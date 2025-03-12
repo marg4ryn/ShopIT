@@ -23,7 +23,7 @@ Thanks to the use of modern technologies and integration with external services,
 ## **Functionalities**
 - Browsing products and categories
 - Searching, filtering and sorting products
-- Adding products to the cart
+- Adding products to the shopping cart stored in cookies
 - Placing an order with the selection of payment and delivery methods
 - User registration and login
 - Order history and the ability to track them
@@ -59,7 +59,7 @@ Dzięki zastosowaniu nowoczesnych technologii i integracji z usługami zewnętrz
 ## **Funkcjonalności**  
 - Przeglądanie produktów i kategorii  
 - Wyszukiwanie, filtrowanie i sortowanie produktów  
-- Dodawanie produktów do koszyka  
+- Dodawanie produktów do koszyka przechowywanego w formie ciasteczek
 - Składanie zamówienia z wyborem metody płatności i dostawy  
 - Rejestracja i logowanie użytkowników  
 - Historia zamówień i możliwość ich śledzenia  
