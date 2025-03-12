@@ -1,16 +1,19 @@
-import mongoose from "mongoose";
+const mongoose = require('mongoose');
 
-const connectDB = async () => {
-  try {
-    await mongoose.connect("mongodb://127.0.0.1:27017/shopit", {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    console.log("Połączono z MongoDB!");
-  } catch (error) {
-    console.error("Błąd połączenia z MongoDB:", error);
-    process.exit(1);
-  }
-};
+// Connect with the database
+mongoose.connect('mongodb://127.0.0.1:27017/shopit')
+.then(() => console.log("Connected to MongoDB and loaded models"))
+.catch(err => console.error("Connection error: ", err));
 
-export default connectDB;
+// Load models
+require('./models/Product');
+require('./models/Category');
+require('./models/Cart');
+require('./models/Order');
+require('./models/Payment');
+require('./models/Review');
+require('./models/User');
+
+module.exports = mongoose;
+
+console.log("Loaded models: ", mongoose.modelNames());
