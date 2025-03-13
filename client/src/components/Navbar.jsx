@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 const Navbar = () => {
     return (
       <nav className="bg-green-700 text-white p-4 w-full fixed top-0">
@@ -12,7 +14,8 @@ const Navbar = () => {
             <button className="absolute right-2 top-1/2 transform -translate-y-1/2">🔍</button>
           </div>
           <ul className="flex space-x-4 text-2xl font-semibold">
-            <li><a href="#" className="hover:text-black">Store</a></li>
+            <li><Link to="/categories" className="hover:text-black">Categories</Link></li>
+            <li><Link to="/" className="hover:text-black">Store</Link></li>
             <li><a href="#" className="hover:text-black">Cart</a></li>
             <li><a href="#" className="hover:text-black">Log in</a></li>
           </ul>
