@@ -1,50 +1,58 @@
-import { useState } from "react";
+import { ChevronLast, ChevronFirst } from "lucide-react"
+import { useState } from "react"
 
-const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(true);
+export default function Sidebar() {
+  const [expanded, setExpanded] = useState(true)
+  
+  const options = ["Most popular", "Descending price", "Rising price"];
+  const [selected, setSelected] = useState(options[0]);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="relative">
-      {/* Przycisk do chowania/pokazywania */}
-      <button
-        className={`fixed top-20 left-0 bg-gray-700 text-white px-3 py-1 rounded-r-lg z-50 transition-transform ${
-          isOpen ? "translate-x-64" : "translate-x-0"
-        }`}
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        {isOpen ? "←" : "→"}
-      </button>
-
-      {/* Sidebar */}
-      <div
-        className={`bg-gray-200 p-4 w-64 h-screen fixed top-14 left-0 transition-transform duration-300 ${
-          isOpen ? "translate-x-0" : "-translate-x-64"
-        }`}
-      >
-        <h2 className="text-xl font-bold mb-4">Filtry</h2>
-
-        {/* Kategorie */}
-        <div className="mb-4">
-          <h3 className="font-semibold">Kategorie</h3>
-          <ul>
-            <li><input type="checkbox" /> Laptopy</li>
-            <li><input type="checkbox" /> Smartfony</li>
-            <li><input type="checkbox" /> Akcesoria</li>
-          </ul>
+    <aside className="h-screen">
+      <nav className={`h-full flex flex-col border-0 shadow-sm ${expanded ? 'bg-neutral-800' : 'bg-neutral-900'}`}>
+        <div className="p-4 pb-2 flex justify-between items-center">
+          <p className={`overflow-hidden transition-all text-xl font-bold text-center text-white ${expanded ? "w-64" : "w-0" }`}>Sorting</p>
+          <button 
+            onClick={() => setExpanded((curr) => !curr)} 
+            className="p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100">
+            {expanded ? <ChevronFirst /> : <ChevronLast />}
+          </button>
         </div>
 
-        {/* Sortowanie */}
-        <div>
-          <h3 className="font-semibold">Sortuj według</h3>
-          <select className="w-full p-2 border rounded-lg">
-            <option>Najniższa cena</option>
-            <option>Najwyższa cena</option>
-            <option>Najlepiej oceniane</option>
-          </select>
-        </div>
-      </div>
-    </div>
-  );
-};
+        <div className='p-4 pb-2 flex justify-between items-center'>
+          <div className={`relative ${expanded ? "w-64" : "w-0"} transition-all`}>
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className={`w-full px-4 py-2 bg-white text-black rounded-md flex justify-between items-center focus:outline-none focus:ring-3 focus:ring-black`}
+            >
+              {selected}
+              <span className="ml-2">{isOpen ? "▲" : "▼"}</span>
+            </button>
 
-export default Sidebar;
+            {isOpen && (
+              <ul className={`absolute w-full mt-1 bg-white border rounded shadow-lg`}>
+                {options.map((option, index) => (
+                  <li
+                    key={index}
+                    onClick={() => {
+                      setSelected(option);
+                      setIsOpen(false);
+                    }}
+                    className={`px-4 py-2 hover:bg-gray-100 cursor-pointer`}
+                  >
+                    {option}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+
+        <div className="p-4 pb-2 mt-12 flex justify-between items-center">
+          <p className={`overflow-hidden transition-all text-xl font-bold text-center text-white ${expanded ? "w-64" : "w-0" }`}>Filtering</p>
+        </div>
+      </nav>
+    </aside>
+  )
+}
