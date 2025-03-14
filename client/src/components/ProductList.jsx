@@ -20,7 +20,7 @@ const products = [
               <img src={product.image} alt={product.name} className="mx-auto mb-4" />
               <h3 className="text-lg font-semibold">{product.name}</h3>
               <p className="text-gray-700 ">{product.price}</p>
-              <button className="mt-4 mr-2 px-4 py-2 bg-sky-600 text-white rounded hover:bg-sky-700">View product</button>
+              <button className="mt-4 mr-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">View product</button>
               <button className="mt-4 mr-2 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Add to cart</button>
             </div>
           ))}
