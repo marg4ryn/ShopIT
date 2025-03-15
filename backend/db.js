@@ -1,11 +1,9 @@
 const mongoose = require('mongoose');
 
-// Connect to the database
 mongoose.connect('mongodb://127.0.0.1:27017/shopit')
 .then(() => console.log("Connected to MongoDB and loaded models"))
 .catch(err => console.error("Connection error: ", err));
 
-// Load models
 require('./models/Product');
 require('./models/Category');
 require('./models/Cart');

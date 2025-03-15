@@ -37,9 +37,14 @@ router.put('/:id', async (req, res) => {
       { name },
       { new: true }
     );
-    if (!updatedCategory) return res.status(404).send('Category not found');
+
+    if (!updatedCategory) {
+      return res.status(404).send('Category not found');
+    }
+
     res.json(updatedCategory);
   } catch (err) {
+    console.error('Error updating category:', err);
     res.status(500).send('Error updating category');
   }
 });
