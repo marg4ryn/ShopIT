@@ -1,6 +1,9 @@
+require("mongoose");
+require('../models/Category');
+
 const express = require('express');
 const Product = require('../models/Product');
-const Category = require('../models/Category');
+
 const router = express.Router();
 
 router.get('/', async (req, res) => {
@@ -8,7 +11,8 @@ router.get('/', async (req, res) => {
     const products = await Product.find().populate('category');
     res.json(products);
   } catch (err) {
-    res.status(500).send('Error fetching products');
+    console.error("Error fetching products:", err);
+    res.status(500).json({ message: "Error fetching products", error: err.message });
   }
 });
 
