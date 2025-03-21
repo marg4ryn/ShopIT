@@ -1,16 +1,17 @@
-import { ChevronLast, ChevronFirst } from "lucide-react"
-import React, { useState } from "react";
-
+import { ChevronLast, ChevronFirst } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { fetchCategories } from '../api/categories';
 
 export default function Sidebar() {
-  const [expanded, setExpanded] = useState(true)
-  
+  const [expanded, setExpanded] = useState(true);
+
   const options = ["Most popular", "Descending price", "Rising price"];
   const [selected, setSelected] = useState(options[0]);
   const [isOpen, setIsOpen] = useState(false);
 
-  const categories = ["Electronics", "Clothing", "Books", "Toys"];
-  const [selectedCategories, setSelectedCategories] = React.useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+
   const toggleCategory = (category) => {
     setSelectedCategories((prev) =>
       prev.includes(category)
@@ -18,6 +19,19 @@ export default function Sidebar() {
         : [...prev, category]
     );
   };
+
+  useEffect(() => {
+    const getCategories = async () => {
+      try {
+        const data = await fetchCategories();
+        setCategories(data); 
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    getCategories();
+  }, []);
 
   return (
     <aside className="min-h-screen">
@@ -94,16 +108,14 @@ export default function Sidebar() {
               <h2 className="font-bold text-white">Categories:</h2>
               <ul className={`space-y-2`}>
                 {categories.map((category) => (
-                  <li key={category} className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      id={category}
-                      checked={selectedCategories.includes(category)}
-                      onChange={() => toggleCategory(category)}
-                      className="w-4 h-4"
-                    />
-                    <label htmlFor={category} className="text-lg text-white">{category}</label>
-                  </li>
+                  <li key={category._id} className="flex justify-between items-center p-2 hover:bg-gray-700">
+                  <span className="text-white text-semibold">{category.name}</span>
+                  <input
+                    type="checkbox"
+                    checked={selectedCategories.includes(category.name)}
+                    onChange={() => toggleCategory(category.name)}
+                  />
+                </li>
                 ))}
               </ul>
             </div>

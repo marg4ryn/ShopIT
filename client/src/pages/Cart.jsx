@@ -1,12 +1,12 @@
+const cartItems = [
+  { id: 1, name: "Laptop", quantity: 1, price: 1000 },
+  { id: 2, name: "T-shirt", quantity: 2, price: 20 },
+  { id: 3, name: "Headphones", quantity: 1, price: 50 },
+];
+
+const total = cartItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
+
 export default function Cart() {
-  const cartItems = [
-    { id: 1, name: "Laptop", quantity: 1, price: 1000 },
-    { id: 2, name: "T-shirt", quantity: 2, price: 20 },
-    { id: 3, name: "Headphones", quantity: 1, price: 50 },
-  ];
-
-  const total = cartItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
-
   return (
     <main className="flex-grow pt-18 p-4 mt-4 flex flex-col items-center justify-center">
       <div className="text-white min-h-screen p-4">

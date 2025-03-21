@@ -1,4 +1,4 @@
-import { FaSearch, FaShoppingCart, FaUserAlt, FaListAlt, FaStore } from "react-icons/fa";
+import { FaSearch, FaShoppingCart, FaUserAlt, FaListAlt, FaStore, FaBox } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 
 export default function Navbar() {
@@ -31,6 +31,11 @@ export default function Navbar() {
           <li>
             <Link to="/categories">
               <FaListAlt className="text-white hover:text-black" />
+            </Link>
+          </li>
+          <li>
+            <Link to="/products">
+              <FaBox className="text-white hover:text-black" />
             </Link>
           </li>
           <li>

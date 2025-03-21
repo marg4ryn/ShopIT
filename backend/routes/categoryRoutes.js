@@ -1,63 +1,79 @@
-const express = require('express');
-const Category = require('../models/Category');
+const express = require("express");
+const mongoose = require("mongoose");
+const Category = require("../models/Category");
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const categories = await Category.find();
     res.json(categories);
   } catch (err) {
-    res.status(500).send('Error fetching categories');
+    console.error("Error fetching categories:", err);
+    res.status(500).json({ message: "Error fetching categories" });
   }
 });
 
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
   const { name } = req.body;
-  if (!name) return res.status(400).send('Category name is required');
+  if (!name) return res.status(400).json({ message: "Category name is required" });
 
   try {
+    const existingCategory = await Category.findOne({ name });
+    if (existingCategory) {
+      return res.status(400).json({ message: "Category already exists" });
+    }
+
     const newCategory = new Category({ name });
     await newCategory.save();
-    res.json(newCategory);
+    res.status(201).json(newCategory);
   } catch (err) {
-    res.status(500).send('Error adding category');
+    console.error("Error adding category:", err);
+    res.status(500).json({ message: "Error adding category" });
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
 
-  if (!name) return res.status(400).send('Category name is required');
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid category ID" });
+  }
+
+  if (!name) return res.status(400).json({ message: "Category name is required" });
 
   try {
-    const updatedCategory = await Category.findByIdAndUpdate(
-      id,
-      { name },
-      { new: true }
-    );
+    const updatedCategory = await Category.findByIdAndUpdate(id, { name }, { new: true });
 
     if (!updatedCategory) {
-      return res.status(404).send('Category not found');
+      return res.status(404).json({ message: "Category not found" });
     }
 
     res.json(updatedCategory);
   } catch (err) {
-    console.error('Error updating category:', err);
-    res.status(500).send('Error updating category');
+    console.error("Error updating category:", err);
+    res.status(500).json({ message: "Error updating category" });
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete("/:id", async (req, res) => {
   const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid category ID" });
+  }
 
   try {
     const deletedCategory = await Category.findByIdAndDelete(id);
-    if (!deletedCategory) return res.status(404).send('Category not found');
-    res.json({ message: 'Category deleted' });
+    if (!deletedCategory) {
+      return res.status(404).json({ message: "Category not found" });
+    }
+
+    res.json({ message: "Category deleted successfully" });
   } catch (err) {
-    res.status(500).send('Error deleting category');
+    console.error("Error deleting category:", err);
+    res.status(500).json({ message: "Error deleting category" });
   }
 });
 
