@@ -6,11 +6,11 @@ export default function Navbar() {
 
   return (
     <nav className="bg-green-700 text-white p-4 w-full fixed top-0">
-      <div className="container mx-auto flex justify-between items-center">
+      <div className="pl-4 flex justify-between items-center">
         <h1 className="text-4xl font-bold text-white">ShopIt</h1>
 
         {location.pathname === "/" && (
-          <div className="relative">
+          <div className="relative ">
             <input 
               type="text" 
               placeholder="Search products ..." 
