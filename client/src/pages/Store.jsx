@@ -35,7 +35,7 @@ export default function Store() {
                             <div key={product._id} className="bg-white p-4 rounded-lg text-center w-300px">
                                 <img src={product.imageUrl} alt={product.name} className="mx-auto mb-4" />
                                 <h3 className="text-lg font-semibold">{product.name}</h3>
-                                <p className="text-gray-700">{product.price} zł</p>
+                                <p className="text-gray-700">${product.price}</p>
                                 <button 
                                     className="mt-4 mr-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
                                     onClick={() => handleViewProduct(product._id)}
