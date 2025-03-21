@@ -54,7 +54,7 @@ export default function Categories() {
     return (
         <main className="flex-grow pt-18">
             <div className="p-4 mt-4 flex flex-col items-center justify-center">
-            <h2 className="text-2xl font-bold mb-4 text-white">Category management</h2>
+            <h2 className="text-2xl font-bold mb-4 text-white">Categories management</h2>
             <div className="mb-4 mt-8">
                 <input
                 type="text"
