@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { fetchProducts, addProduct, editProduct, deleteProduct, fetchFilteredProducts } from '../api/products';
+import { useNavigate } from "react-router-dom";
+import { fetchProducts, deleteProduct, fetchFilteredProducts } from '../api/products';
 import Sidebar from "../components/Sidebar";
 
 export default function Products() {
     const [products, setProducts] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const loadProducts = async () => {
@@ -16,7 +18,12 @@ export default function Products() {
         };
       
         loadProducts();
-      }, []);
+      }, []
+    );
+
+    const handleAddProduct = () => {
+        navigate(`/addproduct`);
+    };
 
     const handleDeleteProduct = async (id) => {
         try {
@@ -34,8 +41,10 @@ export default function Products() {
                 <div className="flex-grow p-6 container mx-auto mt-4 flex flex-col items-center">
                     <h2 className="text-2xl font-bold mb-4 text-white">Products management</h2>
                     <div className="mb-4 mt-8">
-                        <button className="ml-2 p-2 bg-green-600 hover:bg-green-700 text-white rounded">
-                        Add new product
+                        <button className="ml-2 p-2 bg-green-600 hover:bg-green-700 text-white rounded"
+                            onClick={() => handleAddProduct()}
+                        >
+                            Add new product
                         </button>
                     </div>
                     <ul className="mt-8">
