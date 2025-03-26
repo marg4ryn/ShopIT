@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { fetchCategories, addCategory, editCategory, deleteCategory } from '../api/categories';
+import BackButton from '../components/BackButton';
 
 export default function Categories() {
     const [categories, setCategories] = useState([]);
@@ -82,6 +83,7 @@ export default function Categories() {
                 </li>
                 ))}
             </ul>
+            <BackButton />
             </div>
         </main>    
     );

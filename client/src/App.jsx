@@ -5,6 +5,7 @@ import Store from "./pages/Store";
 import Categories from "./pages/Categories";
 import Products from "./pages/Products";
 import ViewProduct from "./pages/ViewProduct";
+import EditProduct from "./pages/EditProduct";
 import AddProduct from "./pages/AddProduct";
 import Cart from "./pages/Cart";
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="/categories" element={<Categories />} />
           <Route path="/products" element={<Products />} />
           <Route path="/viewproduct/:id" element={<ViewProduct />} />
+          <Route path="/editproduct/:id" element={<EditProduct />} />
           <Route path="/addproduct" element={<AddProduct />} />
           <Route path="/cart" element={<Cart />} />
         </Routes>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fetchCategories } from "../api/categories";
-import { addProduct } from "../api/products";
+import { addProduct } from '../api/products';
 
 export default function AddProduct() {
   const [categories, setCategories] = useState([]);
@@ -33,42 +33,30 @@ export default function AddProduct() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    let uploadedImageUrl = '';
-    if (image) {
-      const formData = new FormData();
-      formData.append('image', image);
-
-      try {
-        const uploadResponse = await axios.post('http://localhost:3000/uploads', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-
-        uploadedImageUrl = uploadResponse.data.imageUrl;
-        setImageUrl(uploadedImageUrl);
-      } catch (error) {
-        alert('Failed to upload image');
-        return;
-      }
+  
+    if (!name || !price || !stock || !selectedCategory) {
+      alert("All fields are required");
+      return;
     }
-
-    const productData = {
-      name,
-      description,
-      price: parseFloat(price),
-      stock: parseInt(stock),
-      category: selectedCategory,
-      imageUrl,
-    };
-
+  
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('description', description);
+    formData.append('price', parseFloat(price));
+    formData.append('stock', parseInt(stock));
+    formData.append('category', selectedCategory);
+  
+    if (image) {
+      formData.append('image', image);
+    }
+  
     try {
-      const response = await addProduct(productData);
+      const response = await addProduct(formData);
       alert("Product added successfully!");
       console.log(response);
     } catch (error) {
       alert("There was an error while adding the product.");
+      console.error(error);
     }
   };
 

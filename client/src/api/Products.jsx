@@ -8,12 +8,21 @@ export const fetchProducts = async () => {
     }
   };
   
+  export const getProduct = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:3000/api/products/${id}`);
+      return await response.json();
+    } catch (err) {
+      console.error('Error getting product:', err);
+      throw err;
+    }
+  };
+
   export const addProduct = async (product) => {
     try {
       const response = await fetch('http://localhost:3000/api/products', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(product),
+        body: product,
       });
       return await response.json();
     } catch (err) {
@@ -21,6 +30,7 @@ export const fetchProducts = async () => {
       throw err;
     }
   };
+  
   
   export const editProduct = async (id, product) => {
     try {

@@ -2,9 +2,44 @@ require("mongoose");
 require('../models/Category');
 
 const express = require('express');
+const multer = require('multer');
+const path = require('path');
+const sharp = require('sharp');
 const Product = require('../models/Product');
+const fs = require('fs');
 
 const router = express.Router();
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('image/')) {
+    cb(null, true);
+  } else {
+    cb(new Error('Only images are allowed!'), false);
+  }
+};
+
+const upload = multer({ storage, fileFilter });
+
+const processImage = async (filePath) => {
+  const outputFilePath = filePath.replace(/\.\w+$/, '-resized.jpg');
+  await sharp(filePath)
+    .resize(300, 200)
+    .toFormat('jpeg')
+    .jpeg({ quality: 80 })
+    .toFile(outputFilePath);
+
+  fs.unlinkSync(filePath);
+  return outputFilePath.replace(/\\/g, '/').replace('uploads/', '/uploads/'); 
+};
 
 router.get('/', async (req, res) => {
   try {
@@ -28,13 +63,16 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
-  const { name, description, price, stock, category, imageUrl } = req.body;
-  if (!name || !description || !price || !stock || !category) {
-    return res.status(400).send('All fields are required');
-  }
-
+router.post('/', upload.single('image'), async (req, res) => {
   try {
+    let imageUrl = null;
+
+    if (req.file) {
+      imageUrl = await processImage(req.file.path);
+    }
+
+    const { name, description, price, stock, category } = req.body;
+
     const newProduct = new Product({
       name,
       description,
@@ -43,39 +81,61 @@ router.post('/', async (req, res) => {
       category,
       imageUrl,
     });
+
     await newProduct.save();
     res.status(201).json(newProduct);
   } catch (err) {
-    res.status(500).send('Error creating product');
+    res.status(500).json({ message: "Error adding product", error: err.message });
   }
 });
 
-router.put('/:id', async (req, res) => {
-  const { name, description, price, stock, category, imageUrl } = req.body;
-  
+router.put('/:id', upload.single('image'), async (req, res) => {
+  const { name, description, price, stock, category } = req.body;
   try {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    let imageUrl = product.imageUrl;
+
+    if (req.file) {
+      if (product.imageUrl) {
+        const oldImagePath = path.join(__dirname, '..', product.imageUrl);
+        if (fs.existsSync(oldImagePath)) {
+          fs.unlinkSync(oldImagePath);
+        }
+      }
+
+      imageUrl = await processImage(req.file.path);
+    }
+
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
       { name, description, price, stock, category, imageUrl },
       { new: true }
     );
 
-    if (!updatedProduct) {
-      return res.status(404).send('Product not found');
-    }
-
     res.json(updatedProduct);
   } catch (err) {
-    res.status(500).send('Error updating product');
+    console.error('Error updating product:', err);
+    res.status(500).json({ message: 'Error updating product', error: err.message });
   }
 });
 
+
 router.delete('/:id', async (req, res) => {
   try {
-    const deletedProduct = await Product.findByIdAndDelete(req.params.id);
-    if (!deletedProduct) {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
       return res.status(404).send('Product not found');
     }
+
+    if (product.imageUrl) {
+      fs.unlinkSync(`.${product.imageUrl}`);
+    }
+
+    await Product.findByIdAndDelete(req.params.id);
     res.json({ message: 'Product deleted successfully' });
   } catch (err) {
     res.status(500).send('Error deleting product');

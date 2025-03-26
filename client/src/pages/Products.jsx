@@ -25,6 +25,14 @@ export default function Products() {
         navigate(`/addproduct`);
     };
 
+    const handleViewProduct = (id) => {
+        navigate(`/viewproduct/${id}`);
+    };
+
+    const handleEditProduct = (id) => {
+        navigate(`/editproduct/${id}`);
+    };
+
     const handleDeleteProduct = async (id) => {
         try {
             await deleteProduct(id);
@@ -55,10 +63,12 @@ export default function Products() {
                                 <span>{product.category?.name}</span>
                             </div>
                             <div>
-                                <button className="mr-2 px-4 w-20 py-2 bg-green-600 hover:bg-green-700 text-white rounded">
+                                <button className="mr-2 px-4 w-20 py-2 bg-green-600 hover:bg-green-700 text-white rounded"
+                                    onClick={() => handleViewProduct(product._id)}>
                                     View
                                 </button>
-                                <button className="mr-2 px-4 w-20 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">
+                                <button className="mr-2 px-4 w-20 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
+                                    onClick={() => handleEditProduct(product._id)}>
                                     Edit
                                 </button>
                                 <button className="mr-2 px-4 w-20 py-2 bg-red-600 hover:bg-red-700 text-white rounded">

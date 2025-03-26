@@ -11,6 +11,7 @@ require('./models/Order');
 require('./models/Payment');
 require('./models/Review');
 require('./models/User');
+require('./models/Announcement');
 
 module.exports = mongoose;
 
