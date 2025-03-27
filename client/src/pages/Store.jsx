@@ -35,7 +35,7 @@ export default function Store() {
                 const columns = 4;
                 const itemsPerSection = 3 * columns;
 
-                if (index % itemsPerSection === 0 ) {
+                if (index % itemsPerSection === 0) {
                     acc.push(
                     <div key={`hero-${index}`} className="col-span-full">
                         <HeroSection />
@@ -46,7 +46,7 @@ export default function Store() {
                 acc.push(
                     <div key={product._id} className="bg-white p-4 rounded-lg text-center min-w-[320px]">
                         <img
-                            src={product.imageUrl.startsWith("http") ? product.imageUrl : `http://localhost:3000/${product.imageUrl}`}
+                            src={product.imageUrl.startsWith("http") ? product.imageUrl : `http://localhost:3000${product.imageUrl}`}
                             alt={product.name}
                             className="w-full h-64 object-cover rounded-md mb-4"
                         />

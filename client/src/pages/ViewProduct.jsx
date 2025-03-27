@@ -40,7 +40,7 @@ export default function ViewProduct() {
             <div className="flex justify-center">
             {product.imageUrl && (
                 <img
-                src={product.imageUrl.startsWith("http") ? product.imageUrl : `http://localhost:3000/${product.imageUrl}`}
+                src={product.imageUrl.startsWith("http") ? product.imageUrl : `http://localhost:3000${product.imageUrl}`}
                 alt={product.name}
                 className="w-128 h-64 object-cover rounded-md"
                 />

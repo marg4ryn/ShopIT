@@ -34,17 +34,22 @@ import React, { useEffect, useState } from 'react';
               className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <div className="flex justify-between">
+          <div className="flex justify-center mt-6 gap-6">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-white rounded bg-red-600 hover:bg-red-700"
+              className="w-50 px-4 py-2 text-white rounded bg-red-600 hover:bg-red-700"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              onClick={async (e) => {
+                e.preventDefault();
+                await onSave(newCategoryName);
+                onClose();
+              }}
+              className="w-50 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
             >
               Save Changes
             </button>

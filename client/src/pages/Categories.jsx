@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { fetchCategories, addCategory, editCategory, deleteCategory } from '../api/categories';
 import BackButton from '../components/BackButton';
 import EditCategoryModal from '../components/EditCategoryModal'
+import DeleteCategoryModal from '../components/DeleteCategoryModal'
 
 export default function Categories() {
     const [categories, setCategories] = useState([]);
     const [newCategory, setNewCategory] = useState('');
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [categoryToEdit, setCategoryToEdit] = useState(null);
+    const [categoryToDelete, setCategoryToDelete] = useState(null);
 
     useEffect(() => {
         const loadCategories = async () => {
@@ -36,20 +39,25 @@ export default function Categories() {
   
     const handleEditCategory = (category) => {
       setCategoryToEdit(category);
-      setIsModalOpen(true);
+      setIsEditModalOpen(true);
     };
 
     const handleSaveCategory = async (newCategoryName) => {
         try {
           const updatedCategory = await editCategory(categoryToEdit._id, newCategoryName);
           setCategories(categories.map(category => category._id === updatedCategory._id ? updatedCategory : category));
-          setIsModalOpen(false);
+          setIsEditModalOpen(false);
         } catch (err) {
           console.error('Failed to edit category:', err);
         }
       };
 
-    const handleDeleteCategory = async (id) => {
+    const handleDeleteCategory = (category) => {
+        setCategoryToDelete(category);
+        setIsDeleteModalOpen(true);
+      };
+
+    const handleDelete = async (id) => {
         try {
             await deleteCategory(id);
             setCategories(prevCategories => prevCategories.filter(category => category._id !== id));
@@ -65,14 +73,14 @@ export default function Categories() {
                 <h2 className="text-2xl font-bold mb-4 text-white">Categories management</h2>
                 <div className="mb-4 mt-8">
                     <input
-                    type="text"
-                    value={newCategory}
-                    onChange={(e) => setNewCategory(e.target.value)}
-                    className="p-2 border rounded bg-white focus:outline-none focus:ring-3 focus:ring-black"
-                    placeholder="Enter category name"
+                      type="text"
+                      value={newCategory}
+                      onChange={(e) => setNewCategory(e.target.value)}
+                      className="p-2 border rounded bg-white focus:outline-none focus:ring-3 focus:ring-black"
+                      placeholder="Enter category name"
                     />
                     <button onClick={handleAddCategory} className="ml-2 p-2 bg-green-600 hover:bg-green-700 text-white rounded">
-                    Add new category
+                      Add new category
                     </button>
                 </div>
                 <ul className="mt-8">
@@ -83,7 +91,7 @@ export default function Categories() {
                         <button onClick={() => handleEditCategory(category)} className="mr-2 px-4 w-20 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">
                             Edit
                         </button>
-                        <button onClick={() => handleDeleteCategory(category._id)} className="mr-2 px-4 w-20 py-2 bg-red-600 hover:bg-red-700 text-white rounded">
+                        <button onClick={() => handleDeleteCategory(category)} className="mr-2 px-4 w-20 py-2 bg-red-600 hover:bg-red-700 text-white rounded">
                             Delete
                         </button>
                         </div>
@@ -94,10 +102,16 @@ export default function Categories() {
             </div>
         </div>
         <EditCategoryModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
           onSave={handleSaveCategory}
           category={categoryToEdit}
+        />
+        <DeleteCategoryModal 
+          isOpen={isDeleteModalOpen} 
+          onClose={() => setIsDeleteModalOpen(false)} 
+          onDelete={handleDelete} 
+          category={categoryToDelete} 
         />
         </main>
     );
