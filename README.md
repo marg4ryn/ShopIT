@@ -25,6 +25,7 @@ Thanks to the use of modern technologies and integration with external services,
 - Searching, filtering and sorting products
 - Adding products to the shopping cart stored in cookies
 - Placing an order with the selection of payment and delivery methods
+- Managing ads displayed on the home page
 - User registration and login
 - Order history and the ability to track them
 - Administration panel for managing products and categories
@@ -57,10 +58,11 @@ Dzięki zastosowaniu nowoczesnych technologii i integracji z usługami zewnętrz
 - **Autoryzacja** - Auth0, reCAPTCHA
   
 ## **Funkcjonalności**  
-- Przeglądanie produktów i kategorii  
+- Przeglądanie produktów i kategorii
 - Wyszukiwanie, filtrowanie i sortowanie produktów  
 - Dodawanie produktów do koszyka przechowywanego w formie ciasteczek
-- Składanie zamówienia z wyborem metody płatności i dostawy  
+- Składanie zamówienia z wyborem metody płatności i dostawy
+- Zarządzanie ogłoszeniami wyświetlanymi na stronie głównej
 - Rejestracja i logowanie użytkowników  
 - Historia zamówień i możliwość ich śledzenia  
 - Panel administracyjny do zarządzania produktami i kategoriami  
