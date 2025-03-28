@@ -6,6 +6,7 @@ import HeroSection from "../components/HeroSection";
 
 export default function Store() {
     const [products, setProducts] = useState([]);
+    const [hoveredProduct, setHoveredProduct] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -43,23 +44,32 @@ export default function Store() {
                     }
 
                     acc.push(
-                        <div key={product._id} className="bg-white p-4 rounded-lg text-center min-w-[280px] max-w-full">
+                        <div
+                            key={product._id}
+                            className="relative bg-white p-4 rounded-lg text-center min-w-[280px] max-w-full overflow-hidden group z-10"
+                            onMouseEnter={() => setHoveredProduct(product._id)}
+                            onMouseLeave={() => setHoveredProduct(null)}
+                            onClick={() => handleViewProduct(product._id)}
+                            >
                             <img
                                 src={product.imageUrl.startsWith("http") ? product.imageUrl : `http://localhost:3000${product.imageUrl}`}
                                 alt={product.name}
                                 className="w-full h-64 object-cover rounded-md mb-4"
                             />
                             <h3 className="text-lg font-semibold">{product.name}</h3>
-                            <p className="text-gray-700">${product.price}</p>
-                            <button
-                                className="mt-4 mr-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                                onClick={() => handleViewProduct(product._id)}
+                            <p className="text-green-600 text-lg font-semibold">${product.price}</p>
+
+
+                            <div
+                                className={`absolute top-0 left-0 w-full h-full bg-white flex flex-col items-center justify-center p-6 text-black transition-all duration-300 ease-in-out 
+                                ${hoveredProduct === product._id ? "translate-x-0" : "-translate-x-full"}`}
                             >
-                                View product
-                            </button>
-                            <button className="mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
-                                Add to cart
-                            </button>
+                                <p className="text-lg font-bold">Details</p>
+                                <p className="text-sm text-gray-600">{product.description}</p>
+                                <button className="mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                                    Add to cart
+                                </button>
+                            </div>
                         </div>
                     );
 

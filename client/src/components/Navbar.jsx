@@ -5,7 +5,7 @@ export default function Navbar() {
   const location = useLocation();
 
   return (
-    <nav className="bg-green-700 text-white p-4 w-full fixed top-0">
+    <nav className="bg-green-700 text-white p-4 w-full fixed top-0 z-50">
       <div className="pl-4 flex justify-between items-center">
         <h1 className="text-4xl font-bold text-white">ShopIt</h1>
 

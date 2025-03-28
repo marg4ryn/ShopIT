@@ -73,7 +73,7 @@ export default function EditProduct() {
     try {
       await editProduct(id, formData);
       alert("Product updated successfully!");
-      navigate(`/viewproduct/${id}`);
+      navigate(`/products`);
     } catch (error) {
       alert("There was an error updating the product.");
       console.error(error);
