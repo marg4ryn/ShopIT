@@ -3,9 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { fetchProducts, deleteProduct, fetchFilteredProducts } from '../api/products';
 import Sidebar from "../components/Sidebar";
 import BackButton from '../components/BackButton';
+import DeleteProductModal from '../components/DeleteProductModal'
 
 export default function Products() {
     const [products, setProducts] = useState([]);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [productToDelete, setProductToDelete] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -34,7 +37,12 @@ export default function Products() {
         navigate(`/editproduct/${id}`);
     };
 
-    const handleDeleteProduct = async (id) => {
+    const handleDeleteProduct = (product) => {
+        setProductToDelete(product);
+        setIsDeleteModalOpen(true);
+      };
+
+    const handleDelete = async (id) => {
         try {
             await deleteProduct(id);
             setProducts(prevProducts => prevProducts.filter(product => product._id !== id));
@@ -63,6 +71,10 @@ export default function Products() {
                                 <span className="font-semibold">{product.name}</span>
                                 <span>{product.category?.name}</span>
                             </div>
+                            <div className="flex flex-col ml-auto mx-16 w-20">
+                                <span className="font-semibold">Price: ${product.price}</span>
+                                <span>Stock: {product.stock}</span>
+                            </div>
                             <div>
                                 <button className="mr-2 px-4 w-20 py-2 bg-green-600 hover:bg-green-700 text-white rounded"
                                     onClick={() => handleViewProduct(product._id)}>
@@ -72,7 +84,8 @@ export default function Products() {
                                     onClick={() => handleEditProduct(product._id)}>
                                     Edit
                                 </button>
-                                <button className="mr-2 px-4 w-20 py-2 bg-red-600 hover:bg-red-700 text-white rounded">
+                                <button className="mr-2 px-4 w-20 py-2 bg-red-600 hover:bg-red-700 text-white rounded"
+                                onClick={() => handleDeleteProduct(product)}>
                                     Delete
                                 </button>
                             </div>
@@ -82,6 +95,12 @@ export default function Products() {
                     <BackButton />
                 </div>
             </div>
+            <DeleteProductModal 
+            isOpen={isDeleteModalOpen} 
+            onClose={() => setIsDeleteModalOpen(false)} 
+            onDelete={handleDelete} 
+            product={productToDelete} 
+            />
         </main>    
     );
 }

@@ -44,7 +44,15 @@ const processImage = async (filePath) => {
 router.get('/', async (req, res) => {
   try {
     const products = await Product.find().populate('category');
-    res.json(products);
+    
+    const updatedProducts = products.map(product => ({
+      ...product.toObject(), 
+      imageUrl: product.imageUrl && product.imageUrl.trim() !== "" 
+        ? product.imageUrl 
+        : "/images/No_Image_Available.jpg"
+    }));
+
+    res.json(updatedProducts);
   } catch (err) {
     console.error("Error fetching products:", err);
     res.status(500).json({ message: "Error fetching products", error: err.message });
@@ -57,7 +65,15 @@ router.get('/:id', async (req, res) => {
     if (!product) {
       return res.status(404).send('Product not found');
     }
-    res.json(product);
+
+    const updatedProduct = {
+      ...product.toObject(),
+      imageUrl: product.imageUrl && product.imageUrl.trim() !== "" 
+        ? product.imageUrl 
+        : "/images/No_Image_Available.jpg"
+    };
+
+    res.json(updatedProduct);
   } catch (err) {
     res.status(500).send('Error fetching product');
   }
