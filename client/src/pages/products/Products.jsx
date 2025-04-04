@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { fetchProducts, deleteProduct, fetchFilteredProducts } from '../api/products';
-import Sidebar from "../components/Sidebar";
-import BackButton from '../components/BackButton';
-import DeleteProductModal from '../components/DeleteProductModal'
+import { fetchProducts, deleteProduct, fetchFilteredProducts } from '../../api/products';
+import Sidebar from "../../components/Sidebar";
+import BackButton from '../../components/BackButton';
+import DeleteModal from '../../components/DeleteModal'
 
 export default function Products() {
     const [products, setProducts] = useState([]);
@@ -95,11 +95,13 @@ export default function Products() {
                     <BackButton />
                 </div>
             </div>
-            <DeleteProductModal 
+            <DeleteModal 
             isOpen={isDeleteModalOpen} 
             onClose={() => setIsDeleteModalOpen(false)} 
             onDelete={handleDelete} 
-            product={productToDelete} 
+            item={productToDelete}
+            titleItem="product"
+            itemLabel={productToDelete?.name}
             />
         </main>    
     );

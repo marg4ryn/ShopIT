@@ -141,19 +141,33 @@ router.put('/:id', upload.single('image'), async (req, res) => {
 
 
 router.delete('/:id', async (req, res) => {
+  console.log(`DELETE /products/${req.params.id} - Incoming request`);
+
   try {
     const product = await Product.findById(req.params.id);
     if (!product) {
+      console.warn(`Product with ID ${req.params.id} not found`);
       return res.status(404).send('Product not found');
     }
 
+    console.log(`Found product: ${product.name} (ID: ${product._id})`);
+
     if (product.imageUrl) {
-      fs.unlinkSync(`.${product.imageUrl}`);
+      const imagePath = `.${product.imageUrl}`;
+      try {
+        fs.unlinkSync(imagePath);
+        console.log(`Deleted image at path: ${imagePath}`);
+      } catch (err) {
+        console.error(`Error deleting image file at ${imagePath}:`, err.message);
+      }
     }
 
     await Product.findByIdAndDelete(req.params.id);
+    console.log(`Deleted product with ID: ${req.params.id}`);
+
     res.json({ message: 'Product deleted successfully' });
   } catch (err) {
+    console.error(`Error while deleting product:`, err);
     res.status(500).send('Error deleting product');
   }
 });

@@ -1,19 +1,37 @@
 import React, { useEffect, useState } from "react";
-import { fetchCategories } from "../api/categories";
-import { addProduct } from '../api/products';
-import BackButton from '../components/BackButton';
+import { useParams, useNavigate } from "react-router-dom";
+import { getProduct, editProduct } from "../../api/products";
+import { fetchCategories } from "../../api/categories";
+import BackButton from '../../components/BackButton';
 
-export default function AddProduct() {
-  const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
+export default function EditProduct() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
+  const [category, setCategory] = useState("");
   const [image, setImage] = useState(null);
-  const [imageUrl, setImageUrl] = useState("http://localhost:3000/images/No_Image_Available.jpg");
+  const [imageUrl, setImageUrl] = useState("");
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
+    const loadProduct = async () => {
+      try {
+        const product = await getProduct(id);
+        setName(product.name);
+        setDescription(product.description);
+        setPrice(product.price);
+        setStock(product.stock);
+        setCategory(product.category._id);
+        setImageUrl(product.imageUrl ? `http://localhost:3000/${product.imageUrl}` : "http://localhost:3000/images/No_Image_Available.jpg");
+      } catch (err) {
+        console.error("Failed to fetch product:", err);
+      }
+    };
+
     const loadCategories = async () => {
       try {
         const data = await fetchCategories();
@@ -23,46 +41,41 @@ export default function AddProduct() {
       }
     };
 
+    loadProduct();
     loadCategories();
-  }, []);
+  }, [id]);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-
-    if (file) {
-      setImage(file);
-      setImageUrl(URL.createObjectURL(file));
-    } else {
-      setImage(null);
-      setImageUrl("/images/No_Image_Available.png");
-    }
+    setImage(file);
+    setImageUrl(URL.createObjectURL(file));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    if (!name || !price || !stock || !selectedCategory) {
+
+    if (!name || !price || !stock || !category) {
       alert("All fields are required");
       return;
     }
-  
+
     const formData = new FormData();
-    formData.append('name', name);
-    formData.append('description', description);
-    formData.append('price', parseFloat(price));
-    formData.append('stock', parseInt(stock));
-    formData.append('category', selectedCategory);
-  
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append("price", parseFloat(price));
+    formData.append("stock", parseInt(stock));
+    formData.append("category", category);
+
     if (image) {
-      formData.append('image', image);
+      formData.append("image", image);
     }
-  
+
     try {
-      const response = await addProduct(formData);
-      alert("Product added successfully!");
-      console.log(response);
+      await editProduct(id, formData);
+      alert("Product updated successfully!");
+      navigate(`/products`);
     } catch (error) {
-      alert("There was an error while adding the product.");
+      alert("There was an error updating the product.");
       console.error(error);
     }
   };
@@ -71,7 +84,7 @@ export default function AddProduct() {
     <main className="container mx-auto py-10 flex-grow pt-18">
       <div className="flex flex-col space-y-6 place-items-center">
         <div className="text-center mt-4">
-            <p className="text-2xl font-bold mb-4 mt-4 text-white">Add new product</p>
+            <p className="text-2xl font-bold mb-4 mt-4 text-white">Edit product</p>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -158,10 +171,9 @@ export default function AddProduct() {
                   <label className="text-white font-lg font-bold">Category</label>
                   <select
                     className="w-50 border border-gray-300 bg-white text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
                   >
-                    <option value="">-- Select --</option>
                     {categories.map((category) => (
                     <option key={category._id} value={category._id}>
                         {category.name}
@@ -180,7 +192,7 @@ export default function AddProduct() {
               type="submit"
               className="p-2 bg-green-600 hover:bg-green-700 text-white rounded w-40"
               >
-              Add
+              Update
             </button>
           </div>
         </form>

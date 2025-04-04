@@ -1,37 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { getProduct, editProduct } from "../api/products";
-import { fetchCategories } from "../api/categories";
-import BackButton from '../components/BackButton';
+import { fetchCategories } from "../../api/categories";
+import { addProduct } from '../../api/products';
+import BackButton from '../../components/BackButton';
 
-export default function EditProduct() {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  
+export default function AddProduct() {
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
-  const [category, setCategory] = useState("");
   const [image, setImage] = useState(null);
-  const [imageUrl, setImageUrl] = useState("");
-  const [categories, setCategories] = useState([]);
+  const [imageUrl, setImageUrl] = useState("http://localhost:3000/images/No_Image_Available.jpg");
 
   useEffect(() => {
-    const loadProduct = async () => {
-      try {
-        const product = await getProduct(id);
-        setName(product.name);
-        setDescription(product.description);
-        setPrice(product.price);
-        setStock(product.stock);
-        setCategory(product.category);
-        setImageUrl(product.imageUrl ? `http://localhost:3000/${product.imageUrl}` : "");
-      } catch (err) {
-        console.error("Failed to fetch product:", err);
-      }
-    };
-
     const loadCategories = async () => {
       try {
         const data = await fetchCategories();
@@ -41,41 +23,46 @@ export default function EditProduct() {
       }
     };
 
-    loadProduct();
     loadCategories();
-  }, [id]);
+  }, []);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setImage(file);
-    setImageUrl(URL.createObjectURL(file));
+
+    if (file) {
+      setImage(file);
+      setImageUrl(URL.createObjectURL(file));
+    } else {
+      setImage(null);
+      setImageUrl("http://localhost:3000/images/No_Image_Available.jpg");
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!name || !price || !stock || !category) {
+  
+    if (!name || !price || !stock || !selectedCategory) {
       alert("All fields are required");
       return;
     }
-
+  
     const formData = new FormData();
-    formData.append("name", name);
-    formData.append("description", description);
-    formData.append("price", parseFloat(price));
-    formData.append("stock", parseInt(stock));
-    formData.append("category", category);
-
+    formData.append('name', name);
+    formData.append('description', description);
+    formData.append('price', parseFloat(price));
+    formData.append('stock', parseInt(stock));
+    formData.append('category', selectedCategory);
+  
     if (image) {
-      formData.append("image", image);
+      formData.append('image', image);
     }
-
+  
     try {
-      await editProduct(id, formData);
-      alert("Product updated successfully!");
-      navigate(`/products`);
+      const response = await addProduct(formData);
+      alert("Product added successfully!");
+      console.log(response);
     } catch (error) {
-      alert("There was an error updating the product.");
+      alert("There was an error while adding the product.");
       console.error(error);
     }
   };
@@ -84,7 +71,7 @@ export default function EditProduct() {
     <main className="container mx-auto py-10 flex-grow pt-18">
       <div className="flex flex-col space-y-6 place-items-center">
         <div className="text-center mt-4">
-            <p className="text-2xl font-bold mb-4 mt-4 text-white">Edit product</p>
+            <p className="text-2xl font-bold mb-4 mt-4 text-white">Add new product</p>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -171,8 +158,8 @@ export default function EditProduct() {
                   <label className="text-white font-lg font-bold">Category</label>
                   <select
                     className="w-50 border border-gray-300 bg-white text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
                   >
                     <option value="">-- Select --</option>
                     {categories.map((category) => (

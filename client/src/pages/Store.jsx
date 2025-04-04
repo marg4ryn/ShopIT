@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchProducts } from '../api/products';
 import Sidebar from "../components/Sidebar";
-import HeroSection from "../components/HeroSection";
+import AdsList from "../components/AdsList";
 
 export default function Store() {
     const [products, setProducts] = useState([]);
@@ -38,7 +38,7 @@ export default function Store() {
                     if (index % itemsPerSection === 0) {
                         acc.push(
                             <div key={`hero-${index}`} className="col-span-full">
-                                <HeroSection />
+                                <AdsList />
                             </div>
                         );
                     }

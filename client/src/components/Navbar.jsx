@@ -42,7 +42,7 @@ export default function Navbar() {
             </Link>
           </li>
           <li className="flex flex-col items-center min-w-[80px]">
-            <Link to="/" className="flex flex-col items-center hover:text-black">
+            <Link to="/announcements" className="flex flex-col items-center hover:text-black">
               <FaAd className="text-3xl" />
               <span>ANNOUNCEMENTS</span>
             </Link>

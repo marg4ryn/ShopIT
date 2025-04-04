@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getProduct  } from "../api/products";
-import BackButton from '../components/BackButton';
+import { getProduct  } from "../../api/products";
+import BackButton from '../../components/BackButton';
 
 export default function ViewProduct() {
   const { id } = useParams();

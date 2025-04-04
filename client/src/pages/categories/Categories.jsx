@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { fetchCategories, addCategory, editCategory, deleteCategory } from '../api/categories';
-import BackButton from '../components/BackButton';
-import EditCategoryModal from '../components/EditCategoryModal'
-import DeleteCategoryModal from '../components/DeleteCategoryModal'
+import { fetchCategories, addCategory, editCategory, deleteCategory } from '../../api/categories';
+import BackButton from '../../components/BackButton';
+import EditCategoryModal from '../../components/EditCategoryModal'
+import DeleteModal from '../../components/DeleteModal'
 
 export default function Categories() {
     const [categories, setCategories] = useState([]);
@@ -107,11 +107,13 @@ export default function Categories() {
           onSave={handleSaveCategory}
           category={categoryToEdit}
         />
-        <DeleteCategoryModal 
+        <DeleteModal 
           isOpen={isDeleteModalOpen} 
           onClose={() => setIsDeleteModalOpen(false)} 
           onDelete={handleDelete} 
-          category={categoryToDelete} 
+          item={categoryToDelete}
+          titleItem="category"
+          itemLabel={categoryToDelete?.name}
         />
         </main>
     );
