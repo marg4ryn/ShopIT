@@ -1,6 +1,13 @@
+const BASE_URL = 'http://localhost:3000/api/products';
+
 export const fetchProducts = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/products');
+      const response = await fetch(BASE_URL);
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      }
+
       return await response.json();
     } catch (err) {
       console.error('Error fetching products:', err);
@@ -10,7 +17,12 @@ export const fetchProducts = async () => {
   
   export const getProduct = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/products/${id}`);
+      const response = await fetch(`${BASE_URL}/${id}`);
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      }
+
       return await response.json();
     } catch (err) {
       console.error('Error getting product:', err);
@@ -20,10 +32,15 @@ export const fetchProducts = async () => {
 
   export const addProduct = async (product) => {
     try {
-      const response = await fetch('http://localhost:3000/api/products', {
+      const response = await fetch(BASE_URL, {
         method: 'POST',
         body: product,
       });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      }
+
       return await response.json();
     } catch (err) {
       console.error('Error adding product:', err);
@@ -31,14 +48,18 @@ export const fetchProducts = async () => {
     }
   };
   
-  
   export const editProduct = async (id, product) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/products/${id}`, {
+      const response = await fetch(`${BASE_URL}/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(product),
       });
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      }
+
       return await response.json();
     } catch (err) {
       console.error('Error editing product:', err);
@@ -48,9 +69,12 @@ export const fetchProducts = async () => {
   
   export const deleteProduct = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/products/${id}`, { method: 'DELETE' });
+      const response = await fetch(`${BASE_URL}/${id}`, {
+        method: 'DELETE' 
+      });
+
       if (!response.ok) {
-        throw new Error('Failed to delete product');
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
       }
     } catch (err) {
       console.error('Error deleting product:', err);
@@ -67,7 +91,12 @@ export const fetchProducts = async () => {
       if (minPrice) queryParams.append('min', minPrice);
       if (maxPrice) queryParams.append('max', maxPrice);
   
-      const response = await fetch(`http://localhost:3000/api/products/filter?${queryParams.toString()}`);
+      const response = await fetch(`${BASE_URL}/filter?${queryParams.toString()}`);
+
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      }
+      
       return await response.json();
     } catch (err) {
       console.error('Error fetching filtered products:', err);

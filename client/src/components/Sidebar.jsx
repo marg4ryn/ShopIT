@@ -34,7 +34,7 @@ export default function Sidebar() {
   }, []);
 
   return (
-    <aside className="min-h-screen">
+    <aside>
       <nav className={`h-full pt-6 flex flex-col items-center border-0 transition-all duration-300 overflow-hidden ${expanded ? 'bg-neutral-800' : 'bg-neutral-900'}`}>
         
         <div className="p-4 pb-2 flex">

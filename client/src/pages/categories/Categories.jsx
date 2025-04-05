@@ -90,7 +90,7 @@ export default function Categories() {
                 <ul className="mt-8">
                     {categories.map((category) => (
                     <li key={category._id} className="flex justify-between items-center mb-4 w-120 p-2 bg-white border rounded">
-                        <span>{category.name}</span>
+                        <span className="font-semibold">{category.name}</span>
                         <div>
                         <button onClick={() => handleEditCategory(category)} className="mr-2 px-4 w-20 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">
                             Edit

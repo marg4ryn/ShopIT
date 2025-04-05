@@ -3,6 +3,11 @@ const BASE_URL = 'http://localhost:3000/api/announcements';
 export const fetchAnnouncements = async () => {
   try {
     const response = await fetch(BASE_URL);
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} - ${response.statusText}`);
+    }
+
     return await response.json();
   } catch (err) {
     console.error('Error fetching announcements:', err);
@@ -15,18 +20,15 @@ export const getAnnouncement = async (id) => {
     const response = await fetch(`${BASE_URL}/${id}`);
 
     if (!response.ok) {
-      console.error('Error: Response status', response.status);
-      throw new Error(`Failed to fetch announcement, status: ${response.status}`);
+      throw new Error(`Error: ${response.status} - ${response.statusText}`);
     }
 
-    const data = await response.json();
-    return data;
+    return await response.json();
   } catch (err) {
     console.error('Error getting announcement:', err);
     throw err;
   }
 };
-
 
 export const addAnnouncement = async (title, header, content, color) => {
   try {
@@ -35,6 +37,11 @@ export const addAnnouncement = async (title, header, content, color) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title, header, content, color }),
     });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} - ${response.statusText}`);
+    }
+
     return await response.json();
   } catch (err) {
     console.error('Error adding announcement:', err);
@@ -49,6 +56,11 @@ export const editAnnouncement = async (id, title, header, content, color) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title, header, content, color }),
     });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} - ${response.statusText}`);
+    }
+
     return await response.json();
   } catch (err) {
     console.error('Error editing announcement:', err);
@@ -63,7 +75,7 @@ export const deleteAnnouncement = async (id) => {
     });
 
     if (!response.ok) {
-      throw new Error('Failed to delete announcement');
+      throw new Error(`Error: ${response.status} - ${response.statusText}`);
     }
   } catch (err) {
     console.error('Error deleting announcement:', err);

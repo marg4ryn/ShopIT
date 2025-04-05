@@ -52,10 +52,10 @@ export default function Products() {
     };
 
     return (
-        <main className="flex-grow pt-18">
-            <div className="flex">
+        <main className="flex flex-grow pt-18">
+            <div className="flex flex-grow">
                 <Sidebar />
-                <div className="flex-grow p-6 container mx-auto mt-4 flex flex-col items-center">
+                <div className="flex-grow p-4 container mx-auto mt-12 flex flex-col items-center">
                     <div className="text-center mt-4">
                         <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md">
                             Products Management
@@ -71,11 +71,11 @@ export default function Products() {
                     <ul className="mt-8">
                         {products.map((product) => (
                         <li key={product._id} className="flex justify-between items-center mb-4 w-150 p-2 bg-white border rounded">
-                            <div className="flex flex-col">
-                                <span className="font-semibold">{product.name}</span>
+                            <div className="flex flex-col w-35">
+                                <span className="font-semibold overflow-hidden text-ellipsis whitespace-nowrap">{product.name}</span>
                                 <span>{product.category?.name}</span>
                             </div>
-                            <div className="flex flex-col ml-auto mx-16 w-20">
+                            <div className="flex flex-col ml-auto mx-16 w-25">
                                 <span className="font-semibold">Price: ${product.price}</span>
                                 <span>Stock: {product.stock}</span>
                             </div>
