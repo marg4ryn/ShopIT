@@ -132,7 +132,7 @@ export default function EditAnnouncement() {
                   : "bg-gray-500"
               }`}
             >
-              Update
+              Save
             </button>
           </div>
         </form>

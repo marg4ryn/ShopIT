@@ -38,7 +38,7 @@ import React, { useEffect, useState } from 'react';
             <button
               type="button"
               onClick={onClose}
-              className="w-50 px-4 py-2 text-white rounded bg-red-600 hover:bg-red-700"
+              className="w-50 px-4 py-2 text-white rounded bg-gray-500 hover:bg-gray-600"
             >
               Cancel
             </button>
@@ -49,7 +49,7 @@ import React, { useEffect, useState } from 'react';
                 await onSave(newCategoryName);
                 onClose();
               }}
-              className="w-50 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              className="w-50 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded"
             >
               Save Changes
             </button>
