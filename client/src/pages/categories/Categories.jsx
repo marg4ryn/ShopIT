@@ -69,9 +69,13 @@ export default function Categories() {
     return (
         <main className="flex-grow pt-18">
         <div className="flex flex-col md:flex-row p-4 mt-4 items-center justify-center">
-            <div className="w-120 p-4 mt-4 flex flex-col items-center justify-center">            
-                <h2 className="text-2xl font-bold mb-4 text-white">Categories management</h2>
-                <div className="mb-4 mt-8">
+          <div className="w-120 p-4 mt-4 flex flex-col items-center justify-center">            
+            <div className="text-center mt-4">
+              <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md">
+                  Categories Management
+              </div>
+            </div>
+            <div className="mb-4 mt-8">
                     <input
                       type="text"
                       value={newCategory}

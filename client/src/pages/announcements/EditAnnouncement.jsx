@@ -4,11 +4,23 @@ import { getAnnouncement, editAnnouncement } from '../../api/Announcements';
 import BackButton from '../../components/BackButton';
 
 export default function EditAnnouncement() {
+  const { id } = useParams();
   const [title, setTitle] = useState("");
   const [header, setHeader] = useState("");
   const [content, setContent] = useState("");
   const [color, setColor] = useState("");
-  const { id } = useParams();
+  const [initialData, setInitialData] = useState({
+    title: "",
+    header: "",
+    content: "",
+    color: "",
+  });
+
+  const isModified =
+    title !== initialData.title ||
+    header !== initialData.header ||
+    color !== initialData.color ||
+    content !== initialData.content;
 
   useEffect(() => {
     const fetchAnnouncement = async () => {
@@ -18,6 +30,12 @@ export default function EditAnnouncement() {
         setHeader(data.header);
         setContent(data.content);
         setColor(data.color);
+        setInitialData({
+          title: data.title,
+          header: data.header,
+          content: data.content,
+          color: data.color,
+        });
       } catch (error) {
         console.error("Error fetching announcement:", error);
       }
@@ -29,6 +47,7 @@ export default function EditAnnouncement() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!isModified) return;
 
     if (!title || !header || !content || !color) {
       alert("All fields are required");
@@ -46,10 +65,12 @@ export default function EditAnnouncement() {
   };
 
   return (
-    <main className="container mx-auto py-10 flex-grow pt-18">
+    <main className="container mx-auto py-10 flex-grow pt-18 flex justify-center items-center flex-col">
       <div className="flex flex-col space-y-6 place-items-center">
         <div className="text-center mt-4">
-          <p className="text-2xl font-bold mb-4 mt-4 text-white">Edit announcement</p>
+          <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md">
+            Edit Announcement
+          </div>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -104,7 +125,12 @@ export default function EditAnnouncement() {
             <BackButton />
             <button
               type="submit"
-              className="p-2 bg-green-600 hover:bg-green-700 text-white rounded w-40"
+              disabled={!isModified}
+              className={`p-2 rounded w-40 text-white transition-colors duration-200 ${
+                isModified
+                  ? "bg-green-600 hover:bg-green-700"
+                  : "bg-gray-500"
+              }`}
             >
               Update
             </button>

@@ -56,7 +56,11 @@ export default function Products() {
             <div className="flex">
                 <Sidebar />
                 <div className="flex-grow p-6 container mx-auto mt-4 flex flex-col items-center">
-                    <h2 className="text-2xl font-bold mb-4 text-white">Products management</h2>
+                    <div className="text-center mt-4">
+                        <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md">
+                            Products Management
+                        </div>
+                    </div>
                     <div className="mb-4 mt-8">
                         <button className="ml-2 p-2 bg-green-600 hover:bg-green-700 text-white rounded"
                             onClick={() => handleAddProduct()}
