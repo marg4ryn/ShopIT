@@ -59,8 +59,8 @@ export default function Categories() {
           // sessionStorage.setItem("productCreated", "success");
         } catch (err) {
           setPopupBackgroundColor("red");
-          setPopupHeader(`${err}`);
-          setPopupContent(`Category hasn't been created!`);
+          setPopupHeader(`Category hasn't been created!`);
+          setPopupContent(`${err}`);
           setPopupShowCloseButton(true);
           setIsPopupOpen(true);
           console.error('Failed to add category:', err);
@@ -85,8 +85,8 @@ export default function Categories() {
           setIsPopupOpen(true);
         } catch (err) {
           setPopupBackgroundColor("red");
-          setPopupHeader(`${err}`);
-          setPopupContent("Category hasn't been saved!");
+          setPopupHeader(`Category hasn't been saved!`);
+          setPopupContent(`${err}`);
           setPopupShowCloseButton(true);
           setIsPopupOpen(true);
           console.error('Failed to edit category:', err);
@@ -109,8 +109,8 @@ export default function Categories() {
             setIsPopupOpen(true);
           } catch (err) {
             setPopupBackgroundColor("red");
-            setPopupHeader(`${err}`);
-            setPopupContent(`Category hasn't been deleted: ${err}`);
+            setPopupHeader(`Category hasn't been deleted!`);
+            setPopupContent(`${err}`);
             setPopupShowCloseButton(true);
             setIsPopupOpen(true);
             console.error('Failed to delete category:', err);

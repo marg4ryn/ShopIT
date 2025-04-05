@@ -22,7 +22,13 @@ export default function ViewAnnouncement() {
   }, [id]);
 
   return (
-    <main className="container mx-auto py-10 flex-grow pt-18 flex justify-center items-center flex-col">
+    <main className="flex flex-col flex-grow">
+      <div className="text-center pt-10 mt-26">
+        <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md">
+          Announcement Preview
+        </div>
+      </div>
+      <div className="flex flex-col items-center mt-10"> 
       <div className="w-full max-w-4xl h-60 flex items-center justify-center text-center px-4 rounded-xl shadow-lg" 
            style={{ backgroundColor: ad?.color || "#16a34a" }}>
         <div>
@@ -37,6 +43,7 @@ export default function ViewAnnouncement() {
       </div>
       <div className="mt-4">
         <BackButton />
+      </div>
       </div>
     </main>
   );

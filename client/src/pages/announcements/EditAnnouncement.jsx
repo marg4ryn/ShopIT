@@ -65,19 +65,21 @@ export default function EditAnnouncement() {
   };
 
   return (
-    <main className="container mx-auto py-10 flex-grow pt-18 flex justify-center items-center flex-col">
-      <div className="flex flex-col space-y-6 place-items-center">
-        <div className="text-center mt-4">
-          <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md">
-            Edit Announcement
-          </div>
+    <main className="flex flex-col flex-grow">
+      <div className="text-center pt-10 mt-26">
+        <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md">
+          Edit Announcement
         </div>
+      </div>
 
+      <div className="flex flex-col items-center mt-10"> 
         <form onSubmit={handleSubmit}>
-          <div className="bg-neutral-800 p-6 rounded-md shadow-md mx-6 w-200">
-            <div className="flex items-center justify-center space-x-4 w-full pb-6">
-              <label className="text-white font-lg font-bold">Title</label>
+        <div className="bg-neutral-800 p-6 rounded-md shadow-md mx-6 w-200">
+           <div className="flex flex-col space-y-6 w-full max-w-md mx-auto">
+            <div className="flex flex-col w-full">
+              <label htmlFor="announcementTitle" className="text-white font-lg font-bold">Title</label>
               <input
+                id="announcementTitle"
                 type="text"
                 className="border text-black border-gray-300 bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
                 value={title}
@@ -85,9 +87,10 @@ export default function EditAnnouncement() {
               />
             </div>
 
-            <div className="flex items-center justify-center space-x-4 w-full pb-6">
-              <label className="text-white font-lg font-bold">Header</label>
+            <div className="flex flex-col w-full">
+              <label htmlFor="announcementHeader" className="text-white font-lg font-bold">Header</label>
               <input
+                id="announcementHeader"
                 type="text"
                 className="border text-black border-gray-300 bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
                 value={header}
@@ -95,22 +98,25 @@ export default function EditAnnouncement() {
               />
             </div>
 
-            <div className="flex items-center justify-center space-x-4 w-full">
-              <label className="text-white font-lg font-bold">Color</label>
+            <div className="flex flex-col w-full justify-center items-center">
+              <label htmlFor="announcementColor" className="text-white font-lg font-bold">Color</label>
               <input
+                id="announcementColor"
                 type="color"
                 className="border text-black border-gray-300 bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
                 value={color}
                 onChange={(e) => setColor(e.target.value)}
               />
             </div>
+          </div>
 
             <div className="p-4 rounded-md border-0">
               <div className="flex-grow container mx-auto mt-4">
-                <label className="block text-white font-lg font-bold pb-2">
+                <label htmlFor="announcementContent" className="block text-white font-lg font-bold pb-2">
                   Content
                 </label>
                 <textarea
+                  id="announcementContent"
                   className="w-180 border border-gray-300 bg-white text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
                   rows="4"
                   placeholder="Enter content..."

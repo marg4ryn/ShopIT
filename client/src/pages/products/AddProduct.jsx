@@ -68,14 +68,14 @@ export default function AddProduct() {
   };
 
   return (
-    <main className="container mx-auto py-10 flex-grow pt-18">
-      <div className="flex flex-col space-y-6 place-items-center">
-        <div className="text-center mt-4">
-          <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md">
-              Add Product
-          </div>
+    <main className="flex flex-col flex-grow">
+      <div className="text-center pt-10 mt-26">
+        <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md">
+          Add Product
         </div>
+      </div>
 
+      <div className="flex flex-col items-center mt-10"> 
         <form onSubmit={handleSubmit}>
         <div className="bg-neutral-800 p-6 rounded-md shadow-md mx-6 w-200">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
