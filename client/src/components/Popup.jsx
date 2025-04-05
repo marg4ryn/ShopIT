@@ -1,22 +1,35 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 function Popup({ isOpen, onClose, backgroundColor, header, content, showCloseButton, autoCloseTime }) {
+  const [isOpening, setIsOpening] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsOpening(true);
+      setIsClosing(false);
+    } else {
+      setIsOpening(false);
+    }
+  }, [isOpen]);
+
   useEffect(() => {
     if (isOpen && !showCloseButton && autoCloseTime) {
       const timer = setTimeout(() => {
-        onClose();
+        setIsClosing(true);
+        setTimeout(onClose, 500);
       }, autoCloseTime);
 
       return () => clearTimeout(timer);
     }
   }, [isOpen, showCloseButton, autoCloseTime, onClose]);
 
-  if (!isOpen) return null;
+  if (!isOpen && !isClosing) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className={`fixed bottom-30 left-0 right-0 bg-opacity-50 flex items-center justify-center z-50 transition-all duration-500 ${isClosing ? 'opacity-0' : 'opacity-100'}`}>
       <div
-        className="bg-white p-6 rounded-lg shadow-lg"
+        className={`bg-white p-6 rounded-lg shadow-lg flex flex-col items-center justify-center transform transition-all duration-500 ease-in-out ${isOpening ? 'translate-y-0' : 'translate-y-10'} ${isClosing ? 'translate-y-10 opacity-0' : 'opacity-100'}`}
         style={{ backgroundColor: backgroundColor }}
       >
         <h2 className="text-2xl font-bold text-white mb-4">{header}</h2>
@@ -24,8 +37,11 @@ function Popup({ isOpen, onClose, backgroundColor, header, content, showCloseBut
 
         {showCloseButton && (
           <button
-            onClick={onClose}
-            className="mt-4 bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700"
+            onClick={() => {
+              setIsClosing(true);
+              setTimeout(onClose, 500);
+            }}
+            className="px-6 py-2 text-white rounded bg-gray-500 hover:bg-gray-600 mt-4"
           >
             Close
           </button>

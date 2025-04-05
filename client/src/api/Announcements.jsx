@@ -5,7 +5,7 @@ export const fetchAnnouncements = async () => {
     const response = await fetch(BASE_URL);
 
     if (!response.ok) {
-      throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      throw new Error(`${response.status} - ${response.statusText}`);
     }
 
     return await response.json();
@@ -20,7 +20,7 @@ export const getAnnouncement = async (id) => {
     const response = await fetch(`${BASE_URL}/${id}`);
 
     if (!response.ok) {
-      throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      throw new Error(`${response.status} - ${response.statusText}`);
     }
 
     return await response.json();
@@ -39,7 +39,7 @@ export const addAnnouncement = async (title, header, content, color) => {
     });
 
     if (!response.ok) {
-      throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      throw new Error(`${response.status} - ${response.statusText}`);
     }
 
     return await response.json();
@@ -58,7 +58,7 @@ export const editAnnouncement = async (id, title, header, content, color) => {
     });
 
     if (!response.ok) {
-      throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      throw new Error(`${response.status} - ${response.statusText}`);
     }
 
     return await response.json();
@@ -75,7 +75,7 @@ export const deleteAnnouncement = async (id) => {
     });
 
     if (!response.ok) {
-      throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      throw new Error(`${response.status} - ${response.statusText}`);
     }
   } catch (err) {
     console.error('Error deleting announcement:', err);

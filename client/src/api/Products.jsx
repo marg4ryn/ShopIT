@@ -5,7 +5,7 @@ export const fetchProducts = async () => {
       const response = await fetch(BASE_URL);
 
       if (!response.ok) {
-        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        throw new Error(`${response.status} - ${response.statusText}`);
       }
 
       return await response.json();
@@ -20,7 +20,7 @@ export const fetchProducts = async () => {
       const response = await fetch(`${BASE_URL}/${id}`);
 
       if (!response.ok) {
-        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        throw new Error(`${response.status} - ${response.statusText}`);
       }
 
       return await response.json();
@@ -38,7 +38,7 @@ export const fetchProducts = async () => {
       });
 
       if (!response.ok) {
-        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        throw new Error(`${response.status} - ${response.statusText}`);
       }
 
       return await response.json();
@@ -57,7 +57,7 @@ export const fetchProducts = async () => {
       });
 
       if (!response.ok) {
-        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        throw new Error(`${response.status} - ${response.statusText}`);
       }
 
       return await response.json();
@@ -74,7 +74,7 @@ export const fetchProducts = async () => {
       });
 
       if (!response.ok) {
-        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        throw new Error(`${response.status} - ${response.statusText}`);
       }
     } catch (err) {
       console.error('Error deleting product:', err);
@@ -94,7 +94,7 @@ export const fetchProducts = async () => {
       const response = await fetch(`${BASE_URL}/filter?${queryParams.toString()}`);
 
       if (!response.ok) {
-        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        throw new Error(`${response.status} - ${response.statusText}`);
       }
       
       return await response.json();

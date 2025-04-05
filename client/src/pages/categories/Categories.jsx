@@ -3,6 +3,7 @@ import { fetchCategories, addCategory, editCategory, deleteCategory } from '../.
 import BackButton from '../../components/BackButton';
 import EditCategoryModal from '../../components/EditCategoryModal'
 import DeleteModal from '../../components/DeleteModal'
+import Popup from "../../components/Popup";
 
 export default function Categories() {
     const [categories, setCategories] = useState([]);
@@ -11,30 +12,60 @@ export default function Categories() {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [categoryToEdit, setCategoryToEdit] = useState(null);
     const [categoryToDelete, setCategoryToDelete] = useState(null);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [popupBackgroundColor, setPopupBackgroundColor] = useState('');
+    const [popupHeader, setPopupHeader] = useState('');
+    const [popupContent, setPopupContent] = useState('');
+    const [popupShowCloseButton, setPopupShowCloseButton] = useState(false);
 
     useEffect(() => {
-        const loadCategories = async () => {
-          try {
-            const data = await fetchCategories();
-            setCategories(data);
-          } catch (err) {
-            console.error('Failed to fetch categories:', err);
-          }
-        };
-      
-        loadCategories();
-      }, []);
+      const loadCategories = async () => {
+        try {
+          const data = await fetchCategories();
+          setCategories(data);
+        } catch (err) {
+          console.error('Failed to fetch categories:', err);
+        }
+      };
+    
+      loadCategories();
+    }, []);
+
+    // useEffect(() => {
+    //   const productCreated = sessionStorage.getItem("productCreated");
+  
+    //   if (productCreated === "success") {
+    //     setIsPopupOpen(true);
+  
+    //     sessionStorage.removeItem("productCreated");
+    //   }
+    // }, []);
+
+    const closePopup = () => {
+      setIsPopupOpen(false);
+    };
 
     const handleAddCategory = async () => {
-        if (newCategory.trim()) {
-            try {
-            const data = await addCategory(newCategory);
-            setCategories([...categories, data]);
-            setNewCategory('');
-            } catch (err) {
-            console.error('Failed to add category:', err);
-            }
+      if (newCategory.trim()) {
+        try {
+          const data = await addCategory(newCategory);
+          setCategories([...categories, data]);
+          setNewCategory('');
+          setPopupBackgroundColor("#008236");
+          setPopupHeader("Success!");
+          setPopupContent("Category has been successfully created!");
+          setPopupShowCloseButton(false);
+          setIsPopupOpen(true);
+          // sessionStorage.setItem("productCreated", "success");
+        } catch (err) {
+          setPopupBackgroundColor("red");
+          setPopupHeader(`${err}`);
+          setPopupContent(`Category hasn't been created!`);
+          setPopupShowCloseButton(true);
+          setIsPopupOpen(true);
+          console.error('Failed to add category:', err);
         }
+      }
     };
   
     const handleEditCategory = (category) => {
@@ -47,7 +78,17 @@ export default function Categories() {
           const updatedCategory = await editCategory(categoryToEdit._id, newCategoryName);
           setCategories(categories.map(category => category._id === updatedCategory._id ? updatedCategory : category));
           setIsEditModalOpen(false);
+          setPopupBackgroundColor("#008236");
+          setPopupHeader("Success!");
+          setPopupContent("Category has been successfully saved!");
+          setPopupShowCloseButton(false);
+          setIsPopupOpen(true);
         } catch (err) {
+          setPopupBackgroundColor("red");
+          setPopupHeader(`${err}`);
+          setPopupContent("Category hasn't been saved!");
+          setPopupShowCloseButton(true);
+          setIsPopupOpen(true);
           console.error('Failed to edit category:', err);
         }
       };
@@ -61,7 +102,17 @@ export default function Categories() {
         try {
             await deleteCategory(id);
             setCategories(prevCategories => prevCategories.filter(category => category._id !== id));
-        } catch (err) {
+            setPopupBackgroundColor("#008236");
+            setPopupHeader("Success!");
+            setPopupContent("Category has been successfully deleted!");
+            setPopupShowCloseButton(false);
+            setIsPopupOpen(true);
+          } catch (err) {
+            setPopupBackgroundColor("red");
+            setPopupHeader(`${err}`);
+            setPopupContent(`Category hasn't been deleted: ${err}`);
+            setPopupShowCloseButton(true);
+            setIsPopupOpen(true);
             console.error('Failed to delete category:', err);
         }
     };
@@ -76,33 +127,34 @@ export default function Categories() {
               </div>
             </div>
             <div className="mb-4 mt-8">
-                    <input
-                      type="text"
-                      value={newCategory}
-                      onChange={(e) => setNewCategory(e.target.value)}
-                      className="p-2 border rounded bg-white focus:outline-none focus:ring-3 focus:ring-black"
-                      placeholder="Enter category name"
-                    />
-                    <button onClick={handleAddCategory} className="ml-2 p-2 bg-green-600 hover:bg-green-700 text-white rounded">
-                      Add new category
+              <input
+                id="categoryName"
+                type="text"
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+                className="p-2 border rounded bg-white focus:outline-none focus:ring-3 focus:ring-black"
+                placeholder="Enter category name"
+              />
+              <button onClick={handleAddCategory} className="ml-2 p-2 bg-green-600 hover:bg-green-700 text-white rounded">
+                Add new category
+              </button>
+            </div>
+            <ul className="mt-8">
+                {categories.map((category) => (
+                <li key={category._id} className="flex justify-between items-center mb-4 w-120 p-2 bg-white border rounded">
+                    <span className="font-semibold">{category.name}</span>
+                    <div>
+                    <button onClick={() => handleEditCategory(category)} className="mr-2 px-4 w-20 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">
+                        Edit
                     </button>
-                </div>
-                <ul className="mt-8">
-                    {categories.map((category) => (
-                    <li key={category._id} className="flex justify-between items-center mb-4 w-120 p-2 bg-white border rounded">
-                        <span className="font-semibold">{category.name}</span>
-                        <div>
-                        <button onClick={() => handleEditCategory(category)} className="mr-2 px-4 w-20 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">
-                            Edit
-                        </button>
-                        <button onClick={() => handleDeleteCategory(category)} className="mr-2 px-4 w-20 py-2 bg-red-600 hover:bg-red-700 text-white rounded">
-                            Delete
-                        </button>
-                        </div>
-                    </li>
-                    ))}
-                </ul>
-                <BackButton />
+                    <button onClick={() => handleDeleteCategory(category)} className="mr-2 px-4 w-20 py-2 bg-red-600 hover:bg-red-700 text-white rounded">
+                        Delete
+                    </button>
+                    </div>
+                </li>
+                ))}
+              </ul>
+              <BackButton />
             </div>
         </div>
         <EditCategoryModal
@@ -118,6 +170,15 @@ export default function Categories() {
           item={categoryToDelete}
           titleItem="category"
           itemLabel={categoryToDelete?.name}
+        />
+        <Popup
+          isOpen={isPopupOpen}
+          onClose={closePopup}
+          backgroundColor={popupBackgroundColor}
+          header={popupHeader}
+          content={popupContent}
+          showCloseButton={popupShowCloseButton}
+          autoCloseTime={3000}
         />
         </main>
     );
