@@ -5,6 +5,7 @@ export default function AdsList() {
   const [ads, setAds] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [disableTransition, setDisableTransition] = useState(false);
 
   useEffect(() => {
     const loadAds = async () => {
@@ -22,10 +23,14 @@ export default function AdsList() {
     if (ads.length > 1) {
       const interval = setInterval(() => {
         setIsTransitioning(true);
+        setDisableTransition(false);
+
         setTimeout(() => {
-          setCurrentIndex((prevIndex) => (prevIndex + 1) % ads.length);
           setIsTransitioning(false);
+          setDisableTransition(true);
+          setCurrentIndex((prevIndex) => (prevIndex + 1) % ads.length);
         }, 2000);
+
       }, 10000);
 
       return () => clearInterval(interval);
@@ -37,14 +42,17 @@ export default function AdsList() {
   return (
     <div className="relative overflow-hidden h-60 my-10 rounded-xl bg-neutral-800 shadow-md">
       <div
-        className={`absolute inset-0 w-full h-full flex transition-transform duration-500 ease-in-out ${
-          isTransitioning ? "transform -translate-x-full" : "transform translate-x-0"
-        }`}
+        className={`
+          flex w-[200%] h-full
+          ${!disableTransition ? "transition-transform duration-1500 ease-in-out" : ""}
+        `}
+        style={{
+          transform: isTransitioning ? "translateX(-50%)" : "translateX(0%)",
+        }}
       >
-        {/* Pierwsze ogłoszenie */}
         <div
           className="w-full h-full flex items-center justify-center text-center px-4"
-          style={{ backgroundColor: ads[currentIndex]?.color || "#16a34a" }}
+          style={{ backgroundColor: ads[currentIndex]?.color }}
         >
           <div>
             <h1 className="text-4xl font-bold text-white mb-2">
@@ -57,14 +65,9 @@ export default function AdsList() {
           </div>
         </div>
 
-        {/* Drugie ogłoszenie (przechodzące na następne miejsce) */}
         <div
-          className="absolute w-full h-full flex items-center justify-center text-center px-4"
-          style={{
-            backgroundColor: ads[(currentIndex + 1) % ads.length]?.color || "#16a34a",
-            left: "100%",
-            transition: "left 0.5s ease-in-out",
-          }}
+          className="w-full h-full flex items-center justify-center text-center px-4"
+          style={{ backgroundColor: ads[(currentIndex + 1) % ads.length]?.color }}
         >
           <div>
             <h1 className="text-4xl font-bold text-white mb-2">
@@ -81,4 +84,4 @@ export default function AdsList() {
       </div>
     </div>
   );
-}
+};
