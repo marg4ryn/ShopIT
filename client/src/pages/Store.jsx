@@ -30,7 +30,7 @@ export default function Store() {
     <main className="flex-grow pt-18">
         <div className="flex">
             <Sidebar />
-            <div className="flex-grow p-6 container mx-auto py-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <div className="flex-grow p-6 container mx-auto py-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 {products.reduce((acc, product, index) => {
                     const columns = 4;
                     const itemsPerSection = 3 * columns;

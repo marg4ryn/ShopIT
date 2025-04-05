@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { fetchCategories } from '../api/categories';
 
 export default function Sidebar() {
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState(false);
 
   const options = ["Most popular", "Descending price", "Rising price"];
   const [selected, setSelected] = useState(options[0]);
