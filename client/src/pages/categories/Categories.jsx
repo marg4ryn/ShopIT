@@ -17,6 +17,9 @@ export default function Categories() {
     const [popupHeader, setPopupHeader] = useState('');
     const [popupContent, setPopupContent] = useState('');
     const [popupShowCloseButton, setPopupShowCloseButton] = useState(false);
+    const [errors, setErrors] = useState({
+      categoryName: ""
+    });
 
     useEffect(() => {
       const loadCategories = async () => {
@@ -36,6 +39,15 @@ export default function Categories() {
     };
 
     const handleAddCategory = async () => {
+
+      const newErrors = {};
+      if (!newCategory) newErrors.categoryName = "Category name is required";
+    
+      if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors);
+        return;
+      }
+
       if (newCategory.trim()) {
         try {
           const data = await addCategory(newCategory);
@@ -115,19 +127,27 @@ export default function Categories() {
                   Categories Management
               </div>
             </div>
-            <div className="mb-4 mt-8">
+            <div className="mb-4 mt-8 flex items-center">
               <input
                 id="categoryName"
                 type="text"
                 value={newCategory}
-                onChange={(e) => setNewCategory(e.target.value)}
-                className="p-2 border rounded bg-white focus:outline-none focus:ring-3 focus:ring-black"
+                onChange={(e) => {
+                  setNewCategory(e.target.value);
+                  setErrors({ ...errors, categoryName: "" });
+                }}
+                className={`${errors.categoryName ? 'border-red-500' : 'border-gray-300'} p-2 border rounded bg-white focus:outline-none focus:ring-3 focus:ring-black`}
                 placeholder="Enter category name"
               />
-              <button onClick={handleAddCategory} className="ml-2 p-2 bg-green-600 hover:bg-green-700 text-white rounded">
+              <button 
+                onClick={handleAddCategory} 
+                className="ml-2 p-2 bg-green-600 hover:bg-green-700 text-white rounded flex-shrink-0"
+              >
                 Add new category
               </button>
             </div>
+            {errors.categoryName && <p className="text-red-500 text-sm mt-2">{errors.categoryName}</p>}
+
             <ul className="mt-8">
                 {categories.map((category) => (
                 <li key={category._id} className="flex justify-between items-center mb-4 w-120 p-2 bg-white border rounded">

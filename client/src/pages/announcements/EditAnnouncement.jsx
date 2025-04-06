@@ -15,6 +15,12 @@ export default function EditAnnouncement() {
     content: "",
     color: "",
   });
+  const [errors, setErrors] = useState({
+    title: "",
+    header: "",
+    content: "",
+    color: "",
+  });
 
   const navigate = useNavigate();
 
@@ -49,10 +55,15 @@ export default function EditAnnouncement() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isModified) return;
 
-    if (!title || !header || !content || !color) {
-      alert("All fields are required");
+    const newErrors = {};
+    if (!title) newErrors.title = "Title is required";
+    if (!header) newErrors.header = "Header is required";
+    if (!content) newErrors.content = "Content is required";
+    if (!color) newErrors.color = "Color is required";
+  
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
 
@@ -94,10 +105,14 @@ export default function EditAnnouncement() {
               <input
                 id="announcementTitle"
                 type="text"
-                className="border text-black border-gray-300 bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
+                className={`border text-black ${errors.title ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => {
+                  setTitle(e.target.value);
+                  setErrors({ ...errors, title: "" });
+                }}
               />
+              {errors.title && <p className="text-red-500 text-sm">{errors.title}</p>}
             </div>
 
             <div className="flex flex-col w-full">
@@ -105,10 +120,14 @@ export default function EditAnnouncement() {
               <input
                 id="announcementHeader"
                 type="text"
-                className="border text-black border-gray-300 bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
+                className={`border text-black ${errors.header ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
                 value={header}
-                onChange={(e) => setHeader(e.target.value)}
+                onChange={(e) => {
+                  setHeader(e.target.value);
+                  setErrors({ ...errors, header: "" });
+                }}
               />
+              {errors.header && <p className="text-red-500 text-sm">{errors.header}</p>}
             </div>
 
             <div className="flex flex-col w-full justify-center items-center">
@@ -116,10 +135,14 @@ export default function EditAnnouncement() {
               <input
                 id="announcementColor"
                 type="color"
-                className="border text-black border-gray-300 bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
+                className={`border text-black ${errors.color ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
                 value={color}
-                onChange={(e) => setColor(e.target.value)}
+                onChange={(e) => {
+                  setColor(e.target.value);
+                  setErrors({ ...errors, color: "" });
+                }}
               />
+              {errors.color && <p className="text-red-500 text-sm">{errors.color}</p>}
             </div>
           </div>
 
@@ -130,12 +153,16 @@ export default function EditAnnouncement() {
                 </label>
                 <textarea
                   id="announcementContent"
-                  className="w-180 border border-gray-300 bg-white text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+                  className={`w-180 border ${errors.content ? 'border-red-500' : 'border-gray-300'} bg-white text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black`}
                   rows="4"
                   placeholder="Enter content..."
                   value={content}
-                  onChange={(e) => setContent(e.target.value)}
+                  onChange={(e) => {
+                    setContent(e.target.value);
+                    setErrors({ ...errors, content: "" });
+                  }}
                 />
+                {errors.content && <p className="text-red-500 text-sm">{errors.content}</p>}
               </div>
             </div>
           </div>

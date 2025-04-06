@@ -16,6 +16,29 @@ export default function EditProduct() {
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState("http://localhost:3000/images/No_Image_Available.jpg");
   const [categories, setCategories] = useState([]);
+  const [initialData, setInitialData] = useState({
+    name: "",
+    description: "",
+    price: "",
+    stock: "",
+    category: "",
+    imageUrl: "",
+  });
+  const [errors, setErrors] = useState({
+    name: "",
+    description: "",
+    price: "",
+    stock: "",
+    category: "",
+  });
+
+  const isModified =
+    name !== initialData.name ||
+    description !== initialData.description ||
+    price !== initialData.price ||
+    stock !== initialData.stock ||
+    category !== initialData.category ||
+    imageUrl !== initialData.imageUrl;
 
   useEffect(() => {
     const loadProduct = async () => {
@@ -27,6 +50,14 @@ export default function EditProduct() {
         setStock(product.stock);
         setCategory(product.category._id);
         setImageUrl(`http://localhost:3000${product.imageUrl}`);
+        setInitialData({
+          name: product.name,
+          description: product.description,
+          price: product.price,
+          stock: product.stock,
+          category: product.category._id,
+          imageUrl: `http://localhost:3000${product.imageUrl}`,
+        });
       } catch (err) {
         console.error("Failed to fetch product:", err);
       }
@@ -54,8 +85,15 @@ export default function EditProduct() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name || !price || !stock || !category) {
-      alert("All fields are required");
+    const newErrors = {};
+    if (!name) newErrors.name = "Name is required";
+    if (!description) newErrors.description = "Description is required";
+    if (!price) newErrors.price = "Price is required";
+    if (!stock) newErrors.stock = "Stock is required";
+    if (!category) newErrors.category = "Category is required";
+  
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
 
@@ -135,10 +173,14 @@ export default function EditProduct() {
                 <input
                   id="productName"
                   type="text"
-                  className="w-full border text-black border-gray-300 bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
+                  className={`w-full border text-black ${errors.name ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) => {
+                    setName(e.target.value);
+                    setErrors({ ...errors, name: "" });
+                  }}
                 />
+                {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
               </div>
 
               <div className="flex flex-col">
@@ -146,10 +188,14 @@ export default function EditProduct() {
                 <input
                   id="productPrice"
                   type="number"
-                  className="w-full border text-black border-gray-300 bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
+                  className={`w-full border text-black ${errors.price ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
                   value={price}
-                  onChange={(e) => setPrice(e.target.value)}
+                  onChange={(e) => {
+                    setPrice(e.target.value);
+                    setErrors({ ...errors, price: "" });
+                  }}
                 />
+                {errors.price && <p className="text-red-500 text-sm">{errors.price}</p>}
               </div>
 
               <div className="flex flex-col">
@@ -157,27 +203,35 @@ export default function EditProduct() {
                 <input
                   id="productStock"
                   type="number"
-                  className="w-full border text-black border-gray-300 bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
+                  className={`w-full border text-black ${errors.stock ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
                   value={stock}
-                  onChange={(e) => setStock(e.target.value)}
+                  onChange={(e) => {
+                    setStock(e.target.value);
+                    setErrors({ ...errors, stock: "" });
+                  }}
                 />
+                {errors.stock && <p className="text-red-500 text-sm">{errors.stock}</p>}
               </div>
 
               <div className="flex flex-col">
                 <label htmlFor="productCategory" className="text-white font-lg font-bold pb-2">Category</label>
                 <select
                   id="productCategory"
-                  className="w-full border border-gray-300 bg-white text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+                  className={`w-full border text-black ${errors.category ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
                   value={category}
-                  onChange={(e) => setCategory(e.target.value)}
+                  onChange={(e) => {
+                    setCategory(e.target.value);
+                    setErrors({ ...errors, category: "" });
+                  }}
                 >
-                  <option value="">-- Select --</option>
-                  {categories.map((category) => (
-                    <option key={category._id} value={category._id}>
-                      {category.name}
-                    </option>
-                  ))}
+                <option value="">-- Select --</option>
+                {categories.map((category) => (
+                  <option key={category._id} value={category._id}>
+                    {category.name}
+                  </option>
+                ))}
                 </select>
+                {errors.category && <p className="text-red-500 text-sm">{errors.category}</p>}
               </div>
             </div>
           </div>
@@ -188,20 +242,29 @@ export default function EditProduct() {
             </label>
             <textarea
               id="productDescription"
-              className="w-full border border-gray-300 bg-white text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+              className={`w-full border text-black ${errors.description ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
               rows="4"
               placeholder="Enter product description..."
               value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={(e) => {
+                setDescription(e.target.value);
+                setErrors({ ...errors, description: "" });
+              }}
             />
+            {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
           </div>
         </div>
              
            <div className="flex text-center gap-8 items-center justify-center mt-4">
            <BackButton />
             <button
+              disabled={!isModified}
               type="submit"
-              className="p-2 bg-green-600 hover:bg-green-700 text-white rounded w-40"
+              className={`p-2 rounded w-40 text-white transition-colors duration-200 ${
+                isModified
+                  ? "bg-green-600 hover:bg-green-700"
+                  : "bg-gray-500"
+              }`}
               >
               Save
             </button>

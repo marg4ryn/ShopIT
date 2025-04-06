@@ -13,6 +13,13 @@ export default function AddProduct() {
   const [stock, setStock] = useState("");
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState("http://localhost:3000/images/No_Image_Available.jpg");
+  const [errors, setErrors] = useState({
+    name: "",
+    description: "",
+    price: "",
+    stock: "",
+    category: "",
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -43,8 +50,15 @@ export default function AddProduct() {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    if (!name || !price || !stock || !selectedCategory) {
-      alert("All fields are required");
+    const newErrors = {};
+    if (!name) newErrors.name = "Name is required";
+    if (!description) newErrors.description = "Description is required";
+    if (!price) newErrors.price = "Price is required";
+    if (!stock) newErrors.stock = "Stock is required";
+    if (!selectedCategory) newErrors.category = "Category is required";
+  
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
   
@@ -126,10 +140,14 @@ export default function AddProduct() {
                   <input
                     id="productName"
                     type="text"
-                    className="border text-black border-gray-300 bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
+                    className={`w-full border text-black ${errors.name ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                      setErrors({ ...errors, name: "" });
+                    }}
                   />
+                  {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
                 </div>
 
                 <div className="flex flex-col">
@@ -137,10 +155,14 @@ export default function AddProduct() {
                   <input
                     id="productPrice"
                     type="number"
-                    className="border text-black border-gray-300 bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
+                    className={`w-full border text-black ${errors.price ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
                     value={price}
-                    onChange={(e) => setPrice(e.target.value)}
+                    onChange={(e) => {
+                      setPrice(e.target.value);
+                      setErrors({ ...errors, price: "" });
+                    }}
                   />
+                  {errors.price && <p className="text-red-500 text-sm">{errors.price}</p>}
                 </div>
 
                 <div className="flex flex-col">
@@ -148,19 +170,26 @@ export default function AddProduct() {
                   <input
                     id="productStock"
                     type="number"
-                    className="border text-black border-gray-300 bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
+                    className={`w-full border text-black ${errors.stock ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
                     value={stock}
-                    onChange={(e) => setStock(e.target.value)}
+                    onChange={(e) => {
+                      setStock(e.target.value);
+                      setErrors({ ...errors, stock: "" });
+                    }}
                   />
+                  {errors.stock && <p className="text-red-500 text-sm">{errors.stock}</p>}
                 </div>
 
                 <div className="flex flex-col">
                   <label htmlFor="productCategory" className="text-white font-lg font-bold pb-2">Category</label>
                   <select
                     id="productCategory"
-                    className="border border-gray-300 bg-white text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+                    className={`w-full border text-black ${errors.category ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
                     value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    onChange={(e) => {
+                      setSelectedCategory(e.target.value);
+                      setErrors({ ...errors, category: "" });
+                    }}
                   >
                     <option value="">-- Select --</option>
                     {categories.map((category) => (
@@ -168,7 +197,8 @@ export default function AddProduct() {
                         {category.name}
                       </option>
                     ))}
-                  </select>
+                  </select>   
+                  {errors.category && <p className="text-red-500 text-sm">{errors.category}</p>}
                 </div>
               </div>
             </div>
@@ -179,12 +209,16 @@ export default function AddProduct() {
               </label>
               <textarea
                 id="productDescription"
-                className="w-full border border-gray-300 bg-white text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+                className={`w-full border text-black ${errors.description ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
                 rows="4"
                 placeholder="Enter product description..."
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={(e) => {
+                  setDescription(e.target.value);
+                  setErrors({ ...errors, description: "" });
+                }}
               />
+              {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
             </div>
           </div>
               
