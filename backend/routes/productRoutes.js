@@ -82,23 +82,17 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', upload.single('image'), async (req, res) => {
-  console.log('POST /products - Adding new product');
   try {
     let imageUrl = null;
 
     if (req.file) {
-      console.log('Image file received:', req.file.originalname);
       imageUrl = await processImage(req.file.path);
-      console.log('Processed image saved at:', imageUrl);
     }
 
     const { name, description, price, stock, category } = req.body;
-    console.log('Product data:', { name, description, price, stock, category });
-
     const newProduct = new Product({ name, description, price, stock, category, imageUrl });
 
     await newProduct.save();
-    console.log('Product saved:', newProduct._id);
     res.status(201).json(newProduct);
   } catch (err) {
     console.error("Error adding product:", err);
@@ -107,7 +101,6 @@ router.post('/', upload.single('image'), async (req, res) => {
 });
 
 router.put('/:id', upload.single('image'), async (req, res) => {
-  console.log(`PUT /products/${req.params.id} - Updating product`);
 
   const { name, description, price, stock, category } = req.body;
 
@@ -152,7 +145,6 @@ router.put('/:id', upload.single('image'), async (req, res) => {
 
 
 router.delete('/:id', async (req, res) => {
-  console.log(`DELETE /products/${req.params.id} - Incoming request`);
 
   try {
     const product = await Product.findById(req.params.id);
@@ -161,20 +153,16 @@ router.delete('/:id', async (req, res) => {
       return res.status(404).send('Product not found');
     }
 
-    console.log(`Found product: ${product.name} (ID: ${product._id})`);
-
     if (product.imageUrl) {
       const imagePath = `.${product.imageUrl}`;
       try {
         fs.unlinkSync(imagePath);
-        console.log(`Deleted image at path: ${imagePath}`);
       } catch (err) {
         console.error(`Error deleting image file at ${imagePath}:`, err.message);
       }
     }
 
     await Product.findByIdAndDelete(req.params.id);
-    console.log(`Deleted product with ID: ${req.params.id}`);
 
     res.json({ message: 'Product deleted successfully' });
   } catch (err) {
@@ -185,7 +173,6 @@ router.delete('/:id', async (req, res) => {
 
 router.get('/filter', async (req, res) => {
   const { min, max, categories } = req.query;
-  console.log('GET /products/filter - Params:', { min, max, categories });
 
   let query = {};
   if (min && max) {
@@ -197,7 +184,6 @@ router.get('/filter', async (req, res) => {
 
   try {
     const products = await Product.find(query).populate('category');
-    console.log(`Filtered products found: ${products.length}`);
     res.json(products);
   } catch (err) {
     console.error("Error fetching filtered products:", err);
