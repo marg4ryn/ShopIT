@@ -18,8 +18,8 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="bg-green-700 text-white p-4 w-full fixed top-0 z-50">
-      <div className="flex justify-between items-center px-4">
+    <nav className="bg-green-700 text-white h-[85px] w-full fixed top-0 z-50">
+      <div className="flex justify-between items-center h-full px-4">
         <h1 className="text-3xl font-bold">ShopIt</h1>
 
         {(location.pathname === "/" || location.pathname === "/products") && (
@@ -35,7 +35,7 @@ export default function Navbar() {
           </div>
         )}
 
-        <button className="lg:hidden text-3xl" onClick={toggleMenu}>
+        <button className="lg:hidden text-3xl font-bold" onClick={toggleMenu}>
           {menuOpen ? <FaTimes /> : <FaBars />}
         </button>
 
