@@ -14,5 +14,3 @@ require('./models/User');
 require('./models/Announcement');
 
 module.exports = mongoose;
-
-console.log("Loaded models: ", mongoose.modelNames());

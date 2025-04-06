@@ -31,6 +31,21 @@ export default function Products() {
       }, []
     );
 
+    useEffect(() => {
+        const popupData = sessionStorage.getItem("popupData");
+        
+        if (popupData) {
+            const parsed = JSON.parse(popupData);
+            setPopupBackgroundColor(parsed.backgroundColor);
+            setPopupHeader(parsed.header);
+            setPopupContent(parsed.content);
+            setPopupShowCloseButton(parsed.showCloseButton);
+            setIsPopupOpen(true);
+        
+            sessionStorage.removeItem("popupData");
+        }
+    }, []);
+        
     const closePopup = () => {
         setIsPopupOpen(false);
     };

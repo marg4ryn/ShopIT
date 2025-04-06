@@ -44,11 +44,11 @@ const processImage = async (filePath) => {
 router.get('/', async (req, res) => {
   try {
     const products = await Product.find().populate('category');
-    
+
     const updatedProducts = products.map(product => ({
-      ...product.toObject(), 
-      imageUrl: product.imageUrl && product.imageUrl.trim() !== "" 
-        ? product.imageUrl 
+      ...product.toObject(),
+      imageUrl: product.imageUrl && product.imageUrl.trim() !== ""
+        ? product.imageUrl
         : "/images/No_Image_Available.jpg"
     }));
 
@@ -63,76 +63,87 @@ router.get('/:id', async (req, res) => {
   try {
     const product = await Product.findById(req.params.id).populate('category');
     if (!product) {
+      console.warn('Product not found');
       return res.status(404).send('Product not found');
     }
 
     const updatedProduct = {
       ...product.toObject(),
-      imageUrl: product.imageUrl && product.imageUrl.trim() !== "" 
-        ? product.imageUrl 
+      imageUrl: product.imageUrl && product.imageUrl.trim() !== ""
+        ? product.imageUrl
         : "/images/No_Image_Available.jpg"
     };
 
     res.json(updatedProduct);
   } catch (err) {
+    console.error("Error fetching product:", err);
     res.status(500).send('Error fetching product');
   }
 });
 
 router.post('/', upload.single('image'), async (req, res) => {
+  console.log('POST /products - Adding new product');
   try {
     let imageUrl = null;
 
     if (req.file) {
+      console.log('Image file received:', req.file.originalname);
       imageUrl = await processImage(req.file.path);
+      console.log('Processed image saved at:', imageUrl);
     }
 
     const { name, description, price, stock, category } = req.body;
+    console.log('Product data:', { name, description, price, stock, category });
 
-    const newProduct = new Product({
-      name,
-      description,
-      price,
-      stock,
-      category,
-      imageUrl,
-    });
+    const newProduct = new Product({ name, description, price, stock, category, imageUrl });
 
     await newProduct.save();
+    console.log('Product saved:', newProduct._id);
     res.status(201).json(newProduct);
   } catch (err) {
+    console.error("Error adding product:", err);
     res.status(500).json({ message: "Error adding product", error: err.message });
   }
 });
 
 router.put('/:id', upload.single('image'), async (req, res) => {
+  console.log(`PUT /products/${req.params.id} - Updating product`);
+
   const { name, description, price, stock, category } = req.body;
+
   try {
     const product = await Product.findById(req.params.id);
     if (!product) {
+      console.warn('Product not found');
       return res.status(404).json({ message: 'Product not found' });
     }
 
-    let imageUrl = product.imageUrl;
+    let newImageUrl = product.imageUrl;
 
     if (req.file) {
-      if (product.imageUrl) {
+      if (
+        product.imageUrl &&
+        product.imageUrl.trim() !== '' &&
+        !product.imageUrl.includes('No_Image_Available.jpg')
+      ) {
         const oldImagePath = path.join(__dirname, '..', product.imageUrl);
         if (fs.existsSync(oldImagePath)) {
           fs.unlinkSync(oldImagePath);
         }
       }
 
-      imageUrl = await processImage(req.file.path);
+      newImageUrl = await processImage(req.file.path);
     }
 
-    const updatedProduct = await Product.findByIdAndUpdate(
-      req.params.id,
-      { name, description, price, stock, category, imageUrl },
-      { new: true }
-    );
+    product.name = name;
+    product.description = description;
+    product.price = price;
+    product.stock = stock;
+    product.category = category;
+    product.imageUrl = newImageUrl;
 
-    res.json(updatedProduct);
+    await product.save();
+    res.json(product);
   } catch (err) {
     console.error('Error updating product:', err);
     res.status(500).json({ message: 'Error updating product', error: err.message });
@@ -173,20 +184,25 @@ router.delete('/:id', async (req, res) => {
 });
 
 router.get('/filter', async (req, res) => {
-    const { min, max, categories } = req.query;
-    let query = {};
-    if (min && max) {
-      query.price = { $gte: min, $lte: max };
-    }
-    if (categories) {
-      query.category = { $in: categories.split(',') };
-    }
-    try {
-      const products = await Product.find(query).populate('category');
-      res.json(products);
-    } catch (err) {
-      res.status(500).send('Error fetching filtered products');
-    }
-  });
+  const { min, max, categories } = req.query;
+  console.log('GET /products/filter - Params:', { min, max, categories });
+
+  let query = {};
+  if (min && max) {
+    query.price = { $gte: min, $lte: max };
+  }
+  if (categories) {
+    query.category = { $in: categories.split(',') };
+  }
+
+  try {
+    const products = await Product.find(query).populate('category');
+    console.log(`Filtered products found: ${products.length}`);
+    res.json(products);
+  } catch (err) {
+    console.error("Error fetching filtered products:", err);
+    res.status(500).send('Error fetching filtered products');
+  }
+});
 
 module.exports = router;

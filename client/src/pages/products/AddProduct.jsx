@@ -90,58 +90,39 @@ export default function AddProduct() {
 
       <div className="flex flex-col items-center mt-10"> 
         <form onSubmit={handleSubmit}>
-        <div className="bg-neutral-800 p-6 rounded-md shadow-md mx-6 w-200">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="p-4 rounded-md border-0 ">
-                <div className="p-4 rounded-md border-0 flex flex-col items-center justify-center">
-
-                  <div className="mb-4">
-                    <img
-                        src={imageUrl}
-                        alt="Selected Preview"
-                        className="w-48 h-48 object-cover rounded-md"
-                    />
-                  </div>
-
-                  <div className="flex items-center space-x-4 w-full justify-center">
-                      <label htmlFor="file-input" className="text-white font-lg font-bold pb-2">Image</label>
-                      <div className="relative">
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleFileChange}
-                            id="file-input"
-                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                        />
-                        <button
-                            type="button"
-                            className="border text-black border-gray-300 bg-white p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-                        >
-                          Choose File
-                        </button>
-                      </div>
-                  </div>
-              </div>
-
-              <div className="flex-grow container mx-auto mt-4">
-                  <label htmlFor="productDescription" className="block text-white font-lg font-bold pb-2">
-                    Description
-                  </label>
-                  <textarea
-                    id="productDescription"
-                    className="w-180 border border-gray-300 bg-white text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-                    rows="4"
-                    placeholder="Enter product description..."
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
+          <div className="bg-neutral-800 p-6 rounded-md shadow-md mx-6 w-200">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="p-4 rounded-md border-0 flex flex-col items-center justify-center">
+                <div className="mb-4">
+                  <img
+                    src={imageUrl}
+                    alt="Selected Preview"
+                    className="w-48 h-48 object-cover rounded-md"
                   />
+                </div>
+                <div className="flex items-center space-x-4 w-full justify-center">
+                  <label htmlFor="file-input" className="text-white font-lg font-bold pb-2">Image</label>
+                  <div className="relative">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      id="file-input"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                    <button
+                      type="button"
+                      className="border text-black border-gray-300 bg-white p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+                    >
+                      Choose File
+                    </button>
+                  </div>
+                </div>
               </div>
-          </div>
 
-            <div className="rounded-md border-0">
-              <div className="mx-auto pr-4 container py-10 space-y-5 flex flex-col items-center">
-                <div className="flex items-center justify-end space-x-4 w-full">
-                  <label htmlFor="productName" className="text-white font-lg font-bold">Name</label>
+              <div className="p-4 rounded-md border-0 flex flex-col space-y-5 justify-center">
+                <div className="flex flex-col">
+                  <label htmlFor="productName" className="text-white font-lg font-bold pb-2">Name</label>
                   <input
                     id="productName"
                     type="text"
@@ -151,8 +132,8 @@ export default function AddProduct() {
                   />
                 </div>
 
-                <div className="flex items-center justify-end space-x-4 w-full">
-                  <label htmlFor="productPrice" className="text-white font-lg font-bold">Price ($)</label>
+                <div className="flex flex-col">
+                  <label htmlFor="productPrice" className="text-white font-lg font-bold pb-2">Price ($)</label>
                   <input
                     id="productPrice"
                     type="number"
@@ -162,8 +143,8 @@ export default function AddProduct() {
                   />
                 </div>
 
-                <div className="flex items-center justify-end space-x-4 w-full">
-                  <label htmlFor="productStock" className="text-white font-lg font-bold">Stock</label>
+                <div className="flex flex-col">
+                  <label htmlFor="productStock" className="text-white font-lg font-bold pb-2">Stock</label>
                   <input
                     id="productStock"
                     type="number"
@@ -173,27 +154,40 @@ export default function AddProduct() {
                   />
                 </div>
 
-                <div className="flex items-center justify-end space-x-4 w-full">
-                  <label htmlFor="productCategory" className="text-white font-lg font-bold">Category</label>
+                <div className="flex flex-col">
+                  <label htmlFor="productCategory" className="text-white font-lg font-bold pb-2">Category</label>
                   <select
                     id="productCategory"
-                    className="w-50 border border-gray-300 bg-white text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+                    className="border border-gray-300 bg-white text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
                   >
                     <option value="">-- Select --</option>
                     {categories.map((category) => (
-                    <option key={category._id} value={category._id}>
+                      <option key={category._id} value={category._id}>
                         {category.name}
-                    </option>
+                      </option>
                     ))}
                   </select>
                 </div>
-
               </div>
             </div>
+
+            <div className="mt-6">
+              <label htmlFor="productDescription" className="block text-white font-lg font-bold pb-2">
+                Description
+              </label>
+              <textarea
+                id="productDescription"
+                className="w-full border border-gray-300 bg-white text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+                rows="4"
+                placeholder="Enter product description..."
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </div>
           </div>
-          </div>               
+              
            <div className="flex text-center gap-8 items-center justify-center mt-4">
            <BackButton />
             <button

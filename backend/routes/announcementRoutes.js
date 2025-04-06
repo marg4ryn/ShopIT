@@ -16,13 +16,11 @@ router.get("/", async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
-  console.log(`Received GET request to fetch announcement with ID: ${id}`);
 
   try {
     const announcement = await Announcement.findById(id);
     
     if (!announcement) {
-      console.log(`Announcement with ID: ${id} not found`);
       return res.status(404).send('Announcement not found');
     }
 

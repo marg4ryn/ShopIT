@@ -46,13 +46,14 @@ export default function Store() {
                     acc.push(
                         <div
                             key={product._id}
-                            className="relative bg-white p-4 rounded-lg text-center min-w-[280px] max-w-full overflow-hidden group z-10"
+                            className="relative bg-white p-4 rounded-lg text-center min-w-[280px] max-w-[400px] max-h-[360px] overflow-hidden group z-10"
+
                             onMouseEnter={() => setHoveredProduct(product._id)}
                             onMouseLeave={() => setHoveredProduct(null)}
                             onClick={() => handleViewProduct(product._id)}
                             >
                             <img
-                                src={product.imageUrl.startsWith("http") ? product.imageUrl : `http://localhost:3000${product.imageUrl}`}
+                                src={`http://localhost:3000${product.imageUrl}`}
                                 alt={product.name}
                                 className="w-full h-64 object-cover rounded-md mb-4"
                             />

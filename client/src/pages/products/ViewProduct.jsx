@@ -12,7 +12,6 @@ export default function ViewProduct() {
       try {
         const data = await getProduct (id);
         setProduct(data);
-        console.log(data);
       } catch (err) {
         console.error("Failed to fetch product:", err);
       }
@@ -22,13 +21,15 @@ export default function ViewProduct() {
   }, [id]);
 
   return (
-    <main className="container mx-auto py-10 flex-grow pt-18">
+    <main className="flex flex-col flex-grow">
       {!product ? (
         <p className="text-white text-center">Loading product...</p>
       ) : (
         <div className="flex flex-col space-y-6 place-items-center">
-          <div className="text-center mt-4">
-            <p className="text-2xl font-bold mb-4 mt-4 text-white">{product.name}</p>
+          <div className="text-center pt-10 mt-26">
+            <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md">
+              {product.name}
+            </div>
           </div>
   
           <div className="bg-neutral-800 p-6 rounded-md shadow-md mx-6 w-200">
@@ -37,7 +38,7 @@ export default function ViewProduct() {
                 <div className="flex justify-center">
                   {product.imageUrl && (
                     <img
-                      src={product.imageUrl.startsWith("http") ? product.imageUrl : `http://localhost:3000${product.imageUrl}`}
+                      src={`http://localhost:3000${product.imageUrl}`}
                       alt={product.name}
                       className="w-128 h-64 object-cover rounded-md"
                     />
@@ -54,7 +55,6 @@ export default function ViewProduct() {
                   </div>     
 
                   <div className="flex-grow w-full">
-                    <label className="block">Description</label>
                     <span className="text-lg">{product.description}</span>
                   </div>
                 </div>                  

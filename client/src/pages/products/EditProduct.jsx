@@ -14,7 +14,7 @@ export default function EditProduct() {
   const [stock, setStock] = useState("");
   const [category, setCategory] = useState("");
   const [image, setImage] = useState(null);
-  const [imageUrl, setImageUrl] = useState("");
+  const [imageUrl, setImageUrl] = useState("http://localhost:3000/images/No_Image_Available.jpg");
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function EditProduct() {
         setPrice(product.price);
         setStock(product.stock);
         setCategory(product.category._id);
-        setImageUrl(product.imageUrl ? `http://localhost:3000/${product.imageUrl}` : "http://localhost:3000/images/No_Image_Available.jpg");
+        setImageUrl(`http://localhost:3000${product.imageUrl}`);
       } catch (err) {
         console.error("Failed to fetch product:", err);
       }
@@ -103,107 +103,100 @@ export default function EditProduct() {
         <form onSubmit={handleSubmit}>
         <div className="bg-neutral-800 p-6 rounded-md shadow-md mx-6 w-200">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="p-4 rounded-md border-0 ">
-                <div className="p-4 rounded-md border-0 flex flex-col items-center justify-center">
-
-                  <div className="mb-4">
-                    <img
-                        src={imageUrl}
-                        alt="Selected Preview"
-                        className="w-48 h-48 object-cover rounded-md"
-                    />
-                  </div>
-
-                  <div className="flex items-center space-x-4 w-full justify-center">
-                      <label htmlFor="file-input" className="text-white font-lg font-bold pb-2">Image</label>
-                      <div className="relative">
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleFileChange}
-                            id="file-input"
-                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                        />
-                        <button
-                            type="button"
-                            className="border text-black border-gray-300 bg-white p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-                        >
-                          Choose File
-                        </button>
-                      </div>
-                  </div>
-              </div>
-
-              <div className="flex-grow container mx-auto mt-4">
-                  <label htmlFor="productDescription" className="block text-white font-lg font-bold pb-2">
-                    Description
-                  </label>
-                  <textarea
-                    id="productDescription"
-                    className="w-180 border border-gray-300 bg-white text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-                    rows="4"
-                    placeholder="Enter product description..."
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                  />
-              </div>
-          </div>
-
-            <div className="rounded-md border-0">
-              <div className="mx-auto pr-4 container py-10 space-y-5 flex flex-col items-center">
-                <div className="flex items-center justify-end space-x-4 w-full">
-                  <label htmlFor="productName" className="text-white font-lg font-bold">Name</label>
+            <div className="flex flex-col items-center justify-center gap-4">
+              <img
+                src={imageUrl}
+                alt="Selected Preview"
+                className="w-48 h-48 object-cover rounded-md"
+              />
+              <div className="flex items-center space-x-4 w-full justify-center">
+                <label htmlFor="file-input" className="text-white font-lg font-bold">Image</label>
+                <div className="relative">
                   <input
-                    id="productName"
-                    type="text"
-                    className="border text-black border-gray-300 bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    id="file-input"
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   />
-                </div>
-
-                <div className="flex items-center justify-end space-x-4 w-full">
-                  <label htmlFor="productPrice" className="text-white font-lg font-bold">Price ($)</label>
-                  <input
-                    id="productPrice"
-                    type="number"
-                    className="border text-black border-gray-300 bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                  />
-                </div>
-
-                <div className="flex items-center justify-end space-x-4 w-full">
-                  <label htmlFor="productStock" className="text-white font-lg font-bold">Stock</label>
-                  <input
-                    id="productStock"
-                    type="number"
-                    className="border text-black border-gray-300 bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
-                    value={stock}
-                    onChange={(e) => setStock(e.target.value)}
-                  />
-                </div>
-
-                <div className="flex items-center justify-end space-x-4 w-full">
-                  <label htmlFor="productCategory" className="text-white font-lg font-bold">Category</label>
-                  <select
-                    id="productCategory"
-                    className="w-50 border border-gray-300 bg-white text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
+                  <button
+                    type="button"
+                    className="border text-black border-gray-300 bg-white p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
                   >
-                    {categories.map((category) => (
-                    <option key={category._id} value={category._id}>
-                        {category.name}
-                    </option>
-                    ))}
-                  </select>
+                    Choose File
+                  </button>
                 </div>
+              </div>
+            </div>
 
+            <div className="space-y-4">
+              <div className="flex flex-col">
+                <label htmlFor="productName" className="text-white font-lg font-bold pb-2">Name</label>
+                <input
+                  id="productName"
+                  type="text"
+                  className="w-full border text-black border-gray-300 bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label htmlFor="productPrice" className="text-white font-lg font-bold pb-2">Price ($)</label>
+                <input
+                  id="productPrice"
+                  type="number"
+                  className="w-full border text-black border-gray-300 bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label htmlFor="productStock" className="text-white font-lg font-bold pb-2">Stock</label>
+                <input
+                  id="productStock"
+                  type="number"
+                  className="w-full border text-black border-gray-300 bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
+                  value={stock}
+                  onChange={(e) => setStock(e.target.value)}
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label htmlFor="productCategory" className="text-white font-lg font-bold pb-2">Category</label>
+                <select
+                  id="productCategory"
+                  className="w-full border border-gray-300 bg-white text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                >
+                  <option value="">-- Select --</option>
+                  {categories.map((category) => (
+                    <option key={category._id} value={category._id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
           </div>
-          </div>               
+
+          <div className="mt-6">
+            <label htmlFor="productDescription" className="block text-white font-lg font-bold pb-2">
+              Description
+            </label>
+            <textarea
+              id="productDescription"
+              className="w-full border border-gray-300 bg-white text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+              rows="4"
+              placeholder="Enter product description..."
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+        </div>
+             
            <div className="flex text-center gap-8 items-center justify-center mt-4">
            <BackButton />
             <button

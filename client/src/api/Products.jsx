@@ -48,12 +48,11 @@ export const fetchProducts = async () => {
     }
   };
   
-  export const editProduct = async (id, product) => {
+  export const editProduct = async (id, formData) => {
     try {
       const response = await fetch(`${BASE_URL}/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(product),
+        body: formData,
       });
 
       if (!response.ok) {
