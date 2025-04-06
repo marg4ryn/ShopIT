@@ -31,16 +31,6 @@ export default function Categories() {
       loadCategories();
     }, []);
 
-    // useEffect(() => {
-    //   const productCreated = sessionStorage.getItem("productCreated");
-  
-    //   if (productCreated === "success") {
-    //     setIsPopupOpen(true);
-  
-    //     sessionStorage.removeItem("productCreated");
-    //   }
-    // }, []);
-
     const closePopup = () => {
       setIsPopupOpen(false);
     };
@@ -56,14 +46,13 @@ export default function Categories() {
           setPopupContent("Category has been successfully created!");
           setPopupShowCloseButton(false);
           setIsPopupOpen(true);
-          // sessionStorage.setItem("productCreated", "success");
         } catch (err) {
           setPopupBackgroundColor("red");
-          setPopupHeader(`Category hasn't been created!`);
+          setPopupHeader(`Failed to create category.`);
           setPopupContent(`${err}`);
           setPopupShowCloseButton(true);
           setIsPopupOpen(true);
-          console.error('Failed to add category:', err);
+          console.error('Failed to create category:', err);
         }
       }
     };
@@ -85,11 +74,11 @@ export default function Categories() {
           setIsPopupOpen(true);
         } catch (err) {
           setPopupBackgroundColor("red");
-          setPopupHeader(`Category hasn't been saved!`);
+          setPopupHeader(`Failed to save category.`);
           setPopupContent(`${err}`);
           setPopupShowCloseButton(true);
           setIsPopupOpen(true);
-          console.error('Failed to edit category:', err);
+          console.error('Failed to save category:', err);
         }
       };
 
@@ -109,7 +98,7 @@ export default function Categories() {
             setIsPopupOpen(true);
           } catch (err) {
             setPopupBackgroundColor("red");
-            setPopupHeader(`Category hasn't been deleted!`);
+            setPopupHeader(`Failed to delete category.`);
             setPopupContent(`${err}`);
             setPopupShowCloseButton(true);
             setIsPopupOpen(true);

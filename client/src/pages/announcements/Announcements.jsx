@@ -3,12 +3,37 @@ import { useNavigate } from "react-router-dom";
 import { fetchAnnouncements, deleteAnnouncement } from '../../api/Announcements';
 import BackButton from '../../components/BackButton';
 import DeleteModal from '../../components/DeleteModal'
+import Popup from "../../components/Popup";
 
 export default function Announcements() {
     const [announcements, setAnnouncements] = useState([]);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [announcementToDelete, setAnnouncementToDelete] = useState(null);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [popupBackgroundColor, setPopupBackgroundColor] = useState('');
+    const [popupHeader, setPopupHeader] = useState('');
+    const [popupContent, setPopupContent] = useState('');
+    const [popupShowCloseButton, setPopupShowCloseButton] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const popupData = sessionStorage.getItem("popupData");
+      
+        if (popupData) {
+          const parsed = JSON.parse(popupData);
+          setPopupBackgroundColor(parsed.backgroundColor);
+          setPopupHeader(parsed.header);
+          setPopupContent(parsed.content);
+          setPopupShowCloseButton(parsed.showCloseButton);
+          setIsPopupOpen(true);
+      
+          sessionStorage.removeItem("popupData");
+        }
+      }, []);
+      
+    const closePopup = () => {
+        setIsPopupOpen(false);
+    };
 
     useEffect(() => {
         const loadAnnouncements = async () => {
@@ -45,7 +70,17 @@ export default function Announcements() {
         try {
             await deleteAnnouncement(id);
             setAnnouncements(prevAnnouncements => prevAnnouncements.filter(announcement => announcement._id !== id));
-        } catch (err) {
+            setPopupBackgroundColor("#008236");
+            setPopupHeader("Success!");
+            setPopupContent("Announcement has been successfully deleted!");
+            setPopupShowCloseButton(false);
+            setIsPopupOpen(true);
+            } catch (err) {
+            setPopupBackgroundColor("red");
+            setPopupHeader(`Failed to delete announcement.`);
+            setPopupContent(`${err}`);
+            setPopupShowCloseButton(true);
+            setIsPopupOpen(true);
             console.error('Failed to delete announcement:', err);
         }
     };
@@ -99,6 +134,15 @@ export default function Announcements() {
             item={announcementToDelete}
             titleItem="announcement"
             itemLabel={announcementToDelete?.title}
+            />
+            <Popup
+            isOpen={isPopupOpen}
+            onClose={closePopup}
+            backgroundColor={popupBackgroundColor}
+            header={popupHeader}
+            content={popupContent}
+            showCloseButton={popupShowCloseButton}
+            autoCloseTime={3000}
             />
         </main>    
     );

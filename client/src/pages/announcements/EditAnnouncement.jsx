@@ -16,6 +16,8 @@ export default function EditAnnouncement() {
     color: "",
   });
 
+  const navigate = useNavigate();
+
   const isModified =
     title !== initialData.title ||
     header !== initialData.header ||
@@ -55,12 +57,23 @@ export default function EditAnnouncement() {
     }
 
     try {
-      const response = await editAnnouncement(id, title, header, content, color);
-      alert("Announcement updated successfully!");
-      console.log(response);
+      await editAnnouncement(id, title, header, content, color);
+      sessionStorage.setItem("popupData", JSON.stringify({
+        backgroundColor: "#008236",
+        header: "Success!",
+        content: "Announcement has been successfully saved!",
+        showCloseButton: false
+      }));
     } catch (error) {
-      alert("There was an error while updating the announcement.");
+      sessionStorage.setItem("popupData", JSON.stringify({
+        backgroundColor: "red",
+        header: "Failed to save announcement.",
+        content: `${error}` ,
+        showCloseButton: true
+      }));
       console.error(error);
+    } finally {
+        navigate(-1);
     }
   };
 

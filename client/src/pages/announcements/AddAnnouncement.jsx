@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { addAnnouncement } from '../../api/Announcements';
 import BackButton from '../../components/BackButton';
 
@@ -7,6 +8,7 @@ export default function AddAnnouncement() {
   const [header, setHeader] = useState("");
   const [content, setContent] = useState("");
   const [color, setColor] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,12 +19,23 @@ export default function AddAnnouncement() {
     }
   
     try {
-      const response = await addAnnouncement(title, header, content, color);
-      alert("Announcement added successfully!");
-      console.log(response);
+      await addAnnouncement(title, header, content, color);
+      sessionStorage.setItem("popupData", JSON.stringify({
+        backgroundColor: "#008236",
+        header: "Success!",
+        content: "Announcement has been successfully created!",
+        showCloseButton: false
+      }));
     } catch (error) {
-      alert("There was an error while adding the announcement.");
+      sessionStorage.setItem("popupData", JSON.stringify({
+        backgroundColor: "red",
+        header: "Failed to create announcement.",
+        content: `${error}` ,
+        showCloseButton: true
+      }));
       console.error(error);
+    } finally {
+        navigate(-1);
     }
   };
  

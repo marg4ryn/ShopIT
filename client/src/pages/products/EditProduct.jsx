@@ -72,23 +72,34 @@ export default function EditProduct() {
 
     try {
       await editProduct(id, formData);
-      alert("Product updated successfully!");
-      navigate(`/products`);
+      sessionStorage.setItem("popupData", JSON.stringify({
+        backgroundColor: "#008236",
+        header: "Success!",
+        content: "Product has been successfully saved!",
+        showCloseButton: false
+      }));
     } catch (error) {
-      alert("There was an error updating the product.");
+      sessionStorage.setItem("popupData", JSON.stringify({
+        backgroundColor: "red",
+        header: "Failed to save product.",
+        content: `${error}` ,
+        showCloseButton: true
+      }));
       console.error(error);
+    } finally {
+        navigate(-1);
     }
   };
 
   return (
-    <main className="container mx-auto py-10 flex-grow pt-18">
-      <div className="flex flex-col space-y-6 place-items-center">
-        <div className="text-center mt-4">
-          <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md">
-              Edit Product
-          </div>
+    <main className="flex flex-col flex-grow">
+      <div className="text-center pt-10 mt-26">
+        <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md">
+          Edit Product
         </div>
+      </div>
 
+      <div className="flex flex-col items-center mt-10"> 
         <form onSubmit={handleSubmit}>
         <div className="bg-neutral-800 p-6 rounded-md shadow-md mx-6 w-200">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -104,7 +115,7 @@ export default function EditProduct() {
                   </div>
 
                   <div className="flex items-center space-x-4 w-full justify-center">
-                      <label className="text-white font-lg font-bold pb-2">Image</label>
+                      <label htmlFor="file-input" className="text-white font-lg font-bold pb-2">Image</label>
                       <div className="relative">
                         <input
                             type="file"
@@ -124,10 +135,11 @@ export default function EditProduct() {
               </div>
 
               <div className="flex-grow container mx-auto mt-4">
-                  <label className="block text-white font-lg font-bold pb-2">
+                  <label htmlFor="productDescription" className="block text-white font-lg font-bold pb-2">
                     Description
                   </label>
                   <textarea
+                    id="productDescription"
                     className="w-180 border border-gray-300 bg-white text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
                     rows="4"
                     placeholder="Enter product description..."
@@ -140,8 +152,9 @@ export default function EditProduct() {
             <div className="rounded-md border-0">
               <div className="mx-auto pr-4 container py-10 space-y-5 flex flex-col items-center">
                 <div className="flex items-center justify-end space-x-4 w-full">
-                  <label className="text-white font-lg font-bold">Name</label>
+                  <label htmlFor="productName" className="text-white font-lg font-bold">Name</label>
                   <input
+                    id="productName"
                     type="text"
                     className="border text-black border-gray-300 bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
                     value={name}
@@ -150,8 +163,9 @@ export default function EditProduct() {
                 </div>
 
                 <div className="flex items-center justify-end space-x-4 w-full">
-                  <label className="text-white font-lg font-bold">Price ($)</label>
+                  <label htmlFor="productPrice" className="text-white font-lg font-bold">Price ($)</label>
                   <input
+                    id="productPrice"
                     type="number"
                     className="border text-black border-gray-300 bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
                     value={price}
@@ -160,8 +174,9 @@ export default function EditProduct() {
                 </div>
 
                 <div className="flex items-center justify-end space-x-4 w-full">
-                  <label className="text-white font-lg font-bold">Stock</label>
+                  <label htmlFor="productStock" className="text-white font-lg font-bold">Stock</label>
                   <input
+                    id="productStock"
                     type="number"
                     className="border text-black border-gray-300 bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
                     value={stock}
@@ -170,8 +185,9 @@ export default function EditProduct() {
                 </div>
 
                 <div className="flex items-center justify-end space-x-4 w-full">
-                  <label className="text-white font-lg font-bold">Category</label>
+                  <label htmlFor="productCategory" className="text-white font-lg font-bold">Category</label>
                   <select
+                    id="productCategory"
                     className="w-50 border border-gray-300 bg-white text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}

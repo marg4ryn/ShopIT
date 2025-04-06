@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { fetchCategories } from "../../api/categories";
 import { addProduct } from '../../api/products';
 import BackButton from '../../components/BackButton';
@@ -12,6 +13,7 @@ export default function AddProduct() {
   const [stock, setStock] = useState("");
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState("http://localhost:3000/images/No_Image_Available.jpg");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -56,14 +58,25 @@ export default function AddProduct() {
     if (image) {
       formData.append('image', image);
     }
-  
+
     try {
-      const response = await addProduct(formData);
-      alert("Product added successfully!");
-      console.log(response);
+      await addProduct(formData);
+      sessionStorage.setItem("popupData", JSON.stringify({
+        backgroundColor: "#008236",
+        header: "Success!",
+        content: "Product has been successfully created!",
+        showCloseButton: false
+      }));
     } catch (error) {
-      alert("There was an error while adding the product.");
+      sessionStorage.setItem("popupData", JSON.stringify({
+        backgroundColor: "red",
+        header: "Failed to create product.",
+        content: `${error}` ,
+        showCloseButton: true
+      }));
       console.error(error);
+    } finally {
+        navigate(-1);
     }
   };
 
@@ -91,7 +104,7 @@ export default function AddProduct() {
                   </div>
 
                   <div className="flex items-center space-x-4 w-full justify-center">
-                      <label className="text-white font-lg font-bold pb-2">Image</label>
+                      <label htmlFor="file-input" className="text-white font-lg font-bold pb-2">Image</label>
                       <div className="relative">
                         <input
                             type="file"
@@ -111,10 +124,11 @@ export default function AddProduct() {
               </div>
 
               <div className="flex-grow container mx-auto mt-4">
-                  <label className="block text-white font-lg font-bold pb-2">
+                  <label htmlFor="productDescription" className="block text-white font-lg font-bold pb-2">
                     Description
                   </label>
                   <textarea
+                    id="productDescription"
                     className="w-180 border border-gray-300 bg-white text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
                     rows="4"
                     placeholder="Enter product description..."
@@ -127,8 +141,9 @@ export default function AddProduct() {
             <div className="rounded-md border-0">
               <div className="mx-auto pr-4 container py-10 space-y-5 flex flex-col items-center">
                 <div className="flex items-center justify-end space-x-4 w-full">
-                  <label className="text-white font-lg font-bold">Name</label>
+                  <label htmlFor="productName" className="text-white font-lg font-bold">Name</label>
                   <input
+                    id="productName"
                     type="text"
                     className="border text-black border-gray-300 bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
                     value={name}
@@ -137,8 +152,9 @@ export default function AddProduct() {
                 </div>
 
                 <div className="flex items-center justify-end space-x-4 w-full">
-                  <label className="text-white font-lg font-bold">Price ($)</label>
+                  <label htmlFor="productPrice" className="text-white font-lg font-bold">Price ($)</label>
                   <input
+                    id="productPrice"
                     type="number"
                     className="border text-black border-gray-300 bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
                     value={price}
@@ -147,8 +163,9 @@ export default function AddProduct() {
                 </div>
 
                 <div className="flex items-center justify-end space-x-4 w-full">
-                  <label className="text-white font-lg font-bold">Stock</label>
+                  <label htmlFor="productStock" className="text-white font-lg font-bold">Stock</label>
                   <input
+                    id="productStock"
                     type="number"
                     className="border text-black border-gray-300 bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black"
                     value={stock}
@@ -157,8 +174,9 @@ export default function AddProduct() {
                 </div>
 
                 <div className="flex items-center justify-end space-x-4 w-full">
-                  <label className="text-white font-lg font-bold">Category</label>
+                  <label htmlFor="productCategory" className="text-white font-lg font-bold">Category</label>
                   <select
+                    id="productCategory"
                     className="w-50 border border-gray-300 bg-white text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}

@@ -4,11 +4,17 @@ import { fetchProducts, deleteProduct, fetchFilteredProducts } from '../../api/p
 import Sidebar from "../../components/Sidebar";
 import BackButton from '../../components/BackButton';
 import DeleteModal from '../../components/DeleteModal'
+import Popup from "../../components/Popup";
 
 export default function Products() {
     const [products, setProducts] = useState([]);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [productToDelete, setProductToDelete] = useState(null);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [popupBackgroundColor, setPopupBackgroundColor] = useState('');
+    const [popupHeader, setPopupHeader] = useState('');
+    const [popupContent, setPopupContent] = useState('');
+    const [popupShowCloseButton, setPopupShowCloseButton] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -24,6 +30,10 @@ export default function Products() {
         loadProducts();
       }, []
     );
+
+    const closePopup = () => {
+        setIsPopupOpen(false);
+    };
 
     const handleAddProduct = () => {
         navigate(`/addproduct`);
@@ -46,7 +56,17 @@ export default function Products() {
         try {
             await deleteProduct(id);
             setProducts(prevProducts => prevProducts.filter(product => product._id !== id));
-        } catch (err) {
+            setPopupBackgroundColor("#008236");
+            setPopupHeader("Success!");
+            setPopupContent("Product has been successfully deleted!");
+            setPopupShowCloseButton(false);
+            setIsPopupOpen(true);
+            } catch (err) {
+            setPopupBackgroundColor("red");
+            setPopupHeader(`Failed to delete product.`);
+            setPopupContent(`${err}`);
+            setPopupShowCloseButton(true);
+            setIsPopupOpen(true);
             console.error('Failed to delete product:', err);
         }
     };
@@ -106,6 +126,15 @@ export default function Products() {
             item={productToDelete}
             titleItem="product"
             itemLabel={productToDelete?.name}
+            />
+            <Popup
+            isOpen={isPopupOpen}
+            onClose={closePopup}
+            backgroundColor={popupBackgroundColor}
+            header={popupHeader}
+            content={popupContent}
+            showCloseButton={popupShowCloseButton}
+            autoCloseTime={3000}
             />
         </main>    
     );
