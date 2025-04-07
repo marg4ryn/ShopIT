@@ -46,19 +46,27 @@ export default function Sidebar() {
           </button>
         </div>
 
-        <div className='p-4 pb-2 flex justify-between items-center'>
-          <div className={`ml-2 ${expanded ? "w-64" : "w-0"} transition-all duration-300`}>
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className={`w-full px-4 py-2 bg-white text-black rounded-md flex justify-between items-center focus:outline-none focus:ring-3 focus:ring-black
-                transition-opacity duration-300 ${expanded ? "opacity-100 visible" : "opacity-0 invisible"}`}
-            >
-            {selected}
-            <span className="ml-2">{isOpen ? "▲" : "▼"}</span>
-          </button>
+        <div className={`p-4 pb-2 flex justify-between items-center transition-all duration-300 ${expanded ? "w-72 opacity-100" : "w-0 opacity-0 overflow-hidden"}`}>
+          {expanded && (
+            <div className={`ml-2 ${expanded ? "w-64" : "w-0"} transition-all duration-300 overflow-hidden`}>
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className={`
+                  w-full px-4 py-2 bg-white text-black rounded-md flex justify-between items-center 
+                  focus:outline-none focus:ring-3 focus:ring-black
+                  transition-all duration-300 ease-in-out ${expanded ? "w-64 opacity-100 visible" : "w-0 opacity-0 invisible"}
+                `}
+              >
+                {selected}
+                <span className="ml-2">{isOpen ? "▲" : "▼"}</span>
+              </button>
 
-            {isOpen && (
-              <ul className={`flex flex-col ${expanded ? "opacity-100 visible" : "opacity-0 invisible"} transition-all duration-300 border-0 mt-1 bg-white rounded overflow-hidden`}>
+              <ul
+                className={`
+                  flex flex-col bg-white rounded overflow-hidden border mt-1 transition-all duration-300 ease-in-out
+                  ${isOpen ? "max-h-[500px] py-2 opacity-100" : "max-h-0 py-0 opacity-0"} 
+                `}
+              >
                 {options.map((option, index) => (
                   <li
                     key={index}
@@ -66,21 +74,21 @@ export default function Sidebar() {
                       setSelected(option);
                       setIsOpen(false);
                     }}
-                    className={`${expanded ? "opacity-100 visible" : "opacity-0 invisible"} transition-all duration-300 px-4 py-2 hover:bg-gray-100 cursor-pointer`}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer transition-all duration-300"
                   >
                     {option}
                   </li>
                 ))}
               </ul>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
         <div className="p-4">
-          <p className={`overflow-hidden text-xl font-bold text-center text-white ${expanded ? "w-64" : "w-0" } ${isOpen ? "mt-2" : "mt-0"}`}>FILTERING</p>
+          <p className={`text-xl font-bold text-center text-white ${expanded ? "w-64 opacity-100" : "w-0 opacity-0 overflow-hidden" } ${isOpen ? "mt-2" : "mt-0"}`}>FILTERING</p>
         </div>
 
-        <div className={`p-4 pb-2 flex overflow-hidden justify-center items-center transition-all duration-300 ${expanded ? "w-64" : "w-0"}`}>
+        <div className={`p-4 pb-2 flex justify-center items-center transition-all duration-300 ${expanded ? "w-64 opacity-100" : "w-0 opacity-0 overflow-hidden"}`}>
           {expanded && (
             <div className="text-center w-64">
               <h2 className="font-bold text-white">Price:</h2>
@@ -89,13 +97,13 @@ export default function Sidebar() {
                   type="number"
                   placeholder="From"
                   className={`w-full px-4 py-2 bg-white text-black rounded-md flex justify-between items-center focus:outline-none focus:ring-3 focus:ring-black
-                    transition-opacity duration-300 ${expanded ? "opacity-100 visible" : "opacity-0 invisible"}`}
+                    transition-all duration-300 ${expanded ? "w-64 opacity-100" : "w-0 opacity-0 overflow-hidden"}`}
                 />
                 <input
                   type="number"
                   placeholder="To"
                   className={`w-full px-4 py-2 bg-white text-black rounded-md flex justify-between items-center focus:outline-none focus:ring-3 focus:ring-black
-                    transition-opacity duration-300 ${expanded ? "opacity-100 visible" : "opacity-0 invisible"}`}
+                    transition-all duration-300 ${expanded ? "w-64 opacity-100" : "w-0 opacity-0 overflow-hidden"}`}
                 />
               </div>
             </div>
@@ -127,15 +135,15 @@ export default function Sidebar() {
           )}
         </div>
 
-        <div className={`w-fit p-4 pb-2 flex transition-all duration-300 ${expanded ? "max-w-64 opacity-100" : "max-w-0 opacity-0"}`}>
+        <div className={`items-center justify-center p-4 pb-2 flex transition-all duration-300 ${expanded ? "w-64 opacity-100" : "w-0 opacity-0 overflow-hidden"}`}>
+        {expanded && (
           <button
-            className={`flex bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition-all duration-300
-              ${expanded ? "max-w-32 opacity-100" : "max-w-0 opacity-0"}`}
+            className={`flex bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded`}
           >
             Apply filters
           </button>
+        )}
         </div>
-
       </nav>
     </aside>
   )
