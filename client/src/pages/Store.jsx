@@ -28,9 +28,9 @@ export default function Store() {
 
     return (
     <main className="flex-grow flex pt-18">
-        <div className="flex">
+        <div className="flex transition-all duration-300">
             <Sidebar />
-            <div className="flex-grow p-6 container mx-auto py-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <div className="flex-grow p-6 w-full mr-14 py-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 {products.reduce((acc, product, index) => {
                     const columns = 4;
                     const itemsPerSection = 3 * columns;
@@ -46,7 +46,7 @@ export default function Store() {
                     acc.push(
                         <div
                             key={product._id}
-                            className="relative bg-white p-4 rounded-lg text-center min-w-[280px] max-w-[400px] max-h-[360px] overflow-hidden group z-10"
+                            className="relative bg-white p-4 rounded-lg text-center min-w-[180px] max-w-[400px] max-h-[360px] overflow-hidden group z-10"
 
                             onMouseEnter={() => setHoveredProduct(product._id)}
                             onMouseLeave={() => setHoveredProduct(null)}
