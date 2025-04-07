@@ -7,29 +7,76 @@ import AdsList from "../components/AdsList";
 export default function Store() {
     const [products, setProducts] = useState([]);
     const [hoveredProduct, setHoveredProduct] = useState(null);
+    const [sortOption, setSortOption] = useState("Most popular");
+    const [filters, setFilters] = useState({
+      selectedCategories: [],
+      priceFrom: 0,
+      priceTo: 1000000,
+    });
+
     const navigate = useNavigate();
 
     useEffect(() => {
         const loadProducts = async () => {
             try {
-            const data = await fetchProducts();
-            setProducts(data);
+                const data = await fetchProducts();
+                setProducts(data);
             } catch (err) {
-            console.error('Failed to fetch products:', err);
+                console.error('Failed to fetch products:', err);
             }
         };
-        
+    
         loadProducts();
     }, []);
-
+    
     const handleViewProduct = (id) => {
         navigate(`/viewproduct/${id}`);
     };
+    
+    const sortProducts = (products) => {
+        switch (sortOption) {
+            case "Most popular":
+                return products;
+            case "Descending price":
+                return [...products].sort((a, b) => b.price - a.price);
+            case "Rising price":
+                return [...products].sort((a, b) => a.price - b.price);
+            default:
+                return products;
+        }
+    };
+    
+    const filterProducts = (products, filters) => {
+        return products.filter(product => {
+            const isCategoryMatch = filters.selectedCategories.length === 0 || filters.selectedCategories.includes(product.category);
+            const isPriceMatch = product.price >= filters.priceFrom && product.price <= filters.priceTo;
+            return isCategoryMatch && isPriceMatch;
+        });
+    };
+    
+    const applyFiltersAndSorting = () => {
+        const filteredProducts = filterProducts(products, filters);
+        const sortedAndFilteredProducts = sortProducts(filteredProducts);
+        setProducts(sortedAndFilteredProducts);
+    };
+    
+    const handleSortChange = (sortOption) => {
+        setSortOption(sortOption);
+    };
+    
+    const handleFilterChange = (newFilters) => {
+        setFilters(newFilters);
+    };
+    
+    useEffect(() => {
+        applyFiltersAndSorting();
+    }, [filters, sortOption]);
+    
 
     return (
     <main className="flex-grow flex pt-18">
         <div className="flex transition-all duration-300">
-            <Sidebar />
+            <Sidebar onSortChange={handleSortChange} onFilterChange={handleFilterChange} />
             <div className="flex-grow p-6 w-full mr-14 py-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 {products.reduce((acc, product, index) => {
                     const columns = 4;

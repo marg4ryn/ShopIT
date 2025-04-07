@@ -2,15 +2,15 @@ import { ChevronLast, ChevronFirst } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { fetchCategories } from '../api/categories';
 
-export default function Sidebar() {
+export default function Sidebar({ onSortChange, onFilterChange }) {
   const [expanded, setExpanded] = useState(false);
-
   const options = ["Most popular", "Descending price", "Rising price"];
   const [selected, setSelected] = useState(options[0]);
   const [isOpen, setIsOpen] = useState(false);
-
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [priceFrom, setPriceFrom] = useState('');
+  const [priceTo, setPriceTo] = useState('');
 
   const toggleCategory = (category) => {
     setSelectedCategories((prev) =>
@@ -32,6 +32,23 @@ export default function Sidebar() {
 
     getCategories();
   }, []);
+
+  const handleSortChange = () => {
+    onSortChange(selected);
+  };
+
+  const handlePriceChange = (type, value) => {
+    const newValue = parseFloat(value) || 0;
+    if (type === 'from') {
+        setPriceFrom(newValue);
+    } else {
+        setPriceTo(newValue);
+    }
+  };
+
+  const applyFilters = () => {
+    onFilterChange({ selectedCategories, priceFrom, priceTo });
+  };
 
   return (
     <aside>
@@ -71,8 +88,9 @@ export default function Sidebar() {
                   <li
                     key={index}
                     onClick={() => {
-                      setSelected(option);
+                      setSelected(option); 
                       setIsOpen(false);
+                      handleSortChange();                 
                     }}
                     className="px-4 py-2 hover:bg-gray-100 cursor-pointer transition-all duration-300"
                   >
@@ -99,6 +117,8 @@ export default function Sidebar() {
                   placeholder="From"
                   className={`w-full px-4 py-2 bg-white text-black rounded-md flex justify-between items-center focus:outline-none focus:ring-3 focus:ring-black
                     transition-all duration-300 ${expanded ? "w-64 opacity-100" : "w-0 opacity-0 overflow-hidden"}`}
+                  onChange={(e) => handlePriceChange('from', e.target.value)} 
+                  value={priceFrom}
                 />
                 <input
                   id="priceTo"
@@ -106,6 +126,8 @@ export default function Sidebar() {
                   placeholder="To"
                   className={`w-full px-4 py-2 bg-white text-black rounded-md flex justify-between items-center focus:outline-none focus:ring-3 focus:ring-black
                     transition-all duration-300 ${expanded ? "w-64 opacity-100" : "w-0 opacity-0 overflow-hidden"}`}
+                  onChange={(e) => handlePriceChange('to', e.target.value)} 
+                  value={priceTo}
                 />
               </div>
             </div>
@@ -128,8 +150,8 @@ export default function Sidebar() {
                       id={category.name}
                       type="checkbox"
                       checked={selectedCategories.includes(category.name)}
-                      onChange={(e) => e.stopPropagation()}
                       className="cursor-pointer"
+                      onChange={(e) => e.stopPropagation()}
                     />
                   </li>
                 ))}
@@ -141,6 +163,7 @@ export default function Sidebar() {
         <div className={`items-center justify-center p-4 pb-2 flex transition-all duration-300 ${expanded ? "w-64 opacity-100" : "w-0 opacity-0 overflow-hidden"}`}>
         {expanded && (
           <button
+            onClick={applyFilters}
             className={`flex bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded`}
           >
             Apply filters
