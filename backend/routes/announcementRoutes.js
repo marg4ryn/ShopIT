@@ -24,7 +24,6 @@ router.get('/:id', async (req, res) => {
       return res.status(404).send('Announcement not found');
     }
 
-    console.log(`Announcement with ID: ${id} found, sending response`);
     res.json(announcement);
   } catch (err) {
     console.error(`Error fetching announcement with ID: ${id}`, err);

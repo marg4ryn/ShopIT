@@ -11,6 +11,10 @@ export default function Sidebar({ onSortChange, onFilterChange }) {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [priceFrom, setPriceFrom] = useState('');
   const [priceTo, setPriceTo] = useState('');
+  const [priceErrors, setPriceErrors] = useState({
+    from: '',
+    to: '',
+  });
 
   const toggleCategory = (category) => {
     setSelectedCategories((prev) =>
@@ -38,16 +42,52 @@ export default function Sidebar({ onSortChange, onFilterChange }) {
   };
 
   const handlePriceChange = (type, value) => {
-    const newValue = parseFloat(value) || 0;
-    if (type === 'from') {
-        setPriceFrom(newValue);
-    } else {
-        setPriceTo(newValue);
+    const num = Number(value);
+  
+    if (!value) {
+      if (type === 'from') setPriceFrom(undefined);
+      else setPriceTo(undefined);
+  
+      setPriceErrors((prev) => ({
+        ...prev,
+        [type]: '',
+      }));
+      return;
     }
+  
+    if (type === 'from') setPriceFrom(num);
+    else setPriceTo(num);
+  };
+
+  const validatePrices = () => {
+    let error = false;
+  
+    const newErrors = { from: '', to: '' };
+  
+    if (priceFrom && (priceFrom < 0 || priceFrom > 999999)) {
+      newErrors.from = 'The value must be between 1 and 999,999';
+      error = true;
+    }
+  
+    if (priceTo && (priceTo < 0 || priceTo > 999999)) {
+      newErrors.to = 'The value must be between 1 and 999,999';
+      error = true;
+    }
+  
+    if (priceFrom !== undefined && priceTo !== undefined && priceFrom > priceTo) {
+      newErrors.from = "'From' cannot be greater than 'To'";
+      error = true;
+    }
+  
+    setPriceErrors(newErrors);
+  
+    return error;
   };
 
   const applyFilters = () => {
-    onFilterChange({ selectedCategories, priceFrom, priceTo });
+    if (!validatePrices()) {
+      onFilterChange({ selectedCategories, priceFrom, priceTo });
+    }
   };
 
   return (
@@ -103,10 +143,10 @@ export default function Sidebar({ onSortChange, onFilterChange }) {
         </div>
 
         <div className="p-4">
-          <p className={`text-xl font-bold text-center text-white ${expanded ? "w-64 opacity-100" : "w-0 opacity-0 overflow-hidden" } ${isOpen ? "mt-2" : "mt-0"}`}>FILTERING</p>
+          <p className={`text-xl font-bold text-center text-white ${expanded ? "w-68 opacity-100" : "w-0 opacity-0 overflow-hidden" } ${isOpen ? "mt-2" : "mt-0"}`}>FILTERING</p>
         </div>
 
-        <div className={`p-4 pb-2 flex justify-center items-center transition-all duration-300 ${expanded ? "w-64 opacity-100" : "w-0 opacity-0 overflow-hidden"}`}>
+        <div className={`p-4 pb-2 flex justify-center items-center transition-all duration-300 ${expanded ? "w-68 opacity-100" : "w-0 opacity-0 overflow-hidden"}`}>
           {expanded && (
             <div className="text-center w-64">
               <h2 className="font-bold text-white">Price:</h2>
@@ -114,21 +154,38 @@ export default function Sidebar({ onSortChange, onFilterChange }) {
                 <input
                   id="priceFrom"
                   type="number"
+                  min="0"
+                  max="999999"
                   placeholder="From"
                   className={`w-full px-4 py-2 bg-white text-black rounded-md flex justify-between items-center focus:outline-none focus:ring-3 focus:ring-black
-                    transition-all duration-300 ${expanded ? "w-64 opacity-100" : "w-0 opacity-0 overflow-hidden"}`}
+                    transition-all duration-300 ${expanded ? "w-68 opacity-100" : "w-0 opacity-0 overflow-hidden"} ${
+                      priceErrors.from ? 'border-red-500' : 'border-gray-300'
+                    }`}
                   onChange={(e) => handlePriceChange('from', e.target.value)} 
-                  value={priceFrom}
+                  value={priceFrom || ''}
                 />
                 <input
                   id="priceTo"
                   type="number"
+                  min="0"
+                  max="999999"
                   placeholder="To"
                   className={`w-full px-4 py-2 bg-white text-black rounded-md flex justify-between items-center focus:outline-none focus:ring-3 focus:ring-black
-                    transition-all duration-300 ${expanded ? "w-64 opacity-100" : "w-0 opacity-0 overflow-hidden"}`}
+                    transition-all duration-300 ${expanded ? "w-68 opacity-100" : "w-0 opacity-0 overflow-hidden"} ${
+                      priceErrors.to ? 'border-red-500' : 'border-gray-300'
+                    }`}
+                    
                   onChange={(e) => handlePriceChange('to', e.target.value)} 
-                  value={priceTo}
+                  value={priceTo || ''}
                 />
+              </div>
+              <div className="flex justify-center gap-4 mt-2">             
+                {priceErrors.from && (
+                  <p className="text-red-500 text-sm mt-1">{priceErrors.from}</p>
+                )}                
+                {priceErrors.to && (
+                  <p className="text-red-500 text-sm mt-1">{priceErrors.to}</p>
+                )}
               </div>
             </div>
           )}

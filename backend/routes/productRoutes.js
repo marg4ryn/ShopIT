@@ -45,8 +45,10 @@ router.get('/filter', async (req, res) => {
   const { min, max, categories, sort } = req.query;
 
   let query = {};
-  if (min && max) {
-    query.price = { $gte: Number(min), $lte: Number(max) };
+  if (min || max) {
+    query.price = {};
+    if (min) query.price.$gte = Number(min);
+    if (max) query.price.$lte = Number(max);
   }
 
   if (categories && categories.trim() !== '') {

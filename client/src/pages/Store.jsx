@@ -11,7 +11,7 @@ export default function Store() {
     const [filters, setFilters] = useState({
         selectedCategories: [],
         priceFrom: 0,
-        priceTo: 1000000,
+        priceTo: 999999,
     });
 
     const navigate = useNavigate();
