@@ -41,6 +41,44 @@ const processImage = async (filePath) => {
   return outputFilePath.replace(/\\/g, '/').replace('uploads/', '/uploads/'); 
 };
 
+router.get('/filter', async (req, res) => {
+  const { min, max, categories, sort } = req.query;
+
+  let query = {};
+  if (min && max) {
+    query.price = { $gte: Number(min), $lte: Number(max) };
+  }
+
+  if (categories && categories.trim() !== '') {
+    query.category = { $in: categories.split(',') };
+  }
+  
+  let sortOption = {};
+  if (sort === 'desc') {
+    sortOption.price = -1;
+  } else if (sort === 'asc') {
+    sortOption.price = 1;
+  }
+
+  try {
+    const products = await Product.find(query)
+      .populate('category')
+      .sort(sortOption);
+
+    const updatedProducts = products.map(product => ({
+      ...product.toObject(),
+      imageUrl: product.imageUrl && product.imageUrl.trim() !== ""
+        ? product.imageUrl
+        : "/images/No_Image_Available.jpg"
+    }));
+
+    res.json(updatedProducts);
+  } catch (err) {
+    console.error("Error fetching filtered products:", err);
+    res.status(500).send('Error fetching filtered products');
+  }
+});
+
 router.get('/', async (req, res) => {
   try {
     const products = await Product.find().populate('category');
@@ -168,26 +206,6 @@ router.delete('/:id', async (req, res) => {
   } catch (err) {
     console.error(`Error while deleting product:`, err);
     res.status(500).send('Error deleting product');
-  }
-});
-
-router.get('/filter', async (req, res) => {
-  const { min, max, categories } = req.query;
-
-  let query = {};
-  if (min && max) {
-    query.price = { $gte: min, $lte: max };
-  }
-  if (categories) {
-    query.category = { $in: categories.split(',') };
-  }
-
-  try {
-    const products = await Product.find(query).populate('category');
-    res.json(products);
-  } catch (err) {
-    console.error("Error fetching filtered products:", err);
-    res.status(500).send('Error fetching filtered products');
   }
 });
 

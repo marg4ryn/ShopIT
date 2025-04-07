@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchProducts } from '../api/products';
+import { fetchFilteredProducts } from '../api/products';
 import Sidebar from "../components/Sidebar";
 import AdsList from "../components/AdsList";
 
@@ -9,69 +9,42 @@ export default function Store() {
     const [hoveredProduct, setHoveredProduct] = useState(null);
     const [sortOption, setSortOption] = useState("Most popular");
     const [filters, setFilters] = useState({
-      selectedCategories: [],
-      priceFrom: 0,
-      priceTo: 1000000,
+        selectedCategories: [],
+        priceFrom: 0,
+        priceTo: 1000000,
     });
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const loadProducts = async () => {
-            try {
-                const data = await fetchProducts();
-                setProducts(data);
-            } catch (err) {
-                console.error('Failed to fetch products:', err);
-            }
-        };
-    
-        loadProducts();
-    }, []);
-    
     const handleViewProduct = (id) => {
         navigate(`/viewproduct/${id}`);
     };
-    
-    const sortProducts = (products) => {
-        switch (sortOption) {
-            case "Most popular":
-                return products;
-            case "Descending price":
-                return [...products].sort((a, b) => b.price - a.price);
-            case "Rising price":
-                return [...products].sort((a, b) => a.price - b.price);
-            default:
-                return products;
+
+    const loadFilteredProducts = async () => {
+        try {
+            const data = await fetchFilteredProducts({
+                category: filters.selectedCategories.join(','),
+                minPrice: filters.priceFrom,
+                maxPrice: filters.priceTo,
+                sortOption,
+            });
+            setProducts(data);
+        } catch (err) {
+            console.error("Failed to fetch filtered products:", err);
         }
     };
-    
-    const filterProducts = (products, filters) => {
-        return products.filter(product => {
-            const isCategoryMatch = filters.selectedCategories.length === 0 || filters.selectedCategories.includes(product.category);
-            const isPriceMatch = product.price >= filters.priceFrom && product.price <= filters.priceTo;
-            return isCategoryMatch && isPriceMatch;
-        });
+
+    useEffect(() => {
+        loadFilteredProducts();
+    }, [filters, sortOption]);
+
+    const handleSortChange = (newSortOption) => {
+        setSortOption(newSortOption);
     };
-    
-    const applyFiltersAndSorting = () => {
-        const filteredProducts = filterProducts(products, filters);
-        const sortedAndFilteredProducts = sortProducts(filteredProducts);
-        setProducts(sortedAndFilteredProducts);
-    };
-    
-    const handleSortChange = (sortOption) => {
-        setSortOption(sortOption);
-    };
-    
+
     const handleFilterChange = (newFilters) => {
         setFilters(newFilters);
     };
-    
-    useEffect(() => {
-        applyFiltersAndSorting();
-    }, [filters, sortOption]);
-    
 
     return (
     <main className="flex-grow flex pt-18">

@@ -1,6 +1,37 @@
 const BASE_URL = 'http://localhost:3000/api/products';
 
-export const fetchProducts = async () => {
+  export const fetchFilteredProducts = async (filters) => {
+    try {
+      const { category, minPrice, maxPrice, sortOption } = filters;
+      const queryParams = new URLSearchParams();
+
+      if (minPrice !== undefined) queryParams.append('min', minPrice);
+      if (maxPrice !== undefined) queryParams.append('max', maxPrice);
+
+        if (category && category.length > 0) {
+        queryParams.append('categories', category);
+      }
+
+      if (sortOption === 'Descending price') {
+        queryParams.append('sort', 'desc');
+      } else if (sortOption === 'Rising price') {
+        queryParams.append('sort', 'asc');
+      }
+  
+      const response = await fetch(`${BASE_URL}/filter?${queryParams.toString()}`);
+  
+      if (!response.ok) {
+        throw new Error(`${response.status} - ${response.statusText}`);
+      }
+  
+      return await response.json();
+    } catch (err) {
+      console.error('Error fetching filtered products:', err);
+      throw err;
+    }
+  };
+  
+  export const fetchProducts = async () => {
     try {
       const response = await fetch(BASE_URL);
 
@@ -77,28 +108,6 @@ export const fetchProducts = async () => {
       }
     } catch (err) {
       console.error('Error deleting product:', err);
-      throw err;
-    }
-  };
-  
-  export const fetchFilteredProducts = async (filters) => {
-    try {
-      const { category, minPrice, maxPrice } = filters;
-      const queryParams = new URLSearchParams();
-  
-      if (category) queryParams.append('categories', category);
-      if (minPrice) queryParams.append('min', minPrice);
-      if (maxPrice) queryParams.append('max', maxPrice);
-  
-      const response = await fetch(`${BASE_URL}/filter?${queryParams.toString()}`);
-
-      if (!response.ok) {
-        throw new Error(`${response.status} - ${response.statusText}`);
-      }
-      
-      return await response.json();
-    } catch (err) {
-      console.error('Error fetching filtered products:', err);
       throw err;
     }
   };

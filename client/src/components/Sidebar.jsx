@@ -33,8 +33,8 @@ export default function Sidebar({ onSortChange, onFilterChange }) {
     getCategories();
   }, []);
 
-  const handleSortChange = () => {
-    onSortChange(selected);
+  const handleSortChange = (option) => {
+    onSortChange(option);
   };
 
   const handlePriceChange = (type, value) => {
@@ -90,7 +90,7 @@ export default function Sidebar({ onSortChange, onFilterChange }) {
                     onClick={() => {
                       setSelected(option); 
                       setIsOpen(false);
-                      handleSortChange();                 
+                      handleSortChange(option);                 
                     }}
                     className="px-4 py-2 hover:bg-gray-100 cursor-pointer transition-all duration-300"
                   >
