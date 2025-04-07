@@ -94,12 +94,14 @@ export default function Sidebar() {
               <h2 className="font-bold text-white">Price:</h2>
               <div className="flex justify-center gap-4 mt-2">
                 <input
+                  id="priceFrom"
                   type="number"
                   placeholder="From"
                   className={`w-full px-4 py-2 bg-white text-black rounded-md flex justify-between items-center focus:outline-none focus:ring-3 focus:ring-black
                     transition-all duration-300 ${expanded ? "w-64 opacity-100" : "w-0 opacity-0 overflow-hidden"}`}
                 />
                 <input
+                  id="priceTo"
                   type="number"
                   placeholder="To"
                   className={`w-full px-4 py-2 bg-white text-black rounded-md flex justify-between items-center focus:outline-none focus:ring-3 focus:ring-black
@@ -123,6 +125,7 @@ export default function Sidebar() {
                   >
                     <span className="text-white font-semibold">{category.name}</span>
                     <input
+                      id={category.name}
                       type="checkbox"
                       checked={selectedCategories.includes(category.name)}
                       onChange={(e) => e.stopPropagation()}

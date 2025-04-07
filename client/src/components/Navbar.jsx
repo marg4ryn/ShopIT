@@ -25,6 +25,7 @@ export default function Navbar() {
         {(location.pathname === "/" || location.pathname === "/products") && (
           <div className="relative w-full max-w-md mx-4 flex-shrink">
             <input 
+              id="searchBar"
               type="text" 
               placeholder="Search products ..." 
               className="w-full px-4 py-2 rounded-lg bg-white text-black placeholder:text-black focus:outline-none focus:ring-2 focus:ring-black"
