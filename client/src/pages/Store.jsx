@@ -77,7 +77,11 @@ export default function Store() {
                                 alt={product.name}
                                 className="w-full h-64 object-cover rounded-md mb-4"
                             />
-                            <h3 className="text-lg font-semibold">{product.name}</h3>
+                            <h3 className="text-lg font-semibold">
+                                    {product.name.length > 20
+                                        ? `${product.name.substring(0, 20)}...`
+                                        : product.name}
+                            </h3>
                             <p className="text-green-600 text-lg font-semibold">${product.price}</p>
 
 
@@ -85,8 +89,16 @@ export default function Store() {
                                 className={`absolute top-0 left-0 w-full h-full bg-white flex flex-col items-center justify-center p-6 text-black transition-all duration-300 ease-in-out 
                                 ${hoveredProduct === product._id ? "translate-x-0" : "-translate-x-full"}`}
                             >
-                                <p className="text-lg font-bold">Details</p>
-                                <p className="text-sm text-gray-600">{product.description}</p>
+                                <p className="text-lg font-bold pb-2">
+                                    {product.name.length > 30
+                                        ? `${product.name.substring(0, 30)}...`
+                                        : product.name}
+                                </p>
+                                <p className="text-sm text-gray-600 pb-2">
+                                    {product.description.length > 150
+                                        ? `${product.description.substring(0, 150)}...`
+                                        : product.description}
+                                </p>
                                 <button className="mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
                                     Add to cart
                                 </button>
