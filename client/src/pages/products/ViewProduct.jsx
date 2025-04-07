@@ -40,7 +40,7 @@ export default function ViewProduct() {
                     <img
                       src={`http://localhost:3000${product.imageUrl}`}
                       alt={product.name}
-                      className="w-128 h-64 object-cover rounded-md"
+                      className="h-128 object-contain rounded-md"
                     />
                   )}
                 </div>

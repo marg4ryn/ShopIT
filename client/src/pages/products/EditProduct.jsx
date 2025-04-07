@@ -145,7 +145,7 @@ export default function EditProduct() {
               <img
                 src={imageUrl}
                 alt="Selected Preview"
-                className="w-48 h-48 object-cover rounded-md"
+                className="h-66 object-contain rounded-md"
               />
               <div className="flex items-center space-x-4 w-full justify-center">
                 <label htmlFor="file-input" className="text-white font-lg font-bold">Image</label>
@@ -255,7 +255,7 @@ export default function EditProduct() {
           </div>
         </div>
              
-           <div className="flex text-center gap-8 items-center justify-center mt-4">
+           <div className="flex text-center gap-8 items-center justify-center my-4">
            <BackButton />
             <button
               disabled={!isModified}

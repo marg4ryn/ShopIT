@@ -38,3 +38,12 @@ function App() {
 }
 
 export default App;
+
+/*TODO przed implementacją logowania
+- poprawienie rozdzielczości zdjęć
+- filtrowanie
+- wyszukiwanie
+- funkcja podglądu i zaznacznia dla ogłoszeń
+- AJAX do doczytywania
+- możliwość dodawania wielu zdjęć dla produktu
+*/

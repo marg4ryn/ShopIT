@@ -32,13 +32,18 @@ const upload = multer({ storage, fileFilter });
 const processImage = async (filePath) => {
   const outputFilePath = filePath.replace(/\.\w+$/, '-resized.jpg');
   await sharp(filePath)
-    .resize(300, 200)
+    .resize({
+      width: 600,
+      height: 400,
+      fit: 'inside',
+      withoutEnlargement: true,
+    })
     .toFormat('jpeg')
     .jpeg({ quality: 80 })
     .toFile(outputFilePath);
 
   fs.unlinkSync(filePath);
-  return outputFilePath.replace(/\\/g, '/').replace('uploads/', '/uploads/'); 
+  return outputFilePath.replace(/\\/g, '/').replace('uploads/', '/uploads/');
 };
 
 router.get('/filter', async (req, res) => {
