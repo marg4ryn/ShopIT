@@ -66,7 +66,7 @@ export default function Store() {
                     acc.push(
                         <div
                             key={product._id}
-                            className="relative bg-white p-4 rounded-lg text-center min-w-[180px] max-w-[400px] max-h-[360px] overflow-hidden group z-10"
+                            className="relative bg-white p-4 rounded-lg text-center min-w-[180px] max-w-[400px] max-h-[380px] overflow-hidden group z-10"
 
                             onMouseEnter={() => setHoveredProduct(product._id)}
                             onMouseLeave={() => setHoveredProduct(null)}
@@ -83,7 +83,6 @@ export default function Store() {
                                         : product.name}
                             </h3>
                             <p className="text-green-600 text-lg font-semibold">${product.price}</p>
-
 
                             <div
                                 className={`absolute top-0 left-0 w-full h-full bg-white flex flex-col items-center justify-center p-6 text-black transition-all duration-300 ease-in-out 

@@ -21,14 +21,13 @@ Thanks to the use of modern technologies and integration with external services,
 - **Authorization** - Auth0, reCAPTCHA
 
 ## **Functionalities**
-- Browsing products and categories
+- Administration panel for managing products, categories and announcements
+- Browsing products, categories and announcements
 - Searching, filtering and sorting products
+- User registration and login
 - Adding products to the shopping cart stored in cookies
 - Placing an order with the selection of payment and delivery methods
-- Managing ads displayed on the home page
-- User registration and login
 - Order history and the ability to track them
-- Administration panel for managing products and categories
 
 ## **Development plans**
 - **Product reviews and opinions system**
@@ -58,14 +57,13 @@ Dzięki zastosowaniu nowoczesnych technologii i integracji z usługami zewnętrz
 - **Autoryzacja** - Auth0, reCAPTCHA
   
 ## **Funkcjonalności**  
-- Przeglądanie produktów i kategorii
-- Wyszukiwanie, filtrowanie i sortowanie produktów  
+- Panel administracyjny do zarządzania produktami, kategoriami i ogłoszeniami
+- Przeglądanie produktów, kategorii i ogłoszeń
+- Wyszukiwanie, filtrowanie i sortowanie produktów 
+- Rejestracja i logowanie użytkowników  
 - Dodawanie produktów do koszyka przechowywanego w formie ciasteczek
 - Składanie zamówienia z wyborem metody płatności i dostawy
-- Zarządzanie ogłoszeniami wyświetlanymi na stronie głównej
-- Rejestracja i logowanie użytkowników  
 - Historia zamówień i możliwość ich śledzenia  
-- Panel administracyjny do zarządzania produktami i kategoriami  
 
 ## **Plany na rozwój** 
 - **System opinii i recenzji produktów**  
