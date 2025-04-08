@@ -41,8 +41,10 @@ export default App;
 
 /*TODO przed implementacją logowania
 - wyszukiwanie
-- funkcja podglądu i zaznaczenia dla ogłoszeń
+- funkcja zaznaczenia dla ogłoszeń
 - AJAX do doczytywania
 - możliwość dodawania wielu zdjęć dla produktu
 - animacja ładowania
+- you have unsaved changes
+- aniamcja ładowania apliakcji
 */

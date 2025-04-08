@@ -61,6 +61,22 @@ export default function AddAnnouncement() {
     </div>
 
     <div className="flex flex-col items-center mt-10"> 
+      <div 
+        className="mb-8 p-6 mx-6 w-200 max-w-4xl h-60 flex items-center justify-center text-center px-4 rounded-xl shadow-lg" 
+        style={{ backgroundColor: color || "#000000" }}
+      >
+        <div>
+          <h1 
+            className="text-4xl font-bold text-white mb-2"
+            dangerouslySetInnerHTML={{ __html: header }}
+          >
+          </h1>
+          <div
+            className="text-lg font-medium text-white"
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
+        </div>
+      </div>
       <form onSubmit={handleSubmit}>
         <div className="bg-neutral-800 p-6 rounded-md shadow-md mx-6 w-200">    
           <div className="flex flex-col space-y-6 w-full max-w-md mx-auto">

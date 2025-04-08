@@ -15,21 +15,40 @@ export default function Products() {
     const [popupHeader, setPopupHeader] = useState('');
     const [popupContent, setPopupContent] = useState('');
     const [popupShowCloseButton, setPopupShowCloseButton] = useState(false);
+    const [sortOption, setSortOption] = useState("Most popular");
+    const [filters, setFilters] = useState({
+        selectedCategories: [],
+        priceFrom: 0,
+        priceTo: 999999,
+    });
+
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const loadProducts = async () => {
-          try {
-            const data = await fetchProducts();
+    const loadFilteredProducts = async () => {
+        try {
+            const data = await fetchFilteredProducts({
+                category: filters.selectedCategories.join(','),
+                minPrice: filters.priceFrom,
+                maxPrice: filters.priceTo,
+                sortOption,
+            });
             setProducts(data);
-          } catch (err) {
-            console.error('Failed to fetch products:', err);
-          }
-        };
-      
-        loadProducts();
-      }, []
-    );
+        } catch (err) {
+            console.error("Failed to fetch filtered products:", err);
+        }
+    };
+
+    useEffect(() => {
+        loadFilteredProducts();
+    }, [filters, sortOption]);
+
+    const handleSortChange = (newSortOption) => {
+        setSortOption(newSortOption);
+    };
+
+    const handleFilterChange = (newFilters) => {
+        setFilters(newFilters);
+    };
 
     useEffect(() => {
         const popupData = sessionStorage.getItem("popupData");
@@ -89,7 +108,7 @@ export default function Products() {
     return (
         <main className="flex flex-grow pt-18">
             <div className="flex flex-grow">
-                <Sidebar />
+                <Sidebar onSortChange={handleSortChange} onFilterChange={handleFilterChange} />
                 <div className="flex-grow p-4 container mx-auto mt-12 flex flex-col items-center">
                     <div className="text-center mt-4">
                         <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md">
