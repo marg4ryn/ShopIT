@@ -34,13 +34,13 @@ export default function ViewProduct() {
   
           <div className="bg-neutral-800 p-6 rounded-md shadow-md mx-6 w-200">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="p-4 rounded-md border-0 ">
+              <div className="px-4 bg-white rounded-xl border-0 ">
                 <div className="flex justify-center">
                   {product.imageUrl && (
                     <img
                       src={`http://localhost:3000${product.imageUrl}`}
                       alt={product.name}
-                      className="h-128 object-contain rounded-md"
+                      className="h-128 object-contain"
                     />
                   )}
                 </div>

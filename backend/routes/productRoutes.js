@@ -6,6 +6,7 @@ const multer = require('multer');
 const path = require('path');
 const sharp = require('sharp');
 const Product = require('../models/Product');
+const Category = require('../models/Category');
 const fs = require('fs');
 
 const router = express.Router();
@@ -50,6 +51,7 @@ router.get('/filter', async (req, res) => {
   const { min, max, categories, sort } = req.query;
 
   let query = {};
+
   if (min || max) {
     query.price = {};
     if (min) query.price.$gte = Number(min);
@@ -57,20 +59,28 @@ router.get('/filter', async (req, res) => {
   }
 
   if (categories && categories.trim() !== '') {
-    query.category = { $in: categories.split(',') };
+    const categoryNames = categories.split(',').map(name => name.trim());
+
+    try {
+      const foundCategories = await Category.find({ name: { $in: categoryNames } });
+      const categoryIds = foundCategories.map(cat => cat._id);
+
+      query.category = { $in: categoryIds };
+    } catch (err) {
+      console.error("Error resolving category names:", err);
+      return res.status(500).send('Error resolving category names');
+    }
   }
-  
+
   let sortOption = {};
-  if (sort === 'desc') {
-    sortOption.price = -1;
-  } else if (sort === 'asc') {
-    sortOption.price = 1;
-  }
+  if (sort === 'desc') sortOption.price = -1;
+  else if (sort === 'asc') sortOption.price = 1;
 
   try {
     const products = await Product.find(query)
       .populate('category')
       .sort(sortOption);
+
 
     const updatedProducts = products.map(product => ({
       ...product.toObject(),
@@ -85,6 +95,7 @@ router.get('/filter', async (req, res) => {
     res.status(500).send('Error fetching filtered products');
   }
 });
+
 
 router.get('/', async (req, res) => {
   try {

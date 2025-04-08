@@ -142,11 +142,13 @@ export default function EditProduct() {
         <div className="bg-neutral-800 p-6 rounded-md shadow-md mx-6 w-200">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col items-center justify-center gap-4">
-              <img
-                src={imageUrl}
-                alt="Selected Preview"
-                className="h-66 object-contain rounded-md"
-              />
+              <div className="p-4 bg-white rounded-xl">
+                <img
+                  src={imageUrl}
+                  alt="Selected Preview"
+                  className="h-66 object-contain"
+                />
+              </div>
               <div className="flex items-center space-x-4 w-full justify-center">
                 <label htmlFor="file-input" className="text-white font-lg font-bold">Image</label>
                 <div className="relative">

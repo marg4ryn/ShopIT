@@ -90,6 +90,26 @@ export default function Sidebar({ onSortChange, onFilterChange }) {
     }
   };
 
+  const clearFilters = () => {
+    const clearedSort = options[0];
+    const clearedCategories = [];
+    const clearedPriceFrom = undefined;
+    const clearedPriceTo = undefined;
+  
+    setSelected(clearedSort);
+    setPriceFrom(clearedPriceFrom);
+    setPriceTo(clearedPriceTo);
+    setSelectedCategories(clearedCategories);
+  
+    onSortChange(clearedSort);
+    onFilterChange({
+      selectedCategories: clearedCategories,
+      priceFrom: clearedPriceFrom,
+      priceTo: clearedPriceTo
+    });
+  };
+  
+
   return (
     <aside>
       <nav className={`h-full pt-6 flex flex-col items-center border-0 transition-all duration-300 overflow-hidden ${expanded ? 'bg-neutral-800' : 'bg-neutral-900'}`}>
@@ -217,13 +237,21 @@ export default function Sidebar({ onSortChange, onFilterChange }) {
           )}
         </div>
 
-        <div className={`items-center justify-center p-4 pb-2 flex transition-all duration-300 ${expanded ? "w-64 opacity-100" : "w-0 opacity-0 overflow-hidden"}`}>
+        <div className={`flex flex-col items-center justify-center p-4 pb-2 transition-all duration-300 ${expanded ? "w-64 opacity-100" : "w-0 opacity-0 overflow-hidden"}`}>
         {expanded && (
           <button
             onClick={applyFilters}
-            className={`flex bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded`}
+            className={`mb-4 flex bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded`}
           >
             Apply filters
+          </button>
+        )}
+        {expanded && (
+          <button
+            onClick={clearFilters}
+            className={`flex bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded`}
+          >
+            Clear all
           </button>
         )}
         </div>
