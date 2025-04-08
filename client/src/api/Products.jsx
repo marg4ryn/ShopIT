@@ -9,7 +9,7 @@ const BASE_URL = 'http://localhost:3000/api/products';
       if (maxPrice !== undefined) queryParams.append('max', maxPrice);
 
       if (category && category.length > 0) {
-        queryParams.append('categories', category.join(','));
+        queryParams.append('categories', category);
       }
 
       if (sortOption === 'Descending price') {
@@ -25,7 +25,8 @@ const BASE_URL = 'http://localhost:3000/api/products';
       const response = await fetch(`${BASE_URL}/filter?${queryParams.toString()}`);
 
       if (!response.ok) {
-        throw new Error(`${response.status} - ${response.statusText}`);
+        const errorData = await response.json();
+        throw new Error(`${response.status} - ${errorData.message}`);
       }
 
       return await response.json();
@@ -40,7 +41,8 @@ const BASE_URL = 'http://localhost:3000/api/products';
       const response = await fetch(BASE_URL);
 
       if (!response.ok) {
-        throw new Error(`${response.status} - ${response.statusText}`);
+        const errorData = await response.json();
+        throw new Error(`${response.status} - ${errorData.message}`);
       }
 
       return await response.json();
@@ -55,7 +57,8 @@ const BASE_URL = 'http://localhost:3000/api/products';
       const response = await fetch(`${BASE_URL}/${id}`);
 
       if (!response.ok) {
-        throw new Error(`${response.status} - ${response.statusText}`);
+        const errorData = await response.json();
+        throw new Error(`${response.status} - ${errorData.message}`);
       }
 
       return await response.json();
@@ -73,7 +76,8 @@ const BASE_URL = 'http://localhost:3000/api/products';
       });
 
       if (!response.ok) {
-        throw new Error(`${response.status} - ${response.statusText}`);
+        const errorData = await response.json();
+        throw new Error(`${response.status} - ${errorData.message}`);
       }
 
       return await response.json();
@@ -91,7 +95,8 @@ const BASE_URL = 'http://localhost:3000/api/products';
       });
 
       if (!response.ok) {
-        throw new Error(`${response.status} - ${response.statusText}`);
+        const errorData = await response.json();
+        throw new Error(`${response.status} - ${errorData.message}`);
       }
 
       return await response.json();
@@ -108,7 +113,8 @@ const BASE_URL = 'http://localhost:3000/api/products';
       });
 
       if (!response.ok) {
-        throw new Error(`${response.status} - ${response.statusText}`);
+        const errorData = await response.json();
+        throw new Error(`${response.status} - ${errorData.message}`);
       }
     } catch (err) {
       console.error('Error deleting product:', err);

@@ -24,7 +24,7 @@ const fileFilter = (req, file, cb) => {
   if (file.mimetype.startsWith('image/')) {
     cb(null, true);
   } else {
-    cb(new Error('Only images are allowed!'), false);
+    cb(new Error('A file that is not an image was uploaded'), false);
   }
 };
 
@@ -53,19 +53,30 @@ router.get('/filter', async (req, res) => {
   let query = {};
 
   if (search && search.trim() !== '') {
-    const searchRegex = new RegExp(search.trim(), 'i');
-    query.$or = [
+    try {
+      const searchRegex = new RegExp(search.trim(), 'i');
+      query.$or = [
         { name: { $regex: searchRegex } },
         { description: { $regex: searchRegex } }
-    ];
+      ];
+    } catch (err) {
+      console.error('Error creating search regex:', err);
+      return res.status(400).send({ message: 'Invalid search query format' });
+    }
   }
 
   if (min || max) {
     query.price = {};
     if (min) {
+      if (isNaN(Number(min))) {
+        return res.status(400).send({ message: 'Invalid minimum price value' });
+      }
       query.price.$gte = Number(min);
     }
     if (max) {
+      if (isNaN(Number(max))) {
+        return res.status(400).send({ message: 'Invalid maximum price value' });
+      }
       query.price.$lte = Number(max);
     }
   }
@@ -75,12 +86,16 @@ router.get('/filter', async (req, res) => {
 
     try {
       const foundCategories = await Category.find({ name: { $in: categoryNames } });
-      const categoryIds = foundCategories.map(cat => cat._id);
 
+      if (foundCategories.length === 0) {
+        return res.status(404).send({ message: 'No matching categories found' });
+      }
+
+      const categoryIds = foundCategories.map(cat => cat._id);
       query.category = { $in: categoryIds };
     } catch (err) {
       console.error("Error resolving category names:", err);
-      return res.status(500).send('Error resolving category names');
+      return res.status(500).send({ message: 'Internal server error while fetching categories' });
     }
   }
 
@@ -89,12 +104,18 @@ router.get('/filter', async (req, res) => {
     sortOption.price = -1;
   } else if (sort === 'asc') {
     sortOption.price = 1;
+  } else if (sort && sort !== 'desc' && sort !== 'asc') {
+    return res.status(400).send({ message: 'Invalid sort option. Use "asc" or "desc".' });
   }
 
   try {
     const products = await Product.find(query)
       .populate('category')
       .sort(sortOption);
+
+    if (products.length === 0) {
+      return res.status(404).send({ message: 'No products found matching the filter criteria' });
+    }
 
     const updatedProducts = products.map(product => ({
       ...product.toObject(),
@@ -106,13 +127,17 @@ router.get('/filter', async (req, res) => {
     res.json(updatedProducts);
   } catch (err) {
     console.error("Error fetching filtered products:", err);
-    res.status(500).send('Error fetching filtered products');
+    res.status(500).send({ message: 'Internal server error while fetching products' });
   }
 });
 
 router.get('/', async (req, res) => {
   try {
     const products = await Product.find().populate('category');
+
+    if (!products.length) {
+      return res.status(404).json({ message: "No products found" });
+    }
 
     const updatedProducts = products.map(product => ({
       ...product.toObject(),
@@ -124,16 +149,20 @@ router.get('/', async (req, res) => {
     res.json(updatedProducts);
   } catch (err) {
     console.error("Error fetching products:", err);
-    res.status(500).json({ message: "Error fetching products", error: err.message });
+    res.status(500).json({
+      message: "Error fetching products",
+      error: err.message,
+    });
   }
 });
 
 router.get('/:id', async (req, res) => {
   try {
     const product = await Product.findById(req.params.id).populate('category');
+
     if (!product) {
-      console.warn('Product not found');
-      return res.status(404).send('Product not found');
+      console.warn('Product not found for id:', req.params.id);
+      return res.status(404).json({ message: `Product with id ${req.params.id} not found` });
     }
 
     const updatedProduct = {
@@ -145,8 +174,14 @@ router.get('/:id', async (req, res) => {
 
     res.json(updatedProduct);
   } catch (err) {
-    console.error("Error fetching product:", err);
-    res.status(500).send('Error fetching product');
+    console.error("Error fetching product by id:", err);
+    if (err.name === 'CastError') {
+      return res.status(400).json({ message: 'Invalid product ID format' });
+    }
+    res.status(500).json({
+      message: "Error fetching product",
+      error: err.message,
+    });
   }
 });
 
@@ -159,6 +194,10 @@ router.post('/', upload.single('image'), async (req, res) => {
     }
 
     const { name, description, price, stock, category } = req.body;
+    if (!name || !description || !price || !stock || !category) {
+      return res.status(400).json({ message: "Missing required fields: name, description, price, stock, or category" });
+    }
+
     const newProduct = new Product({ name, description, price, stock, category, imageUrl });
 
     await newProduct.save();
@@ -170,14 +209,13 @@ router.post('/', upload.single('image'), async (req, res) => {
 });
 
 router.put('/:id', upload.single('image'), async (req, res) => {
-
   const { name, description, price, stock, category } = req.body;
 
   try {
     const product = await Product.findById(req.params.id);
     if (!product) {
-      console.warn('Product not found');
-      return res.status(404).json({ message: 'Product not found' });
+      console.warn('Product not found for id:', req.params.id);
+      return res.status(404).json({ message: `Product with id ${req.params.id} not found` });
     }
 
     let newImageUrl = product.imageUrl;
@@ -207,23 +245,24 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     await product.save();
     res.json(product);
   } catch (err) {
-    console.error('Error updating product:', err);
+    console.error("Error updating product:", err);
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({ message: 'File size is too large' });
+    }
     res.status(500).json({ message: 'Error updating product', error: err.message });
   }
 });
 
-
 router.delete('/:id', async (req, res) => {
-
   try {
     const product = await Product.findById(req.params.id);
     if (!product) {
       console.warn(`Product with ID ${req.params.id} not found`);
-      return res.status(404).send('Product not found');
+      return res.status(404).json({ message: `Product with ID ${req.params.id} not found` });
     }
 
     if (product.imageUrl) {
-      const imagePath = `.${product.imageUrl}`;
+      const imagePath = path.join(__dirname, '..', product.imageUrl);
       try {
         fs.unlinkSync(imagePath);
       } catch (err) {
@@ -235,8 +274,8 @@ router.delete('/:id', async (req, res) => {
 
     res.json({ message: 'Product deleted successfully' });
   } catch (err) {
-    console.error(`Error while deleting product:`, err);
-    res.status(500).send('Error deleting product');
+    console.error("Error while deleting product:", err);
+    res.status(500).json({ message: 'Error deleting product', error: err.message });
   }
 });
 

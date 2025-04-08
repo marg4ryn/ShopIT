@@ -10,13 +10,16 @@ router.get("/", async (req, res) => {
     res.json(categories);
   } catch (err) {
     console.error("Error fetching categories:", err);
-    res.status(500).json({ message: "Error fetching categories" });
+    res.status(500).json({ message: "Error fetching categories", error: err.message });
   }
 });
 
 router.post("/", async (req, res) => {
   const { name } = req.body;
-  if (!name) return res.status(400).json({ message: "Category name is required" });
+  
+  if (!name) {
+    return res.status(400).json({ message: "Category name is required" });
+  }
 
   try {
     const existingCategory = await Category.findOne({ name });
@@ -29,7 +32,7 @@ router.post("/", async (req, res) => {
     res.status(201).json(newCategory);
   } catch (err) {
     console.error("Error adding category:", err);
-    res.status(500).json({ message: "Error adding category" });
+    res.status(500).json({ message: "Error adding category", error: err.message });
   }
 });
 
@@ -41,7 +44,9 @@ router.put("/:id", async (req, res) => {
     return res.status(400).json({ message: "Invalid category ID" });
   }
 
-  if (!name) return res.status(400).json({ message: "Category name is required" });
+  if (!name) {
+    return res.status(400).json({ message: "Category name is required" });
+  }
 
   try {
     const updatedCategory = await Category.findByIdAndUpdate(id, { name }, { new: true });
@@ -53,7 +58,7 @@ router.put("/:id", async (req, res) => {
     res.json(updatedCategory);
   } catch (err) {
     console.error("Error updating category:", err);
-    res.status(500).json({ message: "Error updating category" });
+    res.status(500).json({ message: "Error updating category", error: err.message });
   }
 });
 
@@ -73,7 +78,7 @@ router.delete("/:id", async (req, res) => {
     res.json({ message: "Category deleted successfully" });
   } catch (err) {
     console.error("Error deleting category:", err);
-    res.status(500).json({ message: "Error deleting category" });
+    res.status(500).json({ message: "Error deleting category", error: err.message });
   }
 });
 

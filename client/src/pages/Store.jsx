@@ -47,12 +47,36 @@ export default function Store({ searchTerm }) {
         setFilters(newFilters);
     };
 
+    const splitTextInTwo = (text) => {
+        const limit = 30;
+        
+        if (text.length <= limit/2) {
+            return { leftPart: text, rightPart: '' };
+        }
+        const midPoint = Math.floor(limit / 2);
+        let leftPart = text.substring(0, midPoint);
+        let rightPart = text.substring(midPoint, limit);
+        const lastSpaceIndex = rightPart.indexOf(' ') + leftPart.length;
+
+        if (lastSpaceIndex !== -1) {
+            leftPart = text.substring(0, lastSpaceIndex);
+            rightPart = text.substring(lastSpaceIndex + 1, limit);
+        }
+        
+        if (text.length > limit) {
+            rightPart += '...';
+        }
+        
+        return { leftPart, rightPart };
+    };
+
     return (
     <main className="flex-grow flex pt-18">
         <div className="flex transition-all duration-300">
             <Sidebar onSortChange={handleSortChange} onFilterChange={handleFilterChange} />
             <div className="flex-grow p-6 w-full mr-14 py-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 {products.reduce((acc, product, index) => {
+                    const { leftPart, rightPart } = splitTextInTwo(product.name);
                     const columns = 4;
                     const itemsPerSection = 3 * columns;
 
@@ -90,9 +114,9 @@ export default function Store({ searchTerm }) {
                                 ${hoveredProduct === product._id ? "translate-x-0" : "-translate-x-full"}`}
                             >
                                 <p className="text-lg font-bold pb-2">
-                                    {product.name.length > 30
-                                        ? `${product.name.substring(0, 30)}...`
-                                        : product.name}
+                                    <span>{leftPart}</span>
+                                    <br />
+                                    <span>{rightPart}</span>
                                 </p>
                                 <p className="text-sm text-gray-600 pb-2">
                                     {product.description.length > 150

@@ -5,7 +5,8 @@ export const fetchCategories = async () => {
       const response = await fetch(BASE_URL);
       
       if (!response.ok) {
-        throw new Error(`${response.status} - ${response.statusText}`);
+        const errorData = await response.json();
+        throw new Error(`${response.status} - ${errorData.message}`);
       }
 
       return await response.json();
@@ -24,7 +25,8 @@ export const fetchCategories = async () => {
       });
 
       if (!response.ok) {
-        throw new Error(`${response.status} - ${response.statusText}`);
+        const errorData = await response.json();
+        throw new Error(`${response.status} - ${errorData.message}`);
       }
 
       return await response.json();
@@ -43,7 +45,8 @@ export const fetchCategories = async () => {
       });
 
       if (!response.ok) {
-        throw new Error(`${response.status} - ${response.statusText}`);
+        const errorData = await response.json();
+        throw new Error(`${response.status} - ${errorData.message}`);
       }
 
       return await response.json();
@@ -60,7 +63,8 @@ export const fetchCategories = async () => {
       });
       
       if (!response.ok) {
-        throw new Error(`${response.status} - ${response.statusText}`);
+        const errorData = await response.json();
+        throw new Error(`${response.status} - ${errorData.message}`);
       }
     } catch (err) {
       console.error('Error deleting category:', err);

@@ -51,7 +51,11 @@ export default function ViewProduct() {
                   
                   <div className="flex justify-between w-full">
                     <span className="text-sm">{product.category?.name || "Unknown"}</span>
-                    <span className="text-sm font-bold">Only {product.stock} products left!</span>
+                    <span
+                      className={`text-sm ${product.stock < 20 ? 'text-red-500 font-bold' : ''}`}
+                    >
+                      {product.stock < 20 ? `Only ${product.stock} products left!` : `In stock: ${product.stock}`}
+                    </span>
                   </div>     
 
                   <div className="flex-grow w-full">

@@ -48,7 +48,8 @@ export default App;
 - możliwość dodawania wielu zdjęć dla produktu
 - animacja ładowania
 - you have unsaved changes
-- aniamcja ładowania apliakcji
-- more information in error pop ups
+- animacja ładowania aplikacji
 - no products found
+- części ułamowe dla cen produktów
+- ograniczenia dla długości tekstów
 */
