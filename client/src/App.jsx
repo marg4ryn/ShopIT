@@ -50,6 +50,5 @@ export default App;
 - you have unsaved changes
 - animacja ładowania aplikacji
 - no products found
-- części ułamowe dla cen produktów
 - ograniczenia dla długości tekstów
 */

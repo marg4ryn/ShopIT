@@ -64,7 +64,7 @@ export default function ViewProduct() {
                 </div>                  
 
                 <div className="flex items-center justify-center w-full mt-auto pb-4">
-                  <span className="text-green-600 text-3xl font-bold">${product.price}</span>
+                  <span className="text-green-600 text-3xl font-bold">${parseFloat(product.price).toFixed(2)}</span>
                 </div>
               </div>
             </div>

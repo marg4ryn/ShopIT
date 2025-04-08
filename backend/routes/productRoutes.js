@@ -199,8 +199,8 @@ router.post('/', upload.single('image'), async (req, res) => {
     }
 
     const newProduct = new Product({ name, description, price, stock, category, imageUrl });
-
     await newProduct.save();
+    console.log(newProduct);
     res.status(201).json(newProduct);
   } catch (err) {
     console.error("Error adding product:", err);

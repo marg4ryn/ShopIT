@@ -50,10 +50,10 @@ export default function Store({ searchTerm }) {
     const splitTextInTwo = (text) => {
         const limit = 30;
         
-        if (text.length <= limit/2) {
+        if (text.length <= 20) {
             return { leftPart: text, rightPart: '' };
         }
-        const midPoint = Math.floor(limit / 2);
+        const midPoint = Math.floor(text.length / 2);
         let leftPart = text.substring(0, midPoint);
         let rightPart = text.substring(midPoint, limit);
         const lastSpaceIndex = rightPart.indexOf(' ') + leftPart.length;
@@ -107,7 +107,7 @@ export default function Store({ searchTerm }) {
                                         ? `${product.name.substring(0, 20)}...`
                                         : product.name}
                             </h3>
-                            <p className="text-green-600 text-lg font-semibold">${product.price}</p>
+                            <p className="text-green-600 text-lg font-semibold">${parseFloat(product.price).toFixed(2)}</p>
 
                             <div
                                 className={`absolute top-0 left-0 w-full h-full bg-white flex flex-col items-center justify-center p-6 text-black transition-all duration-300 ease-in-out 

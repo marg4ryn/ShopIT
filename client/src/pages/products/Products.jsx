@@ -131,7 +131,7 @@ export default function Products({ searchTerm }) {
                                 <span>{product.category?.name}</span>
                             </div>
                             <div className="flex flex-col ml-auto w-35">
-                                <span className="font-semibold">Price: ${product.price}</span>
+                                <span className="font-semibold">Price: ${parseFloat(product.price).toFixed(2)}</span>
                                 <span>Stock: {product.stock}</span>
                             </div>
                             <div>

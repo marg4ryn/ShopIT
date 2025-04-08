@@ -96,11 +96,10 @@ export default function EditProduct() {
       setErrors(newErrors);
       return;
     }
-
     const formData = new FormData();
     formData.append("name", name);
     formData.append("description", description);
-    formData.append("price", parseFloat(price));
+    formData.append('price', price);
     formData.append("stock", parseInt(stock));
     formData.append("category", category);
 
