@@ -42,12 +42,11 @@ function App() {
 
 export default App;
 
-/*TODO przed implementacją logowania
-- funkcja zaznaczenia dla ogłoszeń
-- AJAX do doczytywania
-- możliwość dodawania wielu zdjęć dla produktu
-- animacja ładowania
-- you have unsaved changes
-- animacja ładowania aplikacji
+/*TODO before implementing login
+- checkboxes for ads
 - no products found
+- AJAX for loading
+- multiple photos for a product
+- loading animation
+- application opening animation
 */

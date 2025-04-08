@@ -164,7 +164,7 @@ export default function Categories() {
                 </li>
                 ))}
               </ul>
-              <BackButton />
+              <BackButton onClick={() => { navigate(-1); }} />
             </div>
         </div>
         <EditCategoryModal

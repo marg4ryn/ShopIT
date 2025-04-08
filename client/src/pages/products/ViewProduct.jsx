@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getProduct  } from "../../api/products";
 import BackButton from '../../components/BackButton';
 
 export default function ViewProduct() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
-
+  const navigate = useNavigate();
+  
   useEffect(() => {
     const loadProduct = async () => {
       try {
@@ -71,7 +72,7 @@ export default function ViewProduct() {
           </div>
   
           <div className="flex text-center gap-8 items-center justify-center mt-4">
-            <BackButton />
+            <BackButton onClick={() => { navigate(-1); }} />
             <button className="p-2 bg-green-600 hover:bg-green-700 text-white rounded w-40">
               Add to cart
             </button>

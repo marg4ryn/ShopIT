@@ -151,7 +151,7 @@ export default function Products({ searchTerm }) {
                         </li>
                         ))}
                     </ul>
-                    <BackButton />
+                    <BackButton onClick={() => { navigate(-1); }} />
                 </div>
             </div>
             <DeleteModal 

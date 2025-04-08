@@ -241,7 +241,7 @@ export default function Sidebar({ onSortChange, onFilterChange }) {
         {expanded && (
           <button
             onClick={applyFilters}
-            className={`mb-4 flex bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded`}
+            className={`mb-4 w-40 justify-center flex bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded`}
           >
             Apply filters
           </button>
@@ -249,7 +249,7 @@ export default function Sidebar({ onSortChange, onFilterChange }) {
         {expanded && (
           <button
             onClick={clearFilters}
-            className={`flex bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded`}
+            className={`flex w-40 justify-center bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded`}
           >
             Clear all
           </button>

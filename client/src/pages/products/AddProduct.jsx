@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { fetchCategories } from "../../api/categories";
 import { addProduct } from '../../api/products';
 import BackButton from '../../components/BackButton';
+import UnsavedChangesModal from '../../components/UnsavedChangesModal';
 
 export default function AddProduct() {
   const [categories, setCategories] = useState([]);
@@ -13,6 +14,8 @@ export default function AddProduct() {
   const [stock, setStock] = useState("");
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState("http://localhost:3000/images/No_Image_Available.jpg");
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); 
   const [errors, setErrors] = useState({
     name: "",
     description: "",
@@ -81,6 +84,7 @@ export default function AddProduct() {
         content: "Product has been successfully created!",
         showCloseButton: false
       }));
+      setUnsavedChanges(false);
     } catch (error) {
       sessionStorage.setItem("popupData", JSON.stringify({
         backgroundColor: "red",
@@ -92,6 +96,16 @@ export default function AddProduct() {
     } finally {
         navigate(-1);
     }
+  };
+
+  const handleLeave = () => {
+    setIsModalOpen(false);
+    setUnsavedChanges(false);
+    navigate(-1);
+  };
+  
+  const handleStay = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -120,7 +134,10 @@ export default function AddProduct() {
                     <input
                       type="file"
                       accept="image/*"
-                      onChange={handleFileChange}
+                      onChange={(e) => {
+                        handleFileChange();
+                        setUnsavedChanges(true);
+                      }}
                       id="file-input"
                       className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                     />
@@ -146,6 +163,7 @@ export default function AddProduct() {
                     onChange={(e) => {
                       setName(e.target.value);
                       setErrors({ ...errors, name: "" });
+                      setUnsavedChanges(true);
                     }}
                   />
                   {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
@@ -162,6 +180,7 @@ export default function AddProduct() {
                     onChange={(e) => {
                       setPrice(e.target.value);
                       setErrors({ ...errors, price: "" });
+                      setUnsavedChanges(true);
                     }}
                   />
                   {errors.price && <p className="text-red-500 text-sm">{errors.price}</p>}
@@ -178,6 +197,7 @@ export default function AddProduct() {
                     onChange={(e) => {
                       setStock(e.target.value);
                       setErrors({ ...errors, stock: "" });
+                      setUnsavedChanges(true);
                     }}
                   />
                   {errors.stock && <p className="text-red-500 text-sm">{errors.stock}</p>}
@@ -192,6 +212,7 @@ export default function AddProduct() {
                     onChange={(e) => {
                       setSelectedCategory(e.target.value);
                       setErrors({ ...errors, category: "" });
+                      setUnsavedChanges(true);
                     }}
                   >
                     <option value="">-- Select --</option>
@@ -220,6 +241,7 @@ export default function AddProduct() {
                 onChange={(e) => {
                   setDescription(e.target.value);
                   setErrors({ ...errors, description: "" });
+                  setUnsavedChanges(true);
                 }}
               />
               {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
@@ -227,7 +249,13 @@ export default function AddProduct() {
           </div>
               
            <div className="flex text-center gap-8 items-center justify-center my-4">
-           <BackButton />
+           <BackButton onClick={() => {
+              if (unsavedChanges) {
+                setIsModalOpen(true);
+              } else {
+                navigate(-1);
+              }
+            }} />
             <button
               type="submit"
               className="p-2 bg-green-600 hover:bg-green-700 text-white rounded w-40"
@@ -237,6 +265,11 @@ export default function AddProduct() {
           </div>
         </form>
       </div>
+      <UnsavedChangesModal 
+        isOpen={isModalOpen} 
+        onClose={handleStay} 
+        onExit={handleLeave} 
+      />
     </main>
   );
 }

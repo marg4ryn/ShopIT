@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getAnnouncement, editAnnouncement } from '../../api/Announcements';
 import BackButton from '../../components/BackButton';
+import UnsavedChangesModal from '../../components/UnsavedChangesModal';
 
 export default function EditAnnouncement() {
   const { id } = useParams();
@@ -9,6 +10,8 @@ export default function EditAnnouncement() {
   const [header, setHeader] = useState("");
   const [content, setContent] = useState("");
   const [color, setColor] = useState("");
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); 
   const [initialData, setInitialData] = useState({
     title: "",
     header: "",
@@ -75,6 +78,7 @@ export default function EditAnnouncement() {
         content: "Announcement has been successfully saved!",
         showCloseButton: false
       }));
+      setUnsavedChanges(false);
     } catch (error) {
       sessionStorage.setItem("popupData", JSON.stringify({
         backgroundColor: "red",
@@ -86,6 +90,16 @@ export default function EditAnnouncement() {
     } finally {
         navigate(-1);
     }
+  };
+
+  const handleLeave = () => {
+    setIsModalOpen(false);
+    setUnsavedChanges(false);
+    navigate(-1);
+  };
+  
+  const handleStay = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -127,6 +141,7 @@ export default function EditAnnouncement() {
                 onChange={(e) => {
                   setTitle(e.target.value);
                   setErrors({ ...errors, title: "" });
+                  setUnsavedChanges(true);
                 }}
               />
               {errors.title && <p className="text-red-500 text-sm">{errors.title}</p>}
@@ -143,6 +158,7 @@ export default function EditAnnouncement() {
                 onChange={(e) => {
                   setHeader(e.target.value);
                   setErrors({ ...errors, header: "" });
+                  setUnsavedChanges(true);
                 }}
               />
               {errors.header && <p className="text-red-500 text-sm">{errors.header}</p>}
@@ -158,6 +174,7 @@ export default function EditAnnouncement() {
                 onChange={(e) => {
                   setColor(e.target.value);
                   setErrors({ ...errors, color: "" });
+                  setUnsavedChanges(true);
                 }}
               />
               {errors.color && <p className="text-red-500 text-sm">{errors.color}</p>}
@@ -179,6 +196,7 @@ export default function EditAnnouncement() {
                   onChange={(e) => {
                     setContent(e.target.value);
                     setErrors({ ...errors, content: "" });
+                    setUnsavedChanges(true);
                   }}
                 />
                 {errors.content && <p className="text-red-500 text-sm">{errors.content}</p>}
@@ -187,7 +205,13 @@ export default function EditAnnouncement() {
           </div>
 
           <div className="flex text-center gap-8 items-center justify-center my-4">
-            <BackButton />
+          <BackButton onClick={() => {
+              if (unsavedChanges) {
+                setIsModalOpen(true);
+              } else {
+                navigate(-1);
+              }
+            }} />
             <button
               type="submit"
               disabled={!isModified}
@@ -202,6 +226,11 @@ export default function EditAnnouncement() {
           </div>
         </form>
       </div>
+      <UnsavedChangesModal 
+        isOpen={isModalOpen} 
+        onClose={handleStay} 
+        onExit={handleLeave} 
+      />
     </main>
   );
 }

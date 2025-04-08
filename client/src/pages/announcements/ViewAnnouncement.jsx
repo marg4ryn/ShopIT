@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getAnnouncement } from "../../api/Announcements";
 import BackButton from '../../components/BackButton';
 
 export default function ViewAnnouncement() {
   const { id } = useParams();
   const [ad, setAd] = useState(null);
-
+  const navigate = useNavigate();
+  
   useEffect(() => {
     const loadAd = async () => {
       try {
@@ -42,7 +43,7 @@ export default function ViewAnnouncement() {
         </div>
       </div>
       <div className="mt-4">
-        <BackButton />
+        <BackButton onClick={() => { navigate(-1); }} />
       </div>
       </div>
     </main>

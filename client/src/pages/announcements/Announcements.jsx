@@ -124,7 +124,7 @@ export default function Announcements() {
                         </li>
                         ))}
                     </ul>
-                    <BackButton />
+                    <BackButton onClick={() => { navigate(-1); }} />
                 </div>
             </div>
             <DeleteModal 

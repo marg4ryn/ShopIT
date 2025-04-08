@@ -1,13 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { addAnnouncement } from '../../api/Announcements';
 import BackButton from '../../components/BackButton';
+import UnsavedChangesModal from '../../components/UnsavedChangesModal';
 
 export default function AddAnnouncement() {
   const [title, setTitle] = useState("");
   const [header, setHeader] = useState("");
   const [content, setContent] = useState("");
   const [color, setColor] = useState("#30b404");
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); 
   const [errors, setErrors] = useState({
     title: "",
     header: "",
@@ -39,6 +42,7 @@ export default function AddAnnouncement() {
         content: "Announcement has been successfully created!",
         showCloseButton: false
       }));
+      setUnsavedChanges(false);
     } catch (error) {
       sessionStorage.setItem("popupData", JSON.stringify({
         backgroundColor: "red",
@@ -50,6 +54,16 @@ export default function AddAnnouncement() {
     } finally {
         navigate(-1);
     }
+  };
+
+  const handleLeave = () => {
+    setIsModalOpen(false);
+    setUnsavedChanges(false);
+    navigate(-1);
+  };
+  
+  const handleStay = () => {
+    setIsModalOpen(false);
   };
   
   return (
@@ -91,6 +105,7 @@ export default function AddAnnouncement() {
                 value={title}
                 onChange={(e) => {
                   setTitle(e.target.value);
+                  setUnsavedChanges(true);
                   setErrors({ ...errors, title: "" });
                 }}
               />
@@ -108,6 +123,7 @@ export default function AddAnnouncement() {
                 value={header}
                 onChange={(e) => {
                   setHeader(e.target.value);
+                  setUnsavedChanges(true);
                   setErrors({ ...errors, header: "" });
                 }}
               />
@@ -123,6 +139,7 @@ export default function AddAnnouncement() {
                 value={color}
                 onChange={(e) => {
                   setColor(e.target.value);
+                  setUnsavedChanges(true);
                   setErrors({ ...errors, color: "" });
                 }}
               />
@@ -144,6 +161,7 @@ export default function AddAnnouncement() {
                   value={content}
                   onChange={(e) => {
                     setContent(e.target.value);
+                    setUnsavedChanges(true);
                     setErrors({ ...errors, content: "" });
                   }}
                 />
@@ -153,7 +171,13 @@ export default function AddAnnouncement() {
 
         </div>               
         <div className="flex text-center gap-8 items-center justify-center my-4">
-        <BackButton />
+        <BackButton onClick={() => {
+          if (unsavedChanges) {
+            setIsModalOpen(true);
+          } else {
+            navigate(-1);
+          }
+        }} />
         <button
             type="submit"
             className="p-2 bg-green-600 hover:bg-green-700 text-white rounded w-40"
@@ -163,6 +187,11 @@ export default function AddAnnouncement() {
         </div>
         </form>
       </div>
+      <UnsavedChangesModal 
+        isOpen={isModalOpen} 
+        onClose={handleStay} 
+        onExit={handleLeave} 
+      />
     </main>
   );
 }

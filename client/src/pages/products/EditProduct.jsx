@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getProduct, editProduct } from "../../api/products";
 import { fetchCategories } from "../../api/categories";
 import BackButton from '../../components/BackButton';
+import UnsavedChangesModal from '../../components/UnsavedChangesModal';
 
 export default function EditProduct() {
   const { id } = useParams();
@@ -16,6 +17,8 @@ export default function EditProduct() {
   const [image, setImage] = useState(null);
   const [imageUrl, setImageUrl] = useState("http://localhost:3000/images/No_Image_Available.jpg");
   const [categories, setCategories] = useState([]);
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); 
   const [initialData, setInitialData] = useState({
     name: "",
     description: "",
@@ -115,6 +118,7 @@ export default function EditProduct() {
         content: "Product has been successfully saved!",
         showCloseButton: false
       }));
+      setUnsavedChanges(false);
     } catch (error) {
       sessionStorage.setItem("popupData", JSON.stringify({
         backgroundColor: "red",
@@ -126,6 +130,16 @@ export default function EditProduct() {
     } finally {
         navigate(-1);
     }
+  };
+
+  const handleLeave = () => {
+    setIsModalOpen(false);
+    setUnsavedChanges(false);
+    navigate(-1);
+  };
+  
+  const handleStay = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -154,7 +168,10 @@ export default function EditProduct() {
                   <input
                     type="file"
                     accept="image/*"
-                    onChange={handleFileChange}
+                    onChange={(e) => {
+                      handleFileChange();
+                      setUnsavedChanges(true);
+                    }}
                     id="file-input"
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   />
@@ -180,6 +197,7 @@ export default function EditProduct() {
                   onChange={(e) => {
                     setName(e.target.value);
                     setErrors({ ...errors, name: "" });
+                    setUnsavedChanges(true);
                   }}
                 />
                 {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
@@ -196,6 +214,7 @@ export default function EditProduct() {
                   onChange={(e) => {
                     setPrice(e.target.value);
                     setErrors({ ...errors, price: "" });
+                    setUnsavedChanges(true);
                   }}
                 />
                 {errors.price && <p className="text-red-500 text-sm">{errors.price}</p>}
@@ -212,6 +231,7 @@ export default function EditProduct() {
                   onChange={(e) => {
                     setStock(e.target.value);
                     setErrors({ ...errors, stock: "" });
+                    setUnsavedChanges(true);
                   }}
                 />
                 {errors.stock && <p className="text-red-500 text-sm">{errors.stock}</p>}
@@ -226,6 +246,7 @@ export default function EditProduct() {
                   onChange={(e) => {
                     setCategory(e.target.value);
                     setErrors({ ...errors, category: "" });
+                    setUnsavedChanges(true);
                   }}
                 >
                 <option value="">-- Select --</option>
@@ -254,6 +275,7 @@ export default function EditProduct() {
               onChange={(e) => {
                 setDescription(e.target.value);
                 setErrors({ ...errors, description: "" });
+                setUnsavedChanges(true);
               }}
             />
             {errors.description && <p className="text-red-500 text-sm">{errors.description}</p>}
@@ -261,7 +283,13 @@ export default function EditProduct() {
         </div>
              
            <div className="flex text-center gap-8 items-center justify-center my-4">
-           <BackButton />
+           <BackButton onClick={() => {
+              if (unsavedChanges) {
+                setIsModalOpen(true);
+              } else {
+                navigate(-1);
+              }
+            }} />
             <button
               disabled={!isModified}
               type="submit"
@@ -276,6 +304,11 @@ export default function EditProduct() {
           </div>
         </form>
       </div>
+      <UnsavedChangesModal 
+        isOpen={isModalOpen} 
+        onClose={handleStay} 
+        onExit={handleLeave} 
+      />
     </main>
   );
 }
