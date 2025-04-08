@@ -121,6 +121,7 @@ export default function EditAnnouncement() {
               <input
                 id="announcementTitle"
                 type="text"
+                maxLength={50}
                 className={`border text-black ${errors.title ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
                 value={title}
                 onChange={(e) => {
@@ -136,6 +137,7 @@ export default function EditAnnouncement() {
               <input
                 id="announcementHeader"
                 type="text"
+                maxLength={50}
                 className={`border text-black ${errors.header ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
                 value={header}
                 onChange={(e) => {
@@ -169,6 +171,7 @@ export default function EditAnnouncement() {
                 </label>
                 <textarea
                   id="announcementContent"
+                  maxLength={200}
                   className={`w-180 border ${errors.content ? 'border-red-500' : 'border-gray-300'} bg-white text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black`}
                   rows="4"
                   placeholder="Enter content..."

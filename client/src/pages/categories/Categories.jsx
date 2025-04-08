@@ -131,6 +131,7 @@ export default function Categories() {
               <input
                 id="categoryName"
                 type="text"
+                maxLength={50}
                 value={newCategory}
                 onChange={(e) => {
                   setNewCategory(e.target.value);

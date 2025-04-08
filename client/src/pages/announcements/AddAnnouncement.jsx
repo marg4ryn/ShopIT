@@ -85,6 +85,7 @@ export default function AddAnnouncement() {
               <input
                 id="announcementTitle"
                 type="text"
+                maxLength={50}
                 placeholder="Enter title..."
                 className={`border text-black ${errors.title ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
                 value={title}
@@ -101,6 +102,7 @@ export default function AddAnnouncement() {
               <input
                 id="announcementHeader"
                 type="text"
+                maxLength={50}
                 placeholder="Enter header..."
                 className={`border text-black ${errors.header ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
                 value={header}
@@ -135,6 +137,7 @@ export default function AddAnnouncement() {
                 </label>
                 <textarea
                   id="announcementContent"
+                  maxLength={200}
                   className={`w-180 border ${errors.content ? 'border-red-500' : 'border-gray-300'} bg-white text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black`}
                   rows="4"
                   placeholder="Enter content..."

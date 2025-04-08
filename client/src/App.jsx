@@ -50,5 +50,4 @@ export default App;
 - you have unsaved changes
 - animacja ładowania aplikacji
 - no products found
-- ograniczenia dla długości tekstów
 */

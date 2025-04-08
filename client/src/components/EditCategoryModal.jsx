@@ -46,6 +46,7 @@ const EditCategoryModal = ({ isOpen, onClose, onSave, category }) => {
             <input
               type="text"
               id="categoryName"
+              maxLength={50}
               value={newCategoryName}
               onChange={(e) => {
                 setNewCategoryName(e.target.value);

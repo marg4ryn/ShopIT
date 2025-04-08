@@ -140,6 +140,7 @@ export default function AddProduct() {
                   <input
                     id="productName"
                     type="text"
+                    maxLength={50}
                     className={`w-full border text-black ${errors.name ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
                     value={name}
                     onChange={(e) => {
@@ -157,6 +158,7 @@ export default function AddProduct() {
                     type="number"
                     className={`w-full border text-black ${errors.price ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
                     value={price}
+                    max={999999}
                     onChange={(e) => {
                       setPrice(e.target.value);
                       setErrors({ ...errors, price: "" });
@@ -170,6 +172,7 @@ export default function AddProduct() {
                   <input
                     id="productStock"
                     type="number"
+                    max={999999}
                     className={`w-full border text-black ${errors.stock ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
                     value={stock}
                     onChange={(e) => {
@@ -209,6 +212,7 @@ export default function AddProduct() {
               </label>
               <textarea
                 id="productDescription"
+                maxLength={400}
                 className={`w-full border text-black ${errors.description ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
                 rows="4"
                 placeholder="Enter product description..."
