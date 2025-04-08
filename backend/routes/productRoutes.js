@@ -48,14 +48,26 @@ const processImage = async (filePath) => {
 };
 
 router.get('/filter', async (req, res) => {
-  const { min, max, categories, sort } = req.query;
+  const { min, max, categories, sort, search } = req.query;
 
   let query = {};
 
+  if (search && search.trim() !== '') {
+    const searchRegex = new RegExp(search.trim(), 'i');
+    query.$or = [
+        { name: { $regex: searchRegex } },
+        { description: { $regex: searchRegex } }
+    ];
+  }
+
   if (min || max) {
     query.price = {};
-    if (min) query.price.$gte = Number(min);
-    if (max) query.price.$lte = Number(max);
+    if (min) {
+      query.price.$gte = Number(min);
+    }
+    if (max) {
+      query.price.$lte = Number(max);
+    }
   }
 
   if (categories && categories.trim() !== '') {
@@ -73,14 +85,16 @@ router.get('/filter', async (req, res) => {
   }
 
   let sortOption = {};
-  if (sort === 'desc') sortOption.price = -1;
-  else if (sort === 'asc') sortOption.price = 1;
+  if (sort === 'desc') {
+    sortOption.price = -1;
+  } else if (sort === 'asc') {
+    sortOption.price = 1;
+  }
 
   try {
     const products = await Product.find(query)
       .populate('category')
       .sort(sortOption);
-
 
     const updatedProducts = products.map(product => ({
       ...product.toObject(),
@@ -95,7 +109,6 @@ router.get('/filter', async (req, res) => {
     res.status(500).send('Error fetching filtered products');
   }
 });
-
 
 router.get('/', async (req, res) => {
   try {

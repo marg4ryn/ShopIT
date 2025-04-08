@@ -7,7 +7,7 @@ export default function AddAnnouncement() {
   const [title, setTitle] = useState("");
   const [header, setHeader] = useState("");
   const [content, setContent] = useState("");
-  const [color, setColor] = useState("");
+  const [color, setColor] = useState("#30b404");
   const [errors, setErrors] = useState({
     title: "",
     header: "",

@@ -2,14 +2,14 @@ const BASE_URL = 'http://localhost:3000/api/products';
 
   export const fetchFilteredProducts = async (filters) => {
     try {
-      const { category, minPrice, maxPrice, sortOption } = filters;
+      const { category, minPrice, maxPrice, sortOption, search } = filters;
       const queryParams = new URLSearchParams();
 
       if (minPrice !== undefined) queryParams.append('min', minPrice);
       if (maxPrice !== undefined) queryParams.append('max', maxPrice);
 
-        if (category && category.length > 0) {
-        queryParams.append('categories', category);
+      if (category && category.length > 0) {
+        queryParams.append('categories', category.join(','));
       }
 
       if (sortOption === 'Descending price') {
@@ -17,13 +17,17 @@ const BASE_URL = 'http://localhost:3000/api/products';
       } else if (sortOption === 'Rising price') {
         queryParams.append('sort', 'asc');
       }
-  
+
+      if (search && search.trim() !== '') {
+        queryParams.append('search', search.trim());
+      }
+
       const response = await fetch(`${BASE_URL}/filter?${queryParams.toString()}`);
-  
+
       if (!response.ok) {
         throw new Error(`${response.status} - ${response.statusText}`);
       }
-  
+
       return await response.json();
     } catch (err) {
       console.error('Error fetching filtered products:', err);

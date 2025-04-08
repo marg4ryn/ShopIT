@@ -6,7 +6,7 @@ import BackButton from '../../components/BackButton';
 import DeleteModal from '../../components/DeleteModal'
 import Popup from "../../components/Popup";
 
-export default function Products() {
+export default function Products({ searchTerm }) {
     const [products, setProducts] = useState([]);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [productToDelete, setProductToDelete] = useState(null);
@@ -31,6 +31,7 @@ export default function Products() {
                 minPrice: filters.priceFrom,
                 maxPrice: filters.priceTo,
                 sortOption,
+                search: searchTerm
             });
             setProducts(data);
         } catch (err) {
@@ -40,7 +41,7 @@ export default function Products() {
 
     useEffect(() => {
         loadFilteredProducts();
-    }, [filters, sortOption]);
+    }, [filters, sortOption, searchTerm]);
 
     const handleSortChange = (newSortOption) => {
         setSortOption(newSortOption);

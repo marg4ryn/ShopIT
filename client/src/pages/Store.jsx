@@ -4,7 +4,7 @@ import { fetchFilteredProducts } from '../api/products';
 import Sidebar from "../components/Sidebar";
 import AdsList from "../components/AdsList";
 
-export default function Store() {
+export default function Store({ searchTerm }) {
     const [products, setProducts] = useState([]);
     const [hoveredProduct, setHoveredProduct] = useState(null);
     const [sortOption, setSortOption] = useState("Most popular");
@@ -27,6 +27,7 @@ export default function Store() {
                 minPrice: filters.priceFrom,
                 maxPrice: filters.priceTo,
                 sortOption,
+                search: searchTerm
             });
             setProducts(data);
         } catch (err) {
@@ -36,7 +37,7 @@ export default function Store() {
 
     useEffect(() => {
         loadFilteredProducts();
-    }, [filters, sortOption]);
+    }, [filters, sortOption, searchTerm]);
 
     const handleSortChange = (newSortOption) => {
         setSortOption(newSortOption);

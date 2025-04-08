@@ -2,9 +2,20 @@ import { useState } from "react";
 import { FaSearch, FaShoppingCart, FaUserAlt, FaListAlt, FaStore, FaBox, FaAd, FaBars, FaTimes } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 
-export default function Navbar() {
+export default function Navbar({ searchTerm, setSearchTerm }) {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [inputValue, setInputValue] = useState(searchTerm);
+
+  const handleSearch = () => {
+    setSearchTerm(inputValue.trim());
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
@@ -28,9 +39,15 @@ export default function Navbar() {
               id="searchBar"
               type="text" 
               placeholder="Search products ..." 
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={handleKeyDown}
               className="w-full px-4 py-2 rounded-lg bg-white text-black placeholder:text-black focus:outline-none focus:ring-2 focus:ring-black"
             />
-            <button className="absolute right-2 top-1/2 transform -translate-y-1/2">
+            <button 
+              onClick={handleSearch}
+              className="absolute right-2 top-1/2 transform -translate-y-1/2"
+            >
               <FaSearch className="text-xl text-blue-600 hover:text-blue-700 cursor-pointer" />
             </button>
           </div>

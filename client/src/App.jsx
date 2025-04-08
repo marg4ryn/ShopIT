@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -14,15 +15,17 @@ import EditAnnouncement from "./pages/announcements/EditAnnouncement";
 import AddAnnouncement from "./pages/announcements/AddAnnouncement";
 
 function App() {
+  const [searchTerm, setSearchTerm] = useState("");
+
   return (
     <BrowserRouter>
       <div className="flex bg-neutral-900 flex-col min-h-screen">
-        <Navbar />
+        <Navbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         <Routes>
-          <Route path="/" element={<Store />} />
+          <Route path="/" element={<Store searchTerm={searchTerm} />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/categories" element={<Categories />} />
-          <Route path="/products" element={<Products />} />
+          <Route path="/products" element={<Products searchTerm={searchTerm} />} />
           <Route path="/viewproduct/:id" element={<ViewProduct />} />
           <Route path="/editproduct/:id" element={<EditProduct />} />
           <Route path="/addproduct" element={<AddProduct />} />
@@ -40,11 +43,12 @@ function App() {
 export default App;
 
 /*TODO przed implementacją logowania
-- wyszukiwanie
 - funkcja zaznaczenia dla ogłoszeń
 - AJAX do doczytywania
 - możliwość dodawania wielu zdjęć dla produktu
 - animacja ładowania
 - you have unsaved changes
 - aniamcja ładowania apliakcji
+- more information in error pop ups
+- no products found
 */
