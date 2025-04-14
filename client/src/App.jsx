@@ -47,6 +47,9 @@ export default App;
 - no products found
 - AJAX for loading
 - multiple photos for a product
+- manual scrolling of ads
+- improve display on wide screens
 - loading animation
 - application opening animation
+- application description page
 */
