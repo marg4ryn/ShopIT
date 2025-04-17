@@ -31,7 +31,14 @@ export default function Navbar({ searchTerm, setSearchTerm }) {
   return (
     <nav className="bg-green-700 text-white h-[85px] w-full fixed top-0 z-50">
       <div className="flex justify-between items-center h-full px-4">
-        <h1 className="text-3xl font-bold">ShopIt</h1>
+        <div className="flex items-center gap-3">
+          <img
+            src="/ShopItLogo.png"
+            alt="ShopIt logo"
+            className="w-14 h-14 object-contain"
+          />
+          <h1 className="text-3xl font-bold">ShopIt</h1>
+        </div>
 
         {(location.pathname === "/" || location.pathname === "/products") && (
           <div className="relative w-full max-w-md mx-4 flex-shrink">
