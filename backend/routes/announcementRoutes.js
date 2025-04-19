@@ -40,7 +40,7 @@ router.post("/", async (req, res) => {
   }
 
   try {
-    const newAnnouncement = new Announcement({ title, header, content, color });
+    const newAnnouncement = new Announcement({ title, header, content, color, visible: true });
     await newAnnouncement.save();
     res.status(201).json(newAnnouncement);
   } catch (err) {

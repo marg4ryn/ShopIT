@@ -59,5 +59,6 @@ export default App;
 - application responsiveness
 - application description page
 - application opening animation
+- blocking the list element behind the pop up bug
 - tests
 */

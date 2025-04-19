@@ -4,6 +4,8 @@ import { fetchCategories } from "../../api/categories";
 import { addProduct } from '../../api/products';
 import BackButton from '../../components/BackButton';
 import UnsavedChangesModal from '../../components/UnsavedChangesModal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 export default function AddProduct() {
   const [categories, setCategories] = useState([]);
@@ -12,8 +14,8 @@ export default function AddProduct() {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
-  const [image, setImage] = useState(null);
-  const [imageUrl, setImageUrl] = useState("http://localhost:3000/images/No_Image_Available.jpg");
+  const [images, setImages] = useState([]);
+  const [selectedImageUrl, setSelectedImageUrl] = useState("http://localhost:3000/images/No_Image_Available.jpg");
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); 
   const [errors, setErrors] = useState({
@@ -38,16 +40,16 @@ export default function AddProduct() {
     loadCategories();
   }, []);
 
-  const handleFileChange = (e) => {
+  const handleAddImage = (e) => {
     const file = e.target.files[0];
-
-    if (file) {
-      setImage(file);
-      setImageUrl(URL.createObjectURL(file));
-    } else {
-      setImage(null);
-      setImageUrl("http://localhost:3000/images/No_Image_Available.jpg");
-    }
+    if (!file) return;
+  
+    const previewUrl = URL.createObjectURL(file);
+  
+    const newImage = { file, previewUrl };
+    setImages(prev => [...prev, newImage]);
+    setSelectedImageUrl(previewUrl);
+    setUnsavedChanges(true);
   };
 
   const handleSubmit = async (e) => {
@@ -72,10 +74,18 @@ export default function AddProduct() {
     formData.append('stock', parseInt(stock));
     formData.append('category', selectedCategory);
   
-    if (image) {
-      formData.append('image', image);
-    }
-
+    images.forEach((imgObj) => {
+      if (imgObj.file) {
+        formData.append('images', imgObj.file);
+      }
+    });
+  
+    const existingUrls = images
+      .filter(img => img.url)
+      .map(img => img.url);
+  
+    formData.append('imageUrls', JSON.stringify(existingUrls));
+  
     try {
       await addProduct(formData);
       sessionStorage.setItem("popupData", JSON.stringify({
@@ -89,12 +99,12 @@ export default function AddProduct() {
       sessionStorage.setItem("popupData", JSON.stringify({
         backgroundColor: "red",
         header: "Failed to create product.",
-        content: `${error}` ,
+        content: `${error}`,
         showCloseButton: true
       }));
       console.error(error);
     } finally {
-        navigate(-1);
+      navigate(-1);
     }
   };
 
@@ -106,6 +116,15 @@ export default function AddProduct() {
   
   const handleStay = () => {
     setIsModalOpen(false);
+  };
+
+  const handleDeleteSelectedImage = () => {
+    setImages(prev => prev.filter(img => {
+      const url = img.previewUrl || img.url;
+      return url !== selectedImageUrl;
+    }));
+    setSelectedImageUrl("http://localhost:3000/images/No_Image_Available.jpg");
+    setUnsavedChanges(true);
   };
 
   return (
@@ -120,34 +139,56 @@ export default function AddProduct() {
         <form onSubmit={handleSubmit}>
           <div className="bg-neutral-800 p-6 rounded-md shadow-md mx-6 w-200">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="p-4 rounded-md border-0 flex flex-col items-center justify-center">
-                <div className="mb-4">
-                  <img
-                    src={imageUrl}
-                    alt="Selected Preview"
-                    className="h-66 object-contain rounded-md"
-                  />
-                </div>
-                <div className="flex items-center space-x-4 w-full justify-center">
-                  <label htmlFor="file-input" className="text-white font-lg font-bold pb-2">Image</label>
-                  <div className="relative">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => {
-                        handleFileChange();
-                        setUnsavedChanges(true);
-                      }}
-                      id="file-input"
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    />
-                    <button
-                      type="button"
-                      className="border text-black border-gray-300 bg-white p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+            <div className="p-4 rounded-md border-0 flex flex-col items-center justify-center">
+              <label htmlFor="file-input" className="text-white font-lg font-bold pb-2">Image</label>
+              <div className="mb-4 relative w-full max-w-md mx-auto">
+                <img
+                  src={selectedImageUrl}
+                  alt="Selected Preview"
+                  className="h-64 w-full object-contain rounded-md"
+                />
+
+                {images.length > 0 && (
+                <button
+                  type="button"
+                  onClick={handleDeleteSelectedImage}
+                  className="absolute bottom-2 right-2 w-10 bg-white p-2 rounded-full shadow-md hover:bg-red-100 transition"
+                  title="Delete image"
+                >
+                  <FontAwesomeIcon icon={faTrash} className="text-red-500" />
+                </button>)}
+              </div>
+
+                <div className="flex justify-center gap-2 mb-4">
+                  {images.map((imgObj, index) => (
+                    <div
+                      key={index}
+                      className={`relative w-16 h-16 border-4 rounded overflow-hidden bg-white cursor-pointer transition 
+                        ${selectedImageUrl === imgObj.previewUrl ? 'border-blue-600' : 'border-gray-300'}
+                        hover:shadow-md hover:ring-2 hover:ring-blue-600`}
                     >
-                      Choose File
-                    </button>
-                  </div>
+                      <img
+                        src={imgObj.previewUrl}
+                        alt={`Thumb ${index}`}
+                        className="w-full h-full object-cover"
+                        onClick={() => setSelectedImageUrl(imgObj.previewUrl)}
+                      />
+                    </div>
+                  ))}
+
+                  {images.length < 5 && (
+                    <div className="relative w-16 h-16 border-2 border-gray-400 rounded flex items-center justify-center overflow-hidden bg-white hover:shadow-md hover:ring-2 hover:ring-blue-600">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          handleAddImage(e);
+                        }}
+                        className="absolute inset-0 opacity-0 cursor-pointer"
+                      />
+                      <span className="text-2xl text-gray-500 font-bold pointer-events-none">+</span>
+                    </div>
+                  )}
                 </div>
               </div>
 

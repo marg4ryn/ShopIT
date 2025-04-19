@@ -52,8 +52,8 @@ export default function ViewProduct() {
                       key={index}
                       src={`http://localhost:3000${img}`}
                       alt={`Mini ${index}`}
-                      className={`w-16 h-16 object-contain rounded cursor-pointer border-2 
-                        ${selectedImage === img ? 'bg-gray-400 grayscale' : 'bg-white'}`}                      
+                      className={`w-16 h-16 object-contain rounded cursor-pointer border-4 bg-white
+                        ${selectedImage === img ? 'border-blue-600' : ''}`}                      
                       onClick={() => setSelectedImage(img)}
                     />
                   ))}

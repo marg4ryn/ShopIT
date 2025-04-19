@@ -207,7 +207,6 @@ router.post('/', upload.array('images', 5), async (req, res) => {
     });
 
     await newProduct.save();
-    console.log(newProduct);
     res.status(201).json(newProduct);
   } catch (err) {
     console.error("Error adding product:", err);
@@ -216,7 +215,7 @@ router.post('/', upload.array('images', 5), async (req, res) => {
 });
 
 router.put('/:id', upload.array('images', 5), async (req, res) => {
-  const { name, description, price, stock, category } = req.body;
+  const { name, description, price, stock, category, deletedImages } = req.body;
 
   try {
     const product = await Product.findById(req.params.id);
@@ -227,16 +226,17 @@ router.put('/:id', upload.array('images', 5), async (req, res) => {
 
     let newImageUrls = [...product.imageUrls];
 
-    if (req.files && req.files.length > 0) {
-      for (let imageUrl of product.imageUrls) {
-        if (imageUrl && !req.files.some(file => imageUrl.includes(file.filename))) {
-          const oldImagePath = path.join(__dirname, '..', imageUrl);
-          if (fs.existsSync(oldImagePath)) {
-            fs.unlinkSync(oldImagePath);
-          }
+    if (deletedImages && deletedImages.length > 0) {
+      for (let imageUrl of deletedImages) {
+        const oldImagePath = path.join(__dirname, '..', imageUrl);
+        if (fs.existsSync(oldImagePath)) {
+          fs.unlinkSync(oldImagePath);
+          newImageUrls = newImageUrls.filter(url => url !== imageUrl);
         }
       }
+    }
 
+    if (req.files && req.files.length > 0) {
       for (let file of req.files) {
         const imageUrl = await processImage(file.path);
         newImageUrls.push(imageUrl);

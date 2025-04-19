@@ -111,7 +111,7 @@ export default function Announcements() {
 
     return (
         <main className="flex-grow pt-18">
-            <div className="flex flex-col md:flex-row p-4 mt-4 items-center justify-center">
+            <div className="flex flex-col md:flex-row p-4 pb-4 mt-4 items-center justify-center">
                 <div className="w-120 p-4 mt-4 flex flex-col items-center justify-center">   
                     <div className="text-center mt-4">
                         <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md">

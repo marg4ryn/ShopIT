@@ -108,7 +108,7 @@ export default function Products({ searchTerm }) {
 
     return (
         <main className="flex flex-grow pt-18">
-            <div className="flex flex-grow">
+            <div className="flex flex-grow pb-4">
                 <Sidebar onSortChange={handleSortChange} onFilterChange={handleFilterChange} />
                 <div className="flex-grow p-4 container mx-auto mt-12 flex flex-col items-center">
                     <div className="text-center mt-4">

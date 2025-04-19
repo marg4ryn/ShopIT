@@ -154,6 +154,7 @@ export default function AddAnnouncement() {
                 </label>
                 <textarea
                   id="announcementContent"
+                  type="text"
                   maxLength={200}
                   className={`w-180 border ${errors.content ? 'border-red-500' : 'border-gray-300'} bg-white text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black`}
                   rows="4"
