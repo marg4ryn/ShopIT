@@ -42,14 +42,21 @@ function App() {
 
 export default App;
 
-/*TODO before implementing login
-- checkboxes for ads
-- no products found
-- AJAX for loading
-- multiple photos for a product
+/* TODO before next phase
 - manual scrolling of ads
-- improve display on wide screens
-- loading animation
-- application opening animation
+- AJAX for loading
+- multiple photos for products
+*/
+
+/* TODO
+- login + profile
+- shopping cart + cookies
+- orders + api
+*/
+
+/* TODO at the end
+- page loading animation
+- application responsiveness
 - application description page
+- application opening animation
 */

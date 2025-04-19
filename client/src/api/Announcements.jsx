@@ -37,7 +37,7 @@ export const addAnnouncement = async (title, header, content, color) => {
     const response = await fetch(BASE_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, header, content, color }),
+      body: JSON.stringify({ title, header, content, color, visible: true }),
     });
 
     if (!response.ok) {
@@ -52,12 +52,12 @@ export const addAnnouncement = async (title, header, content, color) => {
   }
 };
 
-export const editAnnouncement = async (id, title, header, content, color) => {
+export const editAnnouncement = async (id, title, header, content, color, visible) => {
   try {
     const response = await fetch(`${BASE_URL}/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title, header, content, color }),
+      body: JSON.stringify({ title, header, content, color, visible }),
     });
 
     if (!response.ok) {

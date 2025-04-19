@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { fetchProducts, deleteProduct, fetchFilteredProducts } from '../../api/products';
+import { deleteProduct, fetchFilteredProducts } from '../../api/products';
 import Sidebar from "../../components/Sidebar";
 import BackButton from '../../components/BackButton';
 import DeleteModal from '../../components/DeleteModal'
@@ -117,43 +117,58 @@ export default function Products({ searchTerm }) {
                         </div>
                     </div>
                     <div className="mb-4 mt-8">
-                        <button className="ml-2 p-2 bg-green-600 hover:bg-green-700 text-white rounded"
+                        <button
+                            className="ml-2 p-2 bg-green-600 hover:bg-green-700 text-white rounded"
                             onClick={() => handleAddProduct()}
                         >
                             Add new product
                         </button>
                     </div>
-                    <ul className="mt-8">
-                        {products.map((product) => (
-                        <li key={product._id} className="flex justify-between items-center mb-4 w-150 p-2 bg-white border rounded">
-                            <div className="flex flex-col w-35">
-                                <span className="font-semibold overflow-hidden text-ellipsis whitespace-nowrap">{product.name}</span>
-                                <span>{product.category?.name}</span>
+                    <ul className="mt-8 w-full max-w-3xl">
+                        {products.length === 0 ? (
+                            <div className="flex-grow p-6 w-full py-10">
+                                <div className="col-span-full flex text-center items-center justify-center text-white bg-neutral-800 text-xl font-medium py-20 rounded-md">
+                                    No products matching given criteria.
+                                </div>
                             </div>
-                            <div className="flex flex-col ml-auto w-35">
-                                <span className="font-semibold">Price: ${parseFloat(product.price).toFixed(2)}</span>
-                                <span>Stock: {product.stock}</span>
-                            </div>
-                            <div>
-                                <button className="mr-2 px-4 w-20 py-2 bg-green-600 hover:bg-green-700 text-white rounded"
-                                    onClick={() => handleViewProduct(product._id)}>
-                                    View
-                                </button>
-                                <button className="mr-2 px-4 w-20 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
-                                    onClick={() => handleEditProduct(product._id)}>
-                                    Edit
-                                </button>
-                                <button className="mr-2 px-4 w-20 py-2 bg-red-600 hover:bg-red-700 text-white rounded"
-                                onClick={() => handleDeleteProduct(product)}>
-                                    Delete
-                                </button>
-                            </div>
-                        </li>
-                        ))}
+                        ) : (
+                            products.map((product) => (
+                                <li key={product._id} className="flex justify-between items-center mb-4 w-full p-2 bg-white border rounded">
+                                    <div className="flex flex-col w-2/5">
+                                        <span className="font-semibold overflow-hidden text-ellipsis whitespace-nowrap">{product.name}</span>
+                                        <span>{product.category?.name}</span>
+                                    </div>
+                                    <div className="flex flex-col w-1/5">
+                                        <span className="font-semibold">Price: ${parseFloat(product.price).toFixed(2)}</span>
+                                        <span>Stock: {product.stock}</span>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <button
+                                            className="px-4 w-20 py-2 bg-green-600 hover:bg-green-700 text-white rounded"
+                                            onClick={() => handleViewProduct(product._id)}
+                                        >
+                                            View
+                                        </button>
+                                        <button
+                                            className="px-4 w-20 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
+                                            onClick={() => handleEditProduct(product._id)}
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            className="px-4 w-20 py-2 bg-red-600 hover:bg-red-700 text-white rounded"
+                                            onClick={() => handleDeleteProduct(product)}
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                </li>
+                            ))
+                        )}
                     </ul>
                     <BackButton onClick={() => { navigate(-1); }} />
                 </div>
-            </div>
+            </div>    
             <DeleteModal 
             isOpen={isDeleteModalOpen} 
             onClose={() => setIsDeleteModalOpen(false)} 

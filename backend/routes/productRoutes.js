@@ -113,10 +113,6 @@ router.get('/filter', async (req, res) => {
       .populate('category')
       .sort(sortOption);
 
-    if (products.length === 0) {
-      return res.status(404).send({ message: 'No products found matching the filter criteria' });
-    }
-
     const updatedProducts = products.map(product => ({
       ...product.toObject(),
       imageUrl: product.imageUrl && product.imageUrl.trim() !== ""

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { fetchAnnouncements, deleteAnnouncement } from '../../api/Announcements';
+import { fetchAnnouncements, deleteAnnouncement, editAnnouncement } from '../../api/Announcements';
 import BackButton from '../../components/BackButton';
 import DeleteModal from '../../components/DeleteModal'
 import Popup from "../../components/Popup";
@@ -75,13 +75,37 @@ export default function Announcements() {
             setPopupContent("Announcement has been successfully deleted!");
             setPopupShowCloseButton(false);
             setIsPopupOpen(true);
-            } catch (err) {
+        } catch (err) {
             setPopupBackgroundColor("red");
             setPopupHeader(`Failed to delete announcement.`);
             setPopupContent(`${err}`);
             setPopupShowCloseButton(true);
             setIsPopupOpen(true);
             console.error('Failed to delete announcement:', err);
+        }
+    };
+
+    const handleToggleVisibility = async (adId, newVisibility) => {
+        try {
+            const adToUpdate = announcements.find(ad => ad._id === adId);
+            if (adToUpdate) {
+                await editAnnouncement(
+                    adId, 
+                    adToUpdate.title, 
+                    adToUpdate.header, 
+                    adToUpdate.content, 
+                    adToUpdate.color, 
+                    newVisibility
+                );
+                
+                setAnnouncements(prevAds => 
+                    prevAds.map(announcement =>
+                        announcement._id === adId ? { ...announcement, visible: newVisibility } : announcement
+                    )
+                );
+            }
+        } catch (error) {
+            console.error('Error updating visibility:', error);
         }
     };
 
@@ -107,7 +131,24 @@ export default function Announcements() {
                             <div className="flex flex-col">
                                 <span className="font-semibold">{announcement.title}</span>
                             </div>
-                            <div>
+                            <div className="flex items-center">
+                                <label className={`mr-2 px-4 w-26 py-2 ${announcement.visible ? 'bg-amber-600 hover:bg-amber-700' : 'bg-neutral-500 hover:bg-neutral-600'} text-white rounded flex items-center cursor-pointer`}>
+                                    <input 
+                                        type="checkbox" 
+                                        checked={announcement.visible} 
+                                        onChange={() => handleToggleVisibility(announcement._id, !announcement.visible)} 
+                                        className="sr-only"
+                                    />
+                                    <span className={`w-4 h-4 border-2 border-white rounded-sm mr-2 flex items-center justify-center transition duration-200 ${announcement.visible ? 'bg-white' : 'bg-transparent'}`}>
+                                        {announcement.visible && (
+                                            <svg className="w-3 h-3 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 00-1.414 0L9 11.586 6.707 9.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l7-7a1 1 0 000-1.414z" clipRule="evenodd" />
+                                            </svg>
+                                        )}
+                                    </span>
+                                    Visible
+                                </label>
+
                                 <button className="mr-2 px-4 w-20 py-2 bg-green-600 hover:bg-green-700 text-white rounded"
                                     onClick={() => handleViewAnnouncement(announcement._id)}>
                                     View

@@ -71,7 +71,7 @@ export default function ViewProduct() {
             </div>
           </div>
   
-          <div className="flex text-center gap-8 items-center justify-center mt-4">
+          <div className="flex text-center gap-8 items-center justify-center my-4">
             <BackButton onClick={() => { navigate(-1); }} />
             <button className="p-2 bg-green-600 hover:bg-green-700 text-white rounded w-40">
               Add to cart

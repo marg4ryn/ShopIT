@@ -10,6 +10,7 @@ export default function EditAnnouncement() {
   const [header, setHeader] = useState("");
   const [content, setContent] = useState("");
   const [color, setColor] = useState("");
+  const [visible, setVisible] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); 
   const [initialData, setInitialData] = useState({
@@ -41,6 +42,7 @@ export default function EditAnnouncement() {
         setHeader(data.header);
         setContent(data.content);
         setColor(data.color);
+        setVisible(data.visible);
         setInitialData({
           title: data.title,
           header: data.header,
@@ -71,7 +73,7 @@ export default function EditAnnouncement() {
     }
 
     try {
-      await editAnnouncement(id, title, header, content, color);
+      await editAnnouncement(id, title, header, content, color, visible);
       sessionStorage.setItem("popupData", JSON.stringify({
         backgroundColor: "#008236",
         header: "Success!",

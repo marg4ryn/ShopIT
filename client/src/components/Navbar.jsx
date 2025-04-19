@@ -49,13 +49,13 @@ export default function Navbar({ searchTerm, setSearchTerm }) {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="w-full px-4 py-2 rounded-lg bg-white text-black placeholder:text-black focus:outline-none focus:ring-2 focus:ring-black"
+              className="w-full px-4 py-2 rounded-lg bg-white text-black placeholder:text-black focus:outline-none focus:ring-2 focus:ring-black pr-12"
             />
             <button 
               onClick={handleSearch}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2"
+              className="absolute right-0 top-0 bottom-0 bg-gray-300 text-black px-4 py-2 rounded-r-lg hover:bg-gray-400 group-hover:bg-gray-400 cursor-pointer"
             >
-              <FaSearch className="text-xl text-blue-600 hover:text-blue-700 cursor-pointer" />
+              <FaSearch className="text-xl text-blue-500 cursor-pointer" />
             </button>
           </div>
         )}

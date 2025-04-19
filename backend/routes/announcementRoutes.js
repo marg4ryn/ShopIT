@@ -51,7 +51,7 @@ router.post("/", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { title, header, content, color } = req.body;
+  const { title, header, content, color, visible } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ message: "Invalid announcement ID" });
@@ -64,7 +64,7 @@ router.put("/:id", async (req, res) => {
   try {
     const updated = await Announcement.findByIdAndUpdate(
       id,
-      { title, header, content, color },
+      { title, header, content, color, visible },
       { new: true }
     );
 
