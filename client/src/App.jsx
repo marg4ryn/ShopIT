@@ -59,4 +59,5 @@ export default App;
 - application responsiveness
 - application description page
 - application opening animation
+- tests
 */

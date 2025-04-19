@@ -16,12 +16,12 @@ export default function AdsList() {
   useEffect(() => {
     const loadAds = async () => {
       try {
-        console.log("Loading ads...");
+       // console.log("Loading ads...");
         const data = await fetchAnnouncements();
   
         const visibleAds = data.filter(ad => ad.visible === true);
   
-        console.log("Visible ads:", visibleAds);
+        //console.log("Visible ads:", visibleAds);
         setAds(visibleAds);
       } catch (error) {
         console.error("Error loading announcements:", error);
@@ -33,59 +33,59 @@ export default function AdsList() {
 
   useEffect(() => {
     if (ads.length > 1) {
-      console.log("Multiple ads loaded, starting auto-scroll...");
+      //console.log("Multiple ads loaded, starting auto-scroll...");
       setPrevIndex((ads.length - 1) % ads.length);
       setNextIndex(1 % ads.length);
       resetAutoScroll();
     } else {
-      console.log("Not enough ads for auto-scroll.");
+      //console.log("Not enough ads for auto-scroll.");
     }
   }, [ads]);
 
   const resetAutoScroll = () => {
     if (ads.length <= 1) {
-      console.log("Not enough ads for auto-scroll.");
+      //console.log("Not enough ads for auto-scroll.");
       return;
     }
 
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
-      console.log("Auto-scroll interval cleared.");
+      //console.log("Auto-scroll interval cleared.");
     }
 
-    console.log("Auto-scroll reset. Starting new interval.");
+    //console.log("Auto-scroll reset. Starting new interval.");
     intervalRef.current = setInterval(() => {
-      console.log("Auto-scrolling to next slide...");
+      //console.log("Auto-scrolling to next slide...");
       changeSlide(nextIndex);
     }, autoScrollInterval);
   };
 
   const changeSlide = (targetIndex) => {
     if (isTransitioning) {
-      console.log("Transition in progress, cannot change slide.");
+      //console.log("Transition in progress, cannot change slide.");
       return;
     }
 
-    console.log(`Changing slide to index ${targetIndex}, Direction: ${slideDirection}`);
+    //console.log(`Changing slide to index ${targetIndex}, Direction: ${slideDirection}`);
 
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
-      console.log("Auto-scroll interval cleared.");
+      //console.log("Auto-scroll interval cleared.");
     }
 
     setIsTransitioning(true);
 
     if (targetIndex > currentIndex) {
-      console.log("Sliding to next...");
+      //console.log("Sliding to next...");
       setSlideDirection("next");
     } else if (targetIndex < currentIndex) {
-      console.log("Sliding to prev...");
+      //console.log("Sliding to prev...");
       setSlideDirection("prev");
     }
 
     setTimeout(() => {
       setIsTransitioning(false);
-      console.log("Transition completed.");
+      //console.log("Transition completed.");
       resetAutoScroll();
     }, transitionDuration);
 
@@ -96,22 +96,22 @@ export default function AdsList() {
   };
 
   const handleNextManual = () => {
-    console.log("Manually moving to next slide...");
+    //console.log("Manually moving to next slide...");
     changeSlide(nextIndex);
   };
 
   const handlePrevManual = () => {
-    console.log("Manually moving to previous slide...");
+    //console.log("Manually moving to previous slide...");
     changeSlide(prevIndex);
   };
 
   const handleDotClick = (index) => {
     if (index === currentIndex) {
-      console.log("Clicked dot corresponds to the current slide, no action taken.");
+      //console.log("Clicked dot corresponds to the current slide, no action taken.");
       return;
     }
 
-    console.log(`Clicked dot for slide index ${index}`);
+    //console.log(`Clicked dot for slide index ${index}`);
     changeSlide(index);
   };
   

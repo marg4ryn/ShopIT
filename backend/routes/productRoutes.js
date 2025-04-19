@@ -113,42 +113,20 @@ router.get('/filter', async (req, res) => {
       .populate('category')
       .sort(sortOption);
 
-    const updatedProducts = products.map(product => ({
-      ...product.toObject(),
-      imageUrl: product.imageUrl && product.imageUrl.trim() !== ""
-        ? product.imageUrl
-        : "/images/No_Image_Available.jpg"
-    }));
-
+    const updatedProducts = products.map(product => {
+      const productObj = product.toObject();
+    
+      if (!productObj.imageUrls || productObj.imageUrls.length === 0) {
+        productObj.imageUrls = ["/images/No_Image_Available.jpg"];
+      }
+    
+      return productObj;
+    });
+        
     res.json(updatedProducts);
   } catch (err) {
     console.error("Error fetching filtered products:", err);
     res.status(500).send({ message: 'Internal server error while fetching products' });
-  }
-});
-
-router.get('/', async (req, res) => {
-  try {
-    const products = await Product.find().populate('category');
-
-    if (!products.length) {
-      return res.status(404).json({ message: "No products found" });
-    }
-
-    const updatedProducts = products.map(product => ({
-      ...product.toObject(),
-      imageUrl: product.imageUrl && product.imageUrl.trim() !== ""
-        ? product.imageUrl
-        : "/images/No_Image_Available.jpg"
-    }));
-
-    res.json(updatedProducts);
-  } catch (err) {
-    console.error("Error fetching products:", err);
-    res.status(500).json({
-      message: "Error fetching products",
-      error: err.message,
-    });
   }
 });
 
@@ -157,23 +135,18 @@ router.get('/:id', async (req, res) => {
     const product = await Product.findById(req.params.id).populate('category');
 
     if (!product) {
-      console.warn('Product not found for id:', req.params.id);
-      return res.status(404).json({ message: `Product with id ${req.params.id} not found` });
+      return res.status(404).json({ message: "Product not found" });
     }
 
-    const updatedProduct = {
-      ...product.toObject(),
-      imageUrl: product.imageUrl && product.imageUrl.trim() !== ""
-        ? product.imageUrl
-        : "/images/No_Image_Available.jpg"
-    };
+    const productObj = product.toObject();
 
-    res.json(updatedProduct);
+    if (!productObj.imageUrls || productObj.imageUrls.length === 0) {
+      productObj.imageUrls = ["/images/No_Image_Available.jpg"];
+    }
+
+    res.json(productObj);
   } catch (err) {
-    console.error("Error fetching product by id:", err);
-    if (err.name === 'CastError') {
-      return res.status(400).json({ message: 'Invalid product ID format' });
-    }
+    console.error("Error fetching product by ID:", err);
     res.status(500).json({
       message: "Error fetching product",
       error: err.message,
@@ -181,12 +154,42 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.post('/', upload.single('image'), async (req, res) => {
-  try {
-    let imageUrl = null;
+router.get('/:id', async (req, res) => {
+  const { id } = req.params;
 
-    if (req.file) {
-      imageUrl = await processImage(req.file.path);
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: 'Invalid product ID' });
+  }
+
+  try {
+    const product = await Product.findById(id).populate('category');
+
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    const productObj = product.toObject();
+
+    if (!productObj.imageUrls || productObj.imageUrls.length === 0) {
+      productObj.imageUrls = ["/images/No_Image_Available.jpg"];
+    }
+
+    res.json(productObj);
+  } catch (err) {
+    console.error("Error fetching product by ID:", err);
+    res.status(500).json({ message: 'Server error while fetching product', error: err.message });
+  }
+});
+
+router.post('/', upload.array('images', 5), async (req, res) => {
+  try {
+    const imageUrls = [];
+
+    if (req.files) {
+      for (let file of req.files) {
+        const imageUrl = await processImage(file.path);
+        imageUrls.push(imageUrl);
+      }
     }
 
     const { name, description, price, stock, category } = req.body;
@@ -194,7 +197,15 @@ router.post('/', upload.single('image'), async (req, res) => {
       return res.status(400).json({ message: "Missing required fields: name, description, price, stock, or category" });
     }
 
-    const newProduct = new Product({ name, description, price, stock, category, imageUrl });
+    const newProduct = new Product({
+      name,
+      description,
+      price,
+      stock,
+      category,
+      imageUrls
+    });
+
     await newProduct.save();
     console.log(newProduct);
     res.status(201).json(newProduct);
@@ -204,7 +215,7 @@ router.post('/', upload.single('image'), async (req, res) => {
   }
 });
 
-router.put('/:id', upload.single('image'), async (req, res) => {
+router.put('/:id', upload.array('images', 5), async (req, res) => {
   const { name, description, price, stock, category } = req.body;
 
   try {
@@ -214,21 +225,22 @@ router.put('/:id', upload.single('image'), async (req, res) => {
       return res.status(404).json({ message: `Product with id ${req.params.id} not found` });
     }
 
-    let newImageUrl = product.imageUrl;
+    let newImageUrls = [...product.imageUrls];
 
-    if (req.file) {
-      if (
-        product.imageUrl &&
-        product.imageUrl.trim() !== '' &&
-        !product.imageUrl.includes('No_Image_Available.jpg')
-      ) {
-        const oldImagePath = path.join(__dirname, '..', product.imageUrl);
-        if (fs.existsSync(oldImagePath)) {
-          fs.unlinkSync(oldImagePath);
+    if (req.files && req.files.length > 0) {
+      for (let imageUrl of product.imageUrls) {
+        if (imageUrl && !req.files.some(file => imageUrl.includes(file.filename))) {
+          const oldImagePath = path.join(__dirname, '..', imageUrl);
+          if (fs.existsSync(oldImagePath)) {
+            fs.unlinkSync(oldImagePath);
+          }
         }
       }
 
-      newImageUrl = await processImage(req.file.path);
+      for (let file of req.files) {
+        const imageUrl = await processImage(file.path);
+        newImageUrls.push(imageUrl);
+      }
     }
 
     product.name = name;
@@ -236,7 +248,7 @@ router.put('/:id', upload.single('image'), async (req, res) => {
     product.price = price;
     product.stock = stock;
     product.category = category;
-    product.imageUrl = newImageUrl;
+    product.imageUrls = newImageUrls;
 
     await product.save();
     res.json(product);
@@ -257,12 +269,17 @@ router.delete('/:id', async (req, res) => {
       return res.status(404).json({ message: `Product with ID ${req.params.id} not found` });
     }
 
-    if (product.imageUrl) {
-      const imagePath = path.join(__dirname, '..', product.imageUrl);
-      try {
-        fs.unlinkSync(imagePath);
-      } catch (err) {
-        console.error(`Error deleting image file at ${imagePath}:`, err.message);
+    if (product.imageUrls && product.imageUrls.length > 0) {
+      for (let imageUrl of product.imageUrls) {
+        const imagePath = path.join(__dirname, '..', imageUrl);
+
+        try {
+          if (fs.existsSync(imagePath)) {
+            fs.unlinkSync(imagePath);
+          }
+        } catch (err) {
+          console.error(`Error deleting image file at ${imagePath}:`, err.message);
+        }
       }
     }
 

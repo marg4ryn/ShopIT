@@ -117,7 +117,7 @@ export default function Store({ searchTerm }) {
                                 onClick={() => handleViewProduct(product._id)}
                             >
                                 <img
-                                    src={`http://localhost:3000${product.imageUrl}`}
+                                    src={`http://localhost:3000${product.imageUrls[0]}`}
                                     alt={product.name}
                                     className="w-full h-80 object-contain rounded-md mb-4"
                                 />
