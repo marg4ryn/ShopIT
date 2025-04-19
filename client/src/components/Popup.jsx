@@ -27,7 +27,11 @@ function Popup({ isOpen, onClose, backgroundColor, header, content, showCloseBut
   if (!isOpen && !isClosing) return null;
 
   return (
-    <div className={`fixed bottom-30 left-0 right-0 bg-opacity-50 flex items-center justify-center z-50 transition-all duration-500 ${isClosing ? 'opacity-0' : 'opacity-100'}`}>
+    <div
+      className={`fixed bottom-30 left-0 right-0 bg-opacity-50 flex items-center justify-center z-50 transition-all duration-500
+        ${isClosing || !isOpen ? 'pointer-events-none opacity-0' : 'opacity-100'}
+      `}
+    >
       <div
         className={`relative bg-white p-6 rounded-lg shadow-lg flex flex-col items-center justify-center transform transition-all duration-500 ease-in-out ${isOpening ? 'translate-y-0' : 'translate-y-10'} ${isClosing ? 'translate-y-10 opacity-0' : 'opacity-100'}`}
         style={{ backgroundColor: backgroundColor }}
