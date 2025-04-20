@@ -56,22 +56,27 @@ export default function ViewProduct() {
                     alt={product.name}
                     className="h-128 object-contain"
                   />
-                  <div
-                    onClick={prevImage}
-                    className="absolute left-0 top-0 bottom-0 w-1/3 z-10 cursor-pointer hover:bg-[rgba(255,255,255,0.5)] transition-all duration-400 flex items-center justify-center group"
-                  >
-                    <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <span className="text-gray-600 text-2xl">{'<'}</span>
-                    </div>
-                  </div>
-                  <div
-                    onClick={nextImage}
-                    className="absolute right-0 top-0 bottom-0 w-1/3 z-10 cursor-pointer hover:bg-[rgba(255,255,255,0.5)] transition-all duration-400 flex items-center justify-center group"
-                  >
-                    <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <span className="text-gray-600 text-2xl">{'>'}</span>
-                    </div>
-                  </div>
+                  {product.imageUrls?.length > 1 && (
+                    <>
+                      <div
+                        onClick={prevImage}
+                        className="absolute left-0 top-0 bottom-0 w-1/3 z-10 cursor-pointer hover:bg-[rgba(255,255,255,0.5)] transition-all duration-400 flex items-center justify-center group rounded-l-lg"
+                      >
+                        <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <span className="text-gray-600 text-2xl">{'<'}</span>
+                        </div>
+                      </div>
+
+                      <div
+                        onClick={nextImage}
+                        className="absolute right-0 top-0 bottom-0 w-1/3 z-10 cursor-pointer hover:bg-[rgba(255,255,255,0.5)] transition-all duration-400 flex items-center justify-center group rounded-r-lg"
+                      >
+                        <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <span className="text-gray-600 text-2xl">{'>'}</span>
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 <div className="flex gap-2 justify-center mt-4">
