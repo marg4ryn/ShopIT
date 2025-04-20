@@ -36,22 +36,6 @@ const BASE_URL = 'http://localhost:3000/api/products';
     }
   };
   
-  export const fetchProducts = async () => {
-    try {
-      const response = await fetch(BASE_URL);
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(`${response.status} - ${errorData.message}`);
-      }
-
-      return await response.json();
-    } catch (err) {
-      console.error('Error fetching products:', err);
-      throw err;
-    }
-  };
-  
   export const getProduct = async (id) => {
     try {
       const response = await fetch(`${BASE_URL}/${id}`);

@@ -1,4 +1,3 @@
-require("mongoose");
 require('../models/Category');
 
 const express = require('express');
@@ -7,44 +6,51 @@ const path = require('path');
 const sharp = require('sharp');
 const Product = require('../models/Product');
 const Category = require('../models/Category');
-const fs = require('fs');
-
+const fs = require('fs-extra');
+const mongoose = require('mongoose');
 const router = express.Router();
+
+const fileFilter = (req, file, cb) => {
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+  if (!allowedTypes.includes(file.mimetype)) {
+    return cb(new Error('Invalid file type, only JPEG and PNG are allowed!'), false);
+  }
+  cb(null, true);
+};
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/');
+    cb(null, 'uploads');
   },
   filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  },
+    const timestamp = Date.now();
+    cb(null, `${timestamp}-${file.originalname}`);
+  }
 });
 
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image/')) {
-    cb(null, true);
-  } else {
-    cb(new Error('A file that is not an image was uploaded'), false);
-  }
-};
-
-const upload = multer({ storage, fileFilter });
+const upload = multer({ 
+  storage: storage,
+  fileFilter: fileFilter,
+  limits: { fileSize: 5 * 1024 * 1024 }
+});
 
 const processImage = async (filePath) => {
-  const outputFilePath = filePath.replace(/\.\w+$/, '-resized.jpg');
-  await sharp(filePath)
-    .resize({
-      width: 600,
-      height: 400,
-      fit: 'inside',
-      withoutEnlargement: true,
-    })
-    .toFormat('jpeg')
-    .jpeg({ quality: 80 })
-    .toFile(outputFilePath);
+  try {
+    const { name } = path.parse(filePath);
+    const newFilePath = path.join(__dirname, '..', 'uploads', `${name.trim().replace(/\s+/g, '-')}-resized.jpg`);
+    const imageBuffer = await fs.promises.readFile(filePath);
 
-  fs.unlinkSync(filePath);
-  return outputFilePath.replace(/\\/g, '/').replace('uploads/', '/uploads/');
+    await sharp(imageBuffer)
+      .resize(500)
+      .toFormat('jpeg')
+      .toFile(newFilePath);
+
+    await fs.promises.unlink(filePath);
+    return `/uploads/${path.basename(newFilePath)}`;
+  } catch (err) {
+    console.error(`Error processing image: ${err.message}`);
+    throw new Error('Error processing image');
+  }
 };
 
 router.get('/filter', async (req, res) => {
@@ -131,30 +137,6 @@ router.get('/filter', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
-  try {
-    const product = await Product.findById(req.params.id).populate('category');
-
-    if (!product) {
-      return res.status(404).json({ message: "Product not found" });
-    }
-
-    const productObj = product.toObject();
-
-    if (!productObj.imageUrls || productObj.imageUrls.length === 0) {
-      productObj.imageUrls = ["/images/No_Image_Available.jpg"];
-    }
-
-    res.json(productObj);
-  } catch (err) {
-    console.error("Error fetching product by ID:", err);
-    res.status(500).json({
-      message: "Error fetching product",
-      error: err.message,
-    });
-  }
-});
-
-router.get('/:id', async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -169,11 +151,6 @@ router.get('/:id', async (req, res) => {
     }
 
     const productObj = product.toObject();
-
-    if (!productObj.imageUrls || productObj.imageUrls.length === 0) {
-      productObj.imageUrls = ["/images/No_Image_Available.jpg"];
-    }
-
     res.json(productObj);
   } catch (err) {
     console.error("Error fetching product by ID:", err);
@@ -182,19 +159,20 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', upload.array('images', 5), async (req, res) => {
-  try {
-    const imageUrls = [];
+  const imageUrls = [];
 
+  try {
     if (req.files) {
       for (let file of req.files) {
-        const imageUrl = await processImage(file.path);
+        let imageUrl = await processImage(file.path);
+        imageUrl = encodeURI(imageUrl);
         imageUrls.push(imageUrl);
       }
     }
 
     const { name, description, price, stock, category } = req.body;
     if (!name || !description || !price || !stock || !category) {
-      return res.status(400).json({ message: "Missing required fields: name, description, price, stock, or category" });
+      return res.status(400).json({ message: 'Missing required fields' });
     }
 
     const newProduct = new Product({
@@ -208,9 +186,9 @@ router.post('/', upload.array('images', 5), async (req, res) => {
 
     await newProduct.save();
     res.status(201).json(newProduct);
-  } catch (err) {
-    console.error("Error adding product:", err);
-    res.status(500).json({ message: "Error adding product", error: err.message });
+  } catch (err) {   
+    console.error('Error adding product:', err);
+    res.status(500).json({ message: 'Error adding product', error: err.message });
   }
 });
 
@@ -220,14 +198,21 @@ router.put('/:id', upload.array('images', 5), async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) {
-      console.warn('Product not found for id:', req.params.id);
       return res.status(404).json({ message: `Product with id ${req.params.id} not found` });
     }
 
-    let newImageUrls = [...product.imageUrls];
+    let newImageUrls = [...product.imageUrls].map(url => url.replace(/\s+/g, ''));
 
-    if (deletedImages && deletedImages.length > 0) {
-      for (let imageUrl of deletedImages) {
+    let deletedImagePaths = [];
+    if (deletedImages) {
+      try {
+        deletedImagePaths = JSON.parse(deletedImages);
+      } catch (e) {
+        deletedImagePaths = Array.isArray(deletedImages) ? deletedImages : [deletedImages];
+      }
+      deletedImagePaths = deletedImagePaths.map(url => url.replace(/\s+/g, ''));
+
+      for (let imageUrl of deletedImagePaths) {
         const oldImagePath = path.join(__dirname, '..', imageUrl);
         if (fs.existsSync(oldImagePath)) {
           fs.unlinkSync(oldImagePath);
@@ -238,7 +223,8 @@ router.put('/:id', upload.array('images', 5), async (req, res) => {
 
     if (req.files && req.files.length > 0) {
       for (let file of req.files) {
-        const imageUrl = await processImage(file.path);
+        let imageUrl = await processImage(file.path);
+        imageUrl = imageUrl.replace(/\s+/g, '');
         newImageUrls.push(imageUrl);
       }
     }

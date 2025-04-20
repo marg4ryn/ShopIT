@@ -19,6 +19,7 @@ export default function EditProduct() {
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); 
   const [images, setImages] = useState([]);
+  const [visibleImages, setVisibleImages] = useState([]);
   const [selectedImageUrl, setSelectedImageUrl] = useState("http://localhost:3000/images/No_Image_Available.jpg");
   const [initialData, setInitialData] = useState({
     name: "",
@@ -26,7 +27,7 @@ export default function EditProduct() {
     price: "",
     stock: "",
     category: "",
-    imageUrl: "",
+    imageUrls: "",
   });
   const [errors, setErrors] = useState({
     name: "",
@@ -42,7 +43,13 @@ export default function EditProduct() {
     price !== initialData.price ||
     stock !== initialData.stock ||
     category !== initialData.category ||
-    (images[0]?.url !== initialData.imageUrl && !images[0]?.file);
+    visibleImages.length !== initialData.imageUrls.length ||
+    visibleImages.some((img, idx) => img.url !== initialData.imageUrls[idx]);
+
+  useEffect(() => {
+    const filtered = images.filter((img) => !img.isDeleted);
+    setVisibleImages(filtered);
+  }, [images]);
 
   useEffect(() => {
     const loadProduct = async () => {
@@ -57,11 +64,15 @@ export default function EditProduct() {
   
         const imageUrls = product.imageUrls || [];
         const fullImageUrls = imageUrls.map(url => `http://localhost:3000${url}`);
-  
-        const imageObjects = fullImageUrls.map(url => ({ url, isDeleted: false }));
+        const imageObjects = fullImageUrls.map(url => ({
+          file: null,
+          url,
+          previewUrl: url,
+          isDeleted: false
+        }));
+        
         setImages(imageObjects);
-  
-        setSelectedImageUrl(fullImageUrls.length > 0 ? fullImageUrls[0] : "http://localhost:3000/images/No_Image_Available.jpg");
+        setSelectedImageUrl(fullImageUrls?.[0] || "http://localhost:3000/images/No_Image_Available.jpg");
   
         setInitialData({
           name: product.name,
@@ -75,10 +86,57 @@ export default function EditProduct() {
         console.error("Failed to fetch product:", err);
       }
     };
+
+    const loadCategories = async () => {
+      try {
+        const categories = await fetchCategories();
+        setCategories(categories);
+      } catch (err) {
+        console.error("Failed to fetch categories:", err);
+      }
+    };
   
     loadProduct();
+    loadCategories();
   }, [id]);
+
+  const handleAddImage = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
   
+    const previewUrl = URL.createObjectURL(file);
+  
+    const newImage = {
+      file,
+      previewUrl,
+      url: previewUrl,
+      isDeleted: false,
+    };
+  
+    setImages((prev) => [...prev, newImage]);
+    setSelectedImageUrl(previewUrl);
+    setUnsavedChanges(true);
+  };
+
+  const handleDeleteSelectedImage = () => {
+    setImages((prev) => {
+      const updated = prev.map((img) =>
+        img.url === selectedImageUrl || img.previewUrl === selectedImageUrl
+          ? { ...img, isDeleted: true }
+          : img
+      );
+  
+      const nextAvailable = updated.find((img) => !img.isDeleted);
+      setSelectedImageUrl(
+        nextAvailable ? (nextAvailable.url || nextAvailable.previewUrl) : "http://localhost:3000/images/No_Image_Available.jpg"
+      );
+  
+      return updated;
+    });
+  
+    setUnsavedChanges(true);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
   
@@ -105,11 +163,16 @@ export default function EditProduct() {
   
     images.forEach((imgObj) => {
       if (imgObj.isDeleted) {
-        deletedImages.push(imgObj.url);
+        const imagePath = imgObj.url.replace("http://localhost:3000", "");
+        deletedImages.push(imagePath);
       } else if (imgObj.file) {
         formData.append("images", imgObj.file);
       }
     });
+  
+    if (deletedImages.length > 0) {
+      formData.append("deletedImages", JSON.stringify(deletedImages));
+    }
   
     try {
       await editProduct(id, formData, deletedImages);
@@ -143,32 +206,6 @@ export default function EditProduct() {
     setIsModalOpen(false);
   };
 
-  const handleDeleteSelectedImage = () => {
-    setImages((prev) =>
-      prev.map((img) =>
-        img.previewUrl === selectedImageUrl || img.url === selectedImageUrl
-          ? { ...img, isDeleted: true }
-          : img
-      )
-    );
-  
-    setSelectedImageUrl("http://localhost:3000/images/No_Image_Available.jpg");
-    setUnsavedChanges(true);
-  };
-
-  const handleAddImage = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-  
-    const previewUrl = URL.createObjectURL(file);
-  
-    const newImage = { file, previewUrl, isDeleted: false };
-    setImages((prev) => [...prev, newImage]);
-  
-    setSelectedImageUrl(previewUrl);
-    setUnsavedChanges(true);
-  };
-
   return (
     <main className="flex flex-col flex-grow">
       <div className="text-center pt-10 mt-26">
@@ -190,7 +227,7 @@ export default function EditProduct() {
                   className="h-64 w-full object-contain rounded-md"
                 />
 
-                {images.length > 0 && (
+                {visibleImages.length > 0 && (
                 <button
                   type="button"
                   onClick={handleDeleteSelectedImage}
@@ -202,7 +239,7 @@ export default function EditProduct() {
               </div>
 
                 <div className="flex justify-center gap-2 mb-4">
-                  {images.map((imgObj, index) => (
+                  {visibleImages.map((imgObj, index) => (
                     <div
                       key={index}
                       className={`relative w-16 h-16 border-4 rounded overflow-hidden bg-white cursor-pointer transition 
@@ -218,7 +255,7 @@ export default function EditProduct() {
                     </div>
                   ))}
 
-                  {images.length < 5 && (
+                  {visibleImages.length < 5 && (
                     <div className="relative w-16 h-16 border-2 border-gray-400 rounded flex items-center justify-center overflow-hidden bg-white hover:shadow-md hover:ring-2 hover:ring-blue-600">
                       <input
                         type="file"

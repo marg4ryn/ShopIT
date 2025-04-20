@@ -14,7 +14,7 @@ export default function ViewProduct() {
       try {
         const data = await getProduct(id);
         setProduct(data);
-        setSelectedImage(data.imageUrls?.[0]); // ustawiamy domyślne zdjęcie
+        setSelectedImage(data.imageUrls?.[0] || "/images/No_Image_Available.jpg");
       } catch (err) {
         console.error("Failed to fetch product:", err);
       }
@@ -53,7 +53,7 @@ export default function ViewProduct() {
                       src={`http://localhost:3000${img}`}
                       alt={`Mini ${index}`}
                       className={`w-16 h-16 object-contain rounded cursor-pointer border-4 bg-white
-                        ${selectedImage === img ? 'border-blue-600' : ''}`}                      
+                        ${selectedImage === img ? 'border-blue-600' : 'border-gray-300'}`}                      
                       onClick={() => setSelectedImage(img)}
                     />
                   ))}

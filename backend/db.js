@@ -6,11 +6,6 @@ mongoose.connect('mongodb://127.0.0.1:27017/shopit')
 
 require('./models/Product');
 require('./models/Category');
-require('./models/Cart');
-require('./models/Order');
-require('./models/Payment');
-require('./models/Review');
-require('./models/User');
 require('./models/Announcement');
 
 module.exports = mongoose;
