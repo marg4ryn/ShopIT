@@ -1,35 +1,31 @@
-# ShopIt
-
 ### EN
-## **Project Description**
-ShopIt is a modern e-commerce platform that enables fast and convenient online shopping. Thanks to its intuitive interface, users can easily browse products, add them to the cart and finalize orders. The system was designed with smooth operation and security in mind, providing convenient service to both customers and store administrators.
-
-Thanks to the use of modern technologies and integration with external services, ShopIt is a scalable and flexible solution that can be easily expanded with new functions.
+## 🛍️ **Project Description**
+ShopIt is a modern online store that enables fast and convenient online shopping. Thanks to its intuitive interface, users can easily browse products, add them to the cart and finalize orders. The application was designed with fluidity and a multitude of options for store administrators in mind.
 
 ## **Technologies**
-### **Frontend**
-- React + Vite – fast and modern environment for building applications
-- Tailwind CSS – effective styling of the user interface
+### 🎨 **Frontend**
+- React + Vite
+- Tailwind CSS
 
-### **Backend**
-- Node.js + Express – scalable API for handling requests
-- MongoDB + Mongoose – flexible database
+### 🛠️ **Backend**
+- Node.js + Express
+- MongoDB + Mongoose
 
-### **Integrations**
+### 🔗 **Integrations**
 - **Delivery** – InPost, DHL
 - **Payments** – PayU, Przelewy24
 - **Authorization** - Auth0, reCAPTCHA
 
-## **Functionalities**
-- Administration panel for managing products, categories and announcements
-- Browsing products, categories and announcements
+## 🧩 **Functionalities**
+- Administration panels for managing products, categories and announcements
+- Browsing products from the store offer
 - Searching, filtering and sorting products
 - User registration and login
-- Adding products to the shopping cart stored in cookies
-- Placing an order with the selection of payment and delivery methods
+- Adding products to the basket stored in cookies
+- Placing an order with the choice of payment and delivery method
 - Order history and the ability to track them
 
-## **Development plans**
+## 🚀 **Development plans**
 - **Product reviews and opinions system**
 - **Discount and promotional code support**
 - **Mailchimp** - sending emails with order notifications
@@ -37,35 +33,19 @@ Thanks to the use of modern technologies and integration with external services,
 - **Google Analytics** - monitoring user traffic, analyzing behavior
 
 ### PL
-## **Opis projektu**  
-ShopIt to nowoczesna platforma e-commerce, która umożliwia szybkie i wygodne zakupy online. Dzięki intuicyjnemu interfejsowi użytkownicy mogą z łatwością przeglądać produkty, dodawać je do koszyka oraz finalizować zamówienia. System został zaprojektowany z myślą o płynności działania i bezpieczeństwie, zapewniając wygodną obsługę zarówno klientom, jak i administratorom sklepu.
-
-Dzięki zastosowaniu nowoczesnych technologii i integracji z usługami zewnętrznymi ShopIt jest skalowalnym i elastycznym rozwiązaniem, które można łatwo rozwijać o nowe funkcje.
-
-## **Technologie**  
-### **Frontend**  
-- React + Vite – szybkie i nowoczesne środowisko do budowy aplikacji  
-- Tailwind CSS – efektywne stylowanie interfejsu użytkownika  
-
-### **Backend**  
-- Node.js + Express – skalowalne API do obsługi żądań  
-- MongoDB + Mongoose – elastyczna baza danych  
-
-### **Integracje**  
-- **Dostawa** – InPost, DHL
-- **Płatności** – PayU, Przelewy24
-- **Autoryzacja** - Auth0, reCAPTCHA
+## 🛍️ **Opis projektu**  
+ShopIt to nowoczesny sklep internetowy, który umożliwia szybkie i wygodne zakupy online. Dzięki intuicyjnemu interfejsowi użytkownicy mogą z łatwością przeglądać produkty, dodawać je do koszyka oraz finalizować zamówienia. Apllikacja została zaprojektowana z myślą o płynności działania oraz mnogości opcji dla administratorów sklepu.
   
-## **Funkcjonalności**  
-- Panel administracyjny do zarządzania produktami, kategoriami i ogłoszeniami
-- Przeglądanie produktów, kategorii i ogłoszeń
+## 🧩 **Funkcjonalności**  
+- Panele administracyjne do zarządzania produktami, kategoriami i ogłoszeniami
+- Przeglądanie produktów z oferty sklepu
 - Wyszukiwanie, filtrowanie i sortowanie produktów 
 - Rejestracja i logowanie użytkowników  
 - Dodawanie produktów do koszyka przechowywanego w formie ciasteczek
 - Składanie zamówienia z wyborem metody płatności i dostawy
 - Historia zamówień i możliwość ich śledzenia  
 
-## **Plany na rozwój** 
+## 🚀 **Plany na rozwój** 
 - **System opinii i recenzji produktów**  
 - **Obsługa rabatów i kodów promocyjnych**  
 - **Mailchimp** - wysyłanie emaili z powiadomieniami o zamówieniach
