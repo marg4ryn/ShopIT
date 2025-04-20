@@ -14,7 +14,7 @@ export default function ViewProduct() {
       try {
         const data = await getProduct(id);
         setProduct(data);
-        setSelectedImage(data.imageUrls?.[0] || "/images/No_Image_Available.jpg");
+        setSelectedImage(data.imageUrls?.[0]);
       } catch (err) {
         console.error("Failed to fetch product:", err);
       }
@@ -22,6 +22,18 @@ export default function ViewProduct() {
 
     loadProduct();
   }, [id]);
+
+  const nextImage = () => {
+    const currentIndex = product.imageUrls.indexOf(selectedImage);
+    const nextIndex = (currentIndex + 1) % product.imageUrls.length;
+    setSelectedImage(product.imageUrls[nextIndex]);
+  };
+
+  const prevImage = () => {
+    const currentIndex = product.imageUrls.indexOf(selectedImage);
+    const prevIndex = (currentIndex - 1 + product.imageUrls.length) % product.imageUrls.length;
+    setSelectedImage(product.imageUrls[prevIndex]);
+  };
 
   return (
     <main className="flex flex-col flex-grow">
@@ -38,12 +50,28 @@ export default function ViewProduct() {
           <div className="bg-neutral-800 p-6 rounded-md shadow-md mx-6 w-200">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <div className="flex justify-center px-4 bg-white rounded-xl border-0">
+              <div className="flex justify-center px-4 bg-white rounded-xl border-0 relative">
                   <img
                     src={`http://localhost:3000${selectedImage}`}
                     alt={product.name}
                     className="h-128 object-contain"
                   />
+                  <div
+                    onClick={prevImage}
+                    className="absolute left-0 top-0 bottom-0 w-1/3 z-10 cursor-pointer hover:bg-[rgba(255,255,255,0.5)] transition-all duration-400 flex items-center justify-center group"
+                  >
+                    <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <span className="text-gray-600 text-2xl">{'<'}</span>
+                    </div>
+                  </div>
+                  <div
+                    onClick={nextImage}
+                    className="absolute right-0 top-0 bottom-0 w-1/3 z-10 cursor-pointer hover:bg-[rgba(255,255,255,0.5)] transition-all duration-400 flex items-center justify-center group"
+                  >
+                    <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <span className="text-gray-600 text-2xl">{'>'}</span>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="flex gap-2 justify-center mt-4">
@@ -87,6 +115,12 @@ export default function ViewProduct() {
             <BackButton onClick={() => { navigate(-1); }} />
             <button className="p-2 bg-green-600 hover:bg-green-700 text-white rounded w-40">
               Add to cart
+            </button>
+            <button
+              className="px-4 w-20 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
+              onClick={() => navigate(`/editproduct/${id}`)}
+            >
+              Edit
             </button>
           </div>
         </div>

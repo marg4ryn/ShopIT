@@ -45,7 +45,6 @@ export default App;
 /* TODO before next phase
 - manual scrolling of ads
 - AJAX for loading
-- multiple photos for products
 */
 
 /* TODO

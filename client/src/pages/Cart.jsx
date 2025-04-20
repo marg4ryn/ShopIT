@@ -14,7 +14,7 @@ export default function Cart() {
   const [quantity, setQuantity] = useState(1);
 
   const [currentStep, setCurrentStep] = useState(1);
-  const steps = ["Cart", "Shipping", "Payment", "Review"];
+  const steps = ["Cart", "Shipping", "Payment", "Summary"];
 
   const handleQuantityChange = (newQuantity) => {
     setQuantity(newQuantity);

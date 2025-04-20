@@ -42,8 +42,14 @@ export default function ViewAnnouncement() {
           />
         </div>
       </div>
-      <div className="mt-4">
+      <div className="flex text-center gap-8 items-center justify-center my-4">
         <BackButton onClick={() => { navigate(-1); }} />
+        <button
+          className="px-4 w-20 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
+          onClick={() => navigate(`/editannouncement/${id}`)}
+        >
+          Edit
+        </button>
       </div>
       </div>
     </main>
