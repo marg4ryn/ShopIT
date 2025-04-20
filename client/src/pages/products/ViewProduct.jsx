@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { getProduct } from "../../api/products";
 import BackButton from '../../components/BackButton';
 
@@ -14,7 +15,7 @@ export default function ViewProduct() {
       try {
         const data = await getProduct(id);
         setProduct(data);
-        setSelectedImage(data.imageUrls?.[0]);
+        setSelectedImage(data.imageUrls?.[0] || "/images/No_Image_Available.jpg");
       } catch (err) {
         console.error("Failed to fetch product:", err);
       }
@@ -63,7 +64,7 @@ export default function ViewProduct() {
                         className="absolute left-0 top-0 bottom-0 w-1/3 z-10 cursor-pointer hover:bg-[rgba(255,255,255,0.5)] transition-all duration-400 flex items-center justify-center group rounded-l-lg"
                       >
                         <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <span className="text-gray-600 text-2xl">{'<'}</span>
+                          <span className="text-gray-600 text-2xl"><FaChevronLeft /></span>
                         </div>
                       </div>
 
@@ -72,7 +73,7 @@ export default function ViewProduct() {
                         className="absolute right-0 top-0 bottom-0 w-1/3 z-10 cursor-pointer hover:bg-[rgba(255,255,255,0.5)] transition-all duration-400 flex items-center justify-center group rounded-r-lg"
                       >
                         <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <span className="text-gray-600 text-2xl">{'>'}</span>
+                          <span className="text-gray-600 text-2xl"><FaChevronRight /></span>
                         </div>
                       </div>
                     </>

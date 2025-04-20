@@ -43,7 +43,6 @@ function App() {
 export default App;
 
 /* TODO before next phase
-- manual scrolling of ads
 - AJAX for loading
 */
 
