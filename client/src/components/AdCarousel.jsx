@@ -1,12 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
-import { fetchAnnouncements } from "../api/Announcements";
+import { getAllAnnouncements } from "../api/Announcements";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 export default function AdCarousel() {
   const [ads, setAds] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [prevIndex, setPrevIndex] = useState(0);
-  const [nextIndex, setNextIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [slideDirection, setSlideDirection] = useState("reset");
   const intervalRef = useRef(null);
@@ -26,7 +24,7 @@ export default function AdCarousel() {
   useEffect(() => {
     const loadAds = async () => {
       try {
-        const data = await fetchAnnouncements();
+        const data = await getAllAnnouncements();
         const visibleAds = data.filter(ad => ad.visible === true);
         setAds(visibleAds);
       } catch (error) {
@@ -55,8 +53,6 @@ export default function AdCarousel() {
       const newNext = (currentIndex + 1) % ads.length;
       prevIndexRef.current = newPrev;
       nextIndexRef.current = newNext;
-      setPrevIndex(newPrev);
-      setNextIndex(newNext);
     }
   }, [currentIndex]);
 

@@ -44,6 +44,7 @@ export default App;
 
 /* TODO before next phase
 - AJAX for loading
+- Ad Carousel bugs
 */
 
 /* TODO

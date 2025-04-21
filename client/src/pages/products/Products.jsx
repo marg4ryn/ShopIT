@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
-import { deleteProduct, fetchFilteredProducts } from '../../api/products';
+import { deleteProduct, getFilteredProducts } from '../../api/products';
 import Sidebar from "../../components/Sidebar";
 import BackButton from '../../components/BackButton';
 import DeleteModal from '../../components/DeleteModal'
@@ -8,6 +8,9 @@ import Popup from "../../components/Popup";
 
 export default function Products({ searchTerm }) {
     const [products, setProducts] = useState([]);
+    const [hasMore, setHasMore] = useState(true);
+    const limit = 5;
+    const page = useRef(1);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [productToDelete, setProductToDelete] = useState(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -24,24 +27,36 @@ export default function Products({ searchTerm }) {
 
     const navigate = useNavigate();
 
-    const loadFilteredProducts = async () => {
-        try {
-            const data = await fetchFilteredProducts({
-                category: filters.selectedCategories.join(','),
-                minPrice: filters.priceFrom,
-                maxPrice: filters.priceTo,
-                sortOption,
-                search: searchTerm
-            });
-            setProducts(data);
-        } catch (err) {
-            console.error("Failed to fetch filtered products:", err);
+    const loadProducts = async (reset = false) => {
+      try {
+        const result = await getFilteredProducts({
+            category: filters.selectedCategories.join(','),
+            minPrice: filters.priceFrom,
+            maxPrice: filters.priceTo,
+            sortOption,
+            search: searchTerm,
+            page: reset ? 1 : page.current,
+            limit: reset ? page.current * limit : limit
+        });
+        if (reset) {
+            setProducts(result.products);
+        } else {
+            setProducts(prev => [...prev, ...result.products]);
         }
+        setHasMore(result.hasMore);
+      } catch (err) {
+        console.error('Failed to fetch products:', err);
+      }
     };
 
     useEffect(() => {
-        loadFilteredProducts();
-    }, [filters, sortOption, searchTerm]);
+        loadProducts(true);
+    }, [sortOption, filters, searchTerm]);
+
+    const handleLoadMore = () => {
+        page.current++;
+        loadProducts(false);
+    };
 
     const handleSortChange = (newSortOption) => {
         setSortOption(newSortOption);
@@ -110,7 +125,7 @@ export default function Products({ searchTerm }) {
 
     return (
         <main className="flex flex-grow pt-18">
-            <div className="flex flex-grow pb-4">
+            <div className="flex flex-grow">
                 <Sidebar onSortChange={handleSortChange} onFilterChange={handleFilterChange} />
                 <div className="flex-grow p-4 container mx-auto mt-12 flex flex-col items-center">
                     <div className="text-center mt-4">
@@ -168,7 +183,17 @@ export default function Products({ searchTerm }) {
                             ))
                         )}
                     </ul>
-                    <BackButton onClick={() => { navigate(-1); }} />
+                    <div className="flex text-center gap-8 items-center justify-center my-4">
+                        <BackButton onClick={() => { navigate(-1); }} />
+                        {hasMore && (
+                            <button
+                            onClick={handleLoadMore}
+                            className="px-4 py-2  bg-green-600 hover:bg-green-700 text-white rounded flex-shrink-0"
+                            >
+                            Load more
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>    
             <DeleteModal 

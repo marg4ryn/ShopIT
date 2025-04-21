@@ -4,10 +4,32 @@ const Category = require("../models/Category");
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/all", async (req, res) => {
   try {
     const categories = await Category.find();
     res.json(categories);
+  } catch (err) {
+    console.error("Error fetching categories:", err);
+    res.status(500).json({ message: "Error fetching categories", error: err.message });
+  }
+});
+
+router.get("/", async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  try {
+    const total = await Category.countDocuments();
+    const categories = await Category.find()
+      .skip(skip)
+      .limit(limit)
+      .sort({ name: 1 });
+
+    res.json({
+      categories,
+      hasMore: page * limit < total,
+    });
   } catch (err) {
     console.error("Error fetching categories:", err);
     res.status(500).json({ message: "Error fetching categories", error: err.message });

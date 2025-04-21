@@ -1,8 +1,24 @@
 const BASE_URL = 'http://localhost:3000/api/categories';
 
-export const fetchCategories = async () => {
+export const getAllCategories = async () => {
     try {
-      const response = await fetch(BASE_URL);
+      const response = await fetch(`${BASE_URL}/all`);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`${response.status} - ${errorData.message}`);
+      }
+
+      return await response.json();
+    } catch (err) {
+      console.error('Error fetching categories:', err);
+      throw err;
+    }
+  };
+
+  export const getCategories = async (page = 1, limit = 10) => {
+    try {
+      const response = await fetch(`${BASE_URL}/?page=${page}&limit=${limit}`);
       
       if (!response.ok) {
         const errorData = await response.json();

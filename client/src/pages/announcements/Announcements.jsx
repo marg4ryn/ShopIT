@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { fetchAnnouncements, deleteAnnouncement, editAnnouncement } from '../../api/Announcements';
+import { getAnnouncements, deleteAnnouncement, editAnnouncement } from '../../api/Announcements';
 import BackButton from '../../components/BackButton';
 import DeleteModal from '../../components/DeleteModal'
 import Popup from "../../components/Popup";
 
 export default function Announcements() {
     const [announcements, setAnnouncements] = useState([]);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const limit = 10;
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [announcementToDelete, setAnnouncementToDelete] = useState(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -36,19 +39,23 @@ export default function Announcements() {
         setIsPopupOpen(false);
     };
 
+    const loadAnnouncements = async (pageToLoad = 1) => {
+      try {
+        const result = await getAnnouncements(pageToLoad, limit);
+        if (pageToLoad === 1) {
+          setAnnouncements(result.announcements);
+        } else {
+          setAnnouncements(prev => [...prev, ...(result.announcements ?? [])]);
+        }
+        setHasMore(result.hasMore);
+      } catch (err) {
+        console.error('Failed to fetch announcements:', err);
+      }
+    };
+    
     useEffect(() => {
-        const loadAnnouncements = async () => {
-          try {
-            const data = await fetchAnnouncements();
-            setAnnouncements(data);
-          } catch (err) {
-            console.error('Failed to fetch announcements:', err);
-          }
-        };
-      
-        loadAnnouncements();
-      }, []
-    );
+      loadAnnouncements();
+    }, []);
 
     const handleAddAnnouncement = () => {
         navigate(`/addannouncement`);
@@ -111,6 +118,12 @@ export default function Announcements() {
         }
     };
 
+    const handleLoadMore = () => {
+        const nextPage = page + 1;
+        setPage(nextPage);
+        loadAnnouncements(nextPage);
+    };
+
     return (
         <main className="flex-grow pt-18">
             <div className="flex flex-col md:flex-row p-4 pb-4 mt-4 items-center justify-center">
@@ -128,7 +141,7 @@ export default function Announcements() {
                         </button>
                     </div>
                     <ul className="mt-8">
-                        {announcements.map((announcement) => (
+                        {announcements?.map((announcement) => (
                         <li key={announcement._id} className="flex justify-between items-center mb-4 w-150 p-2 bg-white border rounded">
                             <div className="flex flex-col">
                                 <span className="font-semibold">{announcement.title}</span>
@@ -168,7 +181,17 @@ export default function Announcements() {
                         </li>
                         ))}
                     </ul>
-                    <BackButton onClick={() => { navigate(-1); }} />
+                    <div className="flex text-center gap-8 items-center justify-center my-4">
+                        <BackButton onClick={() => { navigate(-1); }} />
+                        {hasMore && (
+                            <button
+                            onClick={handleLoadMore}
+                            className="px-4 py-2  bg-green-600 hover:bg-green-700 text-white rounded flex-shrink-0"
+                            >
+                            Load more
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
             <DeleteModal 

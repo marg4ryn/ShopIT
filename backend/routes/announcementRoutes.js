@@ -4,10 +4,32 @@ const Announcement = require("../models/Announcement");
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/all", async (req, res) => {
   try {
     const announcements = await Announcement.find();
     res.json(announcements);
+  } catch (err) {
+    console.error("Error fetching announcements:", err);
+    res.status(500).json({ message: "Error fetching announcements", error: err.message });
+  }
+});
+
+router.get("/", async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
+  try {
+    const total = await Announcement.countDocuments();
+    const announcements = await Announcement.find()
+      .skip(skip)
+      .limit(limit)
+      .sort({ name: 1 });
+
+    res.json({
+      announcements,
+      hasMore: page * limit < total,
+    });
   } catch (err) {
     console.error("Error fetching announcements:", err);
     res.status(500).json({ message: "Error fetching announcements", error: err.message });

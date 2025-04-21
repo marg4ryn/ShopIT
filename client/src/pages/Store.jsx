@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchFilteredProducts } from '../api/products';
+import { getAllFilteredProducts } from '../api/products';
 import Sidebar from "../components/Sidebar";
 import AdCarousel from "../components/AdCarousel";
 
@@ -22,7 +22,7 @@ export default function Store({ searchTerm }) {
 
     const loadFilteredProducts = async () => {
         try {
-            const data = await fetchFilteredProducts({
+            const data = await getAllFilteredProducts({
                 category: filters.selectedCategories.join(','),
                 minPrice: filters.priceFrom,
                 maxPrice: filters.priceTo,

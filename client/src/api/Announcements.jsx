@@ -1,8 +1,24 @@
 const BASE_URL = 'http://localhost:3000/api/announcements';
 
-export const fetchAnnouncements = async () => {
+export const getAllAnnouncements = async () => {
   try {
-    const response = await fetch(BASE_URL);
+    const response = await fetch(`${BASE_URL}/all`);
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`${response.status} - ${errorData.message}`);
+    }
+
+    return await response.json();
+  } catch (err) {
+    console.error('Error fetching announcements:', err);
+    throw err;
+  }
+};
+
+export const getAnnouncements = async (page = 1, limit = 10) => {
+  try {
+    const response = await fetch(`${BASE_URL}/?page=${page}&limit=${limit}`);
 
     if (!response.ok) {
       const errorData = await response.json();

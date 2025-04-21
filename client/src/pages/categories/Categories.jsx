@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { fetchCategories, addCategory, editCategory, deleteCategory } from '../../api/categories';
+import { useNavigate } from "react-router-dom";
+import { getCategories, addCategory, editCategory, deleteCategory } from '../../api/categories';
 import BackButton from '../../components/BackButton';
 import EditCategoryModal from '../../components/EditCategoryModal'
 import DeleteModal from '../../components/DeleteModal'
@@ -7,6 +8,9 @@ import Popup from "../../components/Popup";
 
 export default function Categories() {
     const [categories, setCategories] = useState([]);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const limit = 10;
     const [newCategory, setNewCategory] = useState('');
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -21,16 +25,23 @@ export default function Categories() {
       categoryName: ""
     });
 
-    useEffect(() => {
-      const loadCategories = async () => {
-        try {
-          const data = await fetchCategories();
-          setCategories(data);
-        } catch (err) {
-          console.error('Failed to fetch categories:', err);
+    const navigate = useNavigate();
+
+    const loadCategories = async (pageToLoad = 1) => {
+      try {
+        const result = await getCategories(pageToLoad, limit);
+        if (pageToLoad === 1) {
+          setCategories(result.categories);
+        } else {
+          setCategories(prev => [...prev, ...(result.categories ?? [])]);
         }
-      };
+        setHasMore(result.hasMore);
+      } catch (err) {
+        console.error('Failed to fetch categories:', err);
+      }
+    };
     
+    useEffect(() => {
       loadCategories();
     }, []);
 
@@ -121,6 +132,12 @@ export default function Categories() {
       }
     };
 
+    const handleLoadMore = () => {
+      const nextPage = page + 1;
+      setPage(nextPage);
+      loadCategories(nextPage);
+    };
+
     return (
         <main className="flex-grow pt-18">
         <div className="flex flex-col md:flex-row p-4 mt-4 items-center justify-center">
@@ -153,7 +170,7 @@ export default function Categories() {
             {errors.categoryName && <p className="text-red-500 text-sm mt-2">{errors.categoryName}</p>}
 
             <ul className="mt-8">
-                {categories.map((category) => (
+                {categories?.map((category) => (
                 <li key={category._id} className="flex justify-between items-center mb-4 w-120 p-2 bg-white border rounded">
                     <span className="font-semibold">{category.name}</span>
                     <div>
@@ -167,7 +184,17 @@ export default function Categories() {
                 </li>
                 ))}
               </ul>
-              <BackButton onClick={() => { navigate(-1); }} />
+              <div className="flex text-center gap-8 items-center justify-center my-4">
+                <BackButton onClick={() => { navigate(-1); }} />
+                {hasMore && (
+                  <button
+                    onClick={handleLoadMore}
+                    className="px-4 py-2  bg-green-600 hover:bg-green-700 text-white rounded flex-shrink-0"
+                  >
+                    Load more
+                  </button>
+                )}
+              </div>
             </div>
         </div>
         <EditCategoryModal

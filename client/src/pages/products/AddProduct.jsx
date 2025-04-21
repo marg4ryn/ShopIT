@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchCategories } from "../../api/categories";
+import { getAllCategories } from "../../api/categories";
 import { addProduct } from '../../api/products';
 import BackButton from '../../components/BackButton';
 import UnsavedChangesModal from '../../components/UnsavedChangesModal';
@@ -30,7 +30,7 @@ export default function AddProduct() {
   useEffect(() => {
     const loadCategories = async () => {
       try {
-        const data = await fetchCategories();
+        const data = await getAllCategories();
         setCategories(data);
       } catch (err) {
         console.error("Failed to fetch categories:", err);

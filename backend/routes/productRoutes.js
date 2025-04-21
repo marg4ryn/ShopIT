@@ -53,68 +53,48 @@ const processImage = async (filePath) => {
   }
 };
 
-router.get('/filter', async (req, res) => {
-  const { min, max, categories, sort, search } = req.query;
-
-  let query = {};
+const buildFilterQuery = async ({ min, max, categories, search }) => {
+  const query = {};
 
   if (search && search.trim() !== '') {
-    try {
-      const searchRegex = new RegExp(search.trim(), 'i');
-      query.$or = [
-        { name: { $regex: searchRegex } },
-        { description: { $regex: searchRegex } }
-      ];
-    } catch (err) {
-      console.error('Error creating search regex:', err);
-      return res.status(400).send({ message: 'Invalid search query format' });
-    }
+    const searchRegex = new RegExp(search.trim(), 'i');
+    query.$or = [
+      { name: { $regex: searchRegex } },
+      { description: { $regex: searchRegex } }
+    ];
   }
 
   if (min || max) {
     query.price = {};
-    if (min) {
-      if (isNaN(Number(min))) {
-        return res.status(400).send({ message: 'Invalid minimum price value' });
-      }
-      query.price.$gte = Number(min);
-    }
-    if (max) {
-      if (isNaN(Number(max))) {
-        return res.status(400).send({ message: 'Invalid maximum price value' });
-      }
-      query.price.$lte = Number(max);
-    }
+    if (min && !isNaN(Number(min))) query.price.$gte = Number(min);
+    if (max && !isNaN(Number(max))) query.price.$lte = Number(max);
   }
 
   if (categories && categories.trim() !== '') {
     const categoryNames = categories.split(',').map(name => name.trim());
+    const foundCategories = await Category.find({ name: { $in: categoryNames } });
 
-    try {
-      const foundCategories = await Category.find({ name: { $in: categoryNames } });
-
-      if (foundCategories.length === 0) {
-        return res.status(404).send({ message: 'No matching categories found' });
-      }
-
-      const categoryIds = foundCategories.map(cat => cat._id);
-      query.category = { $in: categoryIds };
-    } catch (err) {
-      console.error("Error resolving category names:", err);
-      return res.status(500).send({ message: 'Internal server error while fetching categories' });
+    if (foundCategories.length === 0) {
+      throw new Error('No matching categories found');
     }
+
+    const categoryIds = foundCategories.map(cat => cat._id);
+    query.category = { $in: categoryIds };
   }
 
-  let sortOption = {};
-  if (sort === 'desc') {
-    sortOption.price = -1;
-  } else if (sort === 'asc') {
-    sortOption.price = 1;
-  } else if (sort && sort !== 'desc' && sort !== 'asc') {
-    return res.status(400).send({ message: 'Invalid sort option. Use "asc" or "desc".' });
-  }
+  return query;
+};
+
+router.get('/filter-all', async (req, res) => {
+  const { min, max, categories, sort, search } = req.query;
 
   try {
+    const query = await buildFilterQuery({ min, max, categories, search });
+
+    const sortOption = {};
+    if (sort === 'asc') sortOption.price = 1;
+    else if (sort === 'desc') sortOption.price = -1;
+
     const products = await Product.find(query)
       .populate('category')
       .sort(sortOption);
@@ -133,6 +113,40 @@ router.get('/filter', async (req, res) => {
   } catch (err) {
     console.error("Error fetching filtered products:", err);
     res.status(500).send({ message: 'Internal server error while fetching products' });
+  }
+});
+
+router.get('/filter', async (req, res) => {
+  const { min, max, categories, sort, search, page = 1, limit = 10 } = req.query;
+  const skip = (parseInt(page) - 1) * parseInt(limit);
+
+  try {
+    const query = await buildFilterQuery({ min, max, categories, search });
+
+    const sortOption = {};
+    if (sort === 'asc') sortOption.price = 1;
+    else if (sort === 'desc') sortOption.price = -1;
+
+    const totalProducts = await Product.countDocuments(query);
+    const products = await Product.find(query)
+      .populate('category')
+      .sort(sortOption)
+      .skip(skip)
+      .limit(parseInt(limit));
+
+    const updatedProducts = products.map(p => {
+      const obj = p.toObject();
+      if (!obj.imageUrls?.length) obj.imageUrls = ["/images/No_Image_Available.jpg"];
+      return obj;
+    });
+
+    res.json({
+      products: updatedProducts,
+      hasMore: page * limit < totalProducts,
+    });
+  } catch (err) {
+    console.error('Error:', err);
+    res.status(500).json({ message: err.message || 'Internal Server Error' });
   }
 });
 

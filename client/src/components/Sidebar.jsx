@@ -1,6 +1,6 @@
 import { ChevronLast, ChevronFirst } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { fetchCategories } from '../api/categories';
+import { getAllCategories } from '../api/categories';
 
 export default function Sidebar({ onSortChange, onFilterChange }) {
   const [expanded, setExpanded] = useState(false);
@@ -27,7 +27,7 @@ export default function Sidebar({ onSortChange, onFilterChange }) {
   useEffect(() => {
     const getCategories = async () => {
       try {
-        const data = await fetchCategories();
+        const data = await getAllCategories();
         setCategories(data); 
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -45,8 +45,8 @@ export default function Sidebar({ onSortChange, onFilterChange }) {
     const num = Number(value);
   
     if (!value) {
-      if (type === 'from') setPriceFrom(undefined);
-      else setPriceTo(undefined);
+      if (type === 'from') setPriceFrom('');
+      else setPriceTo('');
   
       setPriceErrors((prev) => ({
         ...prev,
@@ -74,7 +74,7 @@ export default function Sidebar({ onSortChange, onFilterChange }) {
       error = true;
     }
   
-    if (priceFrom !== undefined && priceTo !== undefined && priceFrom > priceTo) {
+    if (priceFrom !== '' && priceTo !== '' && priceFrom > priceTo) {
       newErrors.from = "'From' cannot be greater than 'To'";
       error = true;
     }

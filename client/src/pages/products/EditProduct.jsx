@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getProduct, editProduct } from "../../api/products";
-import { fetchCategories } from "../../api/categories";
+import { getAllCategories } from "../../api/categories";
 import BackButton from '../../components/BackButton';
 import UnsavedChangesModal from '../../components/UnsavedChangesModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -89,7 +89,7 @@ export default function EditProduct() {
 
     const loadCategories = async () => {
       try {
-        const categories = await fetchCategories();
+        const categories = await getAllCategories();
         setCategories(categories);
       } catch (err) {
         console.error("Failed to fetch categories:", err);
@@ -273,7 +273,7 @@ export default function EditProduct() {
               </div>
 
             <div className="space-y-4">
-              <div className="flex flex-col">
+              <div className="flex flex-col mt-4">
                 <label htmlFor="productName" className="text-white font-lg font-bold pb-2">Name</label>
                 <input
                   id="productName"
