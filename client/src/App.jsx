@@ -43,7 +43,6 @@ function App() {
 export default App;
 
 /* TODO before next phase
-- pop up overlapping
 - AJAX for loading
 */
 

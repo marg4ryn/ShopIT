@@ -55,6 +55,7 @@ export default function Products({ searchTerm }) {
         const popupData = sessionStorage.getItem("popupData");
         
         if (popupData) {
+            setIsPopupOpen(false);
             const parsed = JSON.parse(popupData);
             setPopupBackgroundColor(parsed.backgroundColor);
             setPopupHeader(parsed.header);
@@ -88,6 +89,7 @@ export default function Products({ searchTerm }) {
       };
 
     const handleDelete = async (id) => {
+        setIsPopupOpen(false);
         try {
             await deleteProduct(id);
             setProducts(prevProducts => prevProducts.filter(product => product._id !== id));

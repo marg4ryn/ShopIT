@@ -20,6 +20,7 @@ export default function Announcements() {
         const popupData = sessionStorage.getItem("popupData");
       
         if (popupData) {
+          setIsPopupOpen(false);
           const parsed = JSON.parse(popupData);
           setPopupBackgroundColor(parsed.backgroundColor);
           setPopupHeader(parsed.header);
@@ -67,6 +68,7 @@ export default function Announcements() {
       };
 
     const handleDelete = async (id) => {
+        setIsPopupOpen(false);
         try {
             await deleteAnnouncement(id);
             setAnnouncements(prevAnnouncements => prevAnnouncements.filter(announcement => announcement._id !== id));

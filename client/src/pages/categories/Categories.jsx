@@ -39,6 +39,7 @@ export default function Categories() {
     };
 
     const handleAddCategory = async () => {
+      setIsPopupOpen(false);
 
       const newErrors = {};
       if (!newCategory) newErrors.categoryName = "Category name is required";
@@ -75,47 +76,49 @@ export default function Categories() {
     };
 
     const handleSaveCategory = async (newCategoryName) => {
-        try {
-          const updatedCategory = await editCategory(categoryToEdit._id, newCategoryName);
-          setCategories(categories.map(category => category._id === updatedCategory._id ? updatedCategory : category));
-          setIsEditModalOpen(false);
-          setPopupBackgroundColor("#008236");
-          setPopupHeader("Success!");
-          setPopupContent("Category has been successfully saved!");
-          setPopupShowCloseButton(false);
-          setIsPopupOpen(true);
-        } catch (err) {
-          setPopupBackgroundColor("red");
-          setPopupHeader(`Failed to save category.`);
-          setPopupContent(`${err}`);
-          setPopupShowCloseButton(true);
-          setIsPopupOpen(true);
-          console.error('Failed to save category:', err);
-        }
-      };
+      setIsPopupOpen(false);
+      try {
+        const updatedCategory = await editCategory(categoryToEdit._id, newCategoryName);
+        setCategories(categories.map(category => category._id === updatedCategory._id ? updatedCategory : category));
+        setIsEditModalOpen(false);
+        setPopupBackgroundColor("#008236");
+        setPopupHeader("Success!");
+        setPopupContent("Category has been successfully saved!");
+        setPopupShowCloseButton(false);
+        setIsPopupOpen(true);
+      } catch (err) {
+        setPopupBackgroundColor("red");
+        setPopupHeader(`Failed to save category.`);
+        setPopupContent(`${err}`);
+        setPopupShowCloseButton(true);
+        setIsPopupOpen(true);
+        console.error('Failed to save category:', err);
+      }
+    };
 
     const handleDeleteCategory = (category) => {
-        setCategoryToDelete(category);
-        setIsDeleteModalOpen(true);
-      };
+      setIsPopupOpen(false);
+      setCategoryToDelete(category);
+      setIsDeleteModalOpen(true);
+    };
 
     const handleDelete = async (id) => {
-        try {
-            await deleteCategory(id);
-            setCategories(prevCategories => prevCategories.filter(category => category._id !== id));
-            setPopupBackgroundColor("#008236");
-            setPopupHeader("Success!");
-            setPopupContent("Category has been successfully deleted!");
-            setPopupShowCloseButton(false);
-            setIsPopupOpen(true);
-          } catch (err) {
-            setPopupBackgroundColor("red");
-            setPopupHeader(`Failed to delete category.`);
-            setPopupContent(`${err}`);
-            setPopupShowCloseButton(true);
-            setIsPopupOpen(true);
-            console.error('Failed to delete category:', err);
-        }
+      try {
+        await deleteCategory(id);
+        setCategories(prevCategories => prevCategories.filter(category => category._id !== id));
+        setPopupBackgroundColor("#008236");
+        setPopupHeader("Success!");
+        setPopupContent("Category has been successfully deleted!");
+        setPopupShowCloseButton(false);
+        setIsPopupOpen(true);
+      } catch (err) {
+        setPopupBackgroundColor("red");
+        setPopupHeader(`Failed to delete category.`);
+        setPopupContent(`${err}`);
+        setPopupShowCloseButton(true);
+        setIsPopupOpen(true);
+        console.error('Failed to delete category:', err);
+      }
     };
 
     return (
