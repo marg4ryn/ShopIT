@@ -1,11 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAllFilteredProducts } from '../api/products';
+import { getFilteredProducts } from '../api/products';
 import Sidebar from "../components/Sidebar";
 import AdCarousel from "../components/AdCarousel";
 
 export default function Store({ searchTerm }) {
     const [products, setProducts] = useState([]);
+    const [hasMore, setHasMore] = useState(true);
+    const limit = 3;
+    const page = useRef(1);
     const [hoveredProduct, setHoveredProduct] = useState(null);
     const [sortOption, setSortOption] = useState("Most popular");
     const [filters, setFilters] = useState({
@@ -20,24 +23,57 @@ export default function Store({ searchTerm }) {
         navigate(`/viewproduct/${id}`);
     };
 
-    const loadFilteredProducts = async () => {
+    const loadProducts = async (reset = false) => {
         try {
-            const data = await getAllFilteredProducts({
+            const result = await getFilteredProducts({
                 category: filters.selectedCategories.join(','),
                 minPrice: filters.priceFrom,
                 maxPrice: filters.priceTo,
-                sortOption,
-                search: searchTerm
+                sortOption: sortOption,
+                search: searchTerm,
+                page: reset ? 1 : page.current,
+                limit: limit
             });
-            setProducts(data);
+            if (reset) {
+                page.current = 1;
+                setProducts(result.products);
+            } else {
+                setProducts(prev => [...prev, ...result.products]);
+            }
+
+            setHasMore(result.hasMore);        
+            console.log('products:', products.length);
+            console.log('Sort Option:', sortOption);
+            console.log('Page:', page.current);
+            console.log('HasMore:', result.hasMore);
         } catch (err) {
-            console.error("Failed to fetch filtered products:", err);
-        }
+            console.error('Failed to fetch products:', err);
+        }            
     };
 
     useEffect(() => {
-        loadFilteredProducts();
-    }, [filters, sortOption, searchTerm]);
+        const handleScroll = () => {
+            const scrollTop = window.scrollY;
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight;
+    
+            if (scrollTop + windowHeight >= documentHeight - 100 && hasMore) {
+                handleLoadMore();
+            }
+        };
+    
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [hasMore]);
+
+    useEffect(() => {
+        loadProducts(true);
+    }, [sortOption, filters, searchTerm]);
+
+    const handleLoadMore = () => {
+        page.current++;
+        loadProducts(false);
+    };
 
     const handleSortChange = (newSortOption) => {
         setSortOption(newSortOption);
@@ -143,6 +179,11 @@ export default function Store({ searchTerm }) {
 
                     return acc;
                 }, [])}
+            {hasMore && (
+                <div className="col-span-full flex justify-center py-6">
+                    <span className="text-white">Loading more products...</span>
+                </div>
+            )}
             </div>)}
         </div>
     </main>
