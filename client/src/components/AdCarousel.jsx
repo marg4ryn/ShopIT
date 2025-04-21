@@ -11,6 +11,8 @@ export default function AdCarousel() {
   const [slideDirection, setSlideDirection] = useState("reset");
   const intervalRef = useRef(null);
   const currentIndexRef = useRef(0);
+  const prevIndexRef = useRef(0);
+  const nextIndexRef = useRef(0);
 
   const autoScrollInterval = 5000;
   const transitionDuration = 2000;
@@ -51,6 +53,8 @@ export default function AdCarousel() {
     if (ads.length > 1) {
       const newPrev = (currentIndex - 1 + ads.length) % ads.length;
       const newNext = (currentIndex + 1) % ads.length;
+      prevIndexRef.current = newPrev;
+      nextIndexRef.current = newNext;
       setPrevIndex(newPrev);
       setNextIndex(newNext);
     }
@@ -72,6 +76,10 @@ export default function AdCarousel() {
   const changeSlide = (targetIndex, direction) => {
     if (isTransitioning || targetIndex === currentIndexRef.current) return;
   
+    targetIndex < currentIndexRef.current ?
+      prevIndexRef.current = targetIndex:
+      nextIndexRef.current = targetIndex;
+
     setIsTransitioning(true);
     setSlideDirection(direction);
   
@@ -84,22 +92,30 @@ export default function AdCarousel() {
   };
   
   const handleNextManual = () => {
-    changeSlide(nextIndex, "next");
+    const newNext = (currentIndex + 1) % ads.length;
+    changeSlide(newNext, "next");
   };
   
   const handlePrevManual = () => {
-    changeSlide(prevIndex, "prev");
+    const newPrev = (currentIndex - 1 + ads.length) % ads.length;
+    changeSlide(newPrev, "prev");
   };
   
   const handleDotClick = (index) => {
     if (index !== currentIndex) {
-      const direction = index > currentIndex ? "next" : "prev";
-      changeSlide(index, direction);
+      if (index === ads.length - 1 && currentIndex === 0) {
+        changeSlide(index, "prev");
+      } else if (index === 0 && currentIndex === ads.length - 1) {
+        changeSlide(index, "next");
+      } else {
+        const direction = index > currentIndex ? "next" : "prev";
+        changeSlide(index, direction);
+      }
     }
   };
   
-  const getPrevIndex = () => (currentIndex - 1 + ads.length) % ads.length;
-  const getNextIndex = () => (currentIndex + 1) % ads.length;
+  const getPrevIndex = () => prevIndexRef.current;
+  const getNextIndex = () => nextIndexRef.current;
 
   if (!ads.length) return null;
 

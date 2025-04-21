@@ -43,6 +43,7 @@ function App() {
 export default App;
 
 /* TODO before next phase
+- pop up overlapping
 - AJAX for loading
 */
 
@@ -55,7 +56,6 @@ export default App;
 /* TODO at the end
 - page loading animation
 - application responsiveness
-- application description page
 - application opening animation
 - move application to MVP
 - tests

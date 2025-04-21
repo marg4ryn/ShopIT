@@ -219,10 +219,11 @@ export default function EditProduct() {
         <div className="bg-neutral-800 p-6 rounded-md shadow-md mx-6 w-200">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="p-4 rounded-md border-0 flex flex-col items-center justify-center">
-              <label htmlFor="file-input" className="text-white font-lg font-bold pb-2">Image</label>
+              <span className="text-white font-lg font-bold pb-2">Image</span>
               <div className="mb-4 relative w-full max-w-md mx-auto">
                 <img
                   src={selectedImageUrl}
+                  id="file-preview"
                   alt="Selected Preview"
                   className="h-64 w-full object-contain rounded-md"
                 />

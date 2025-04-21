@@ -13,7 +13,6 @@ export default function ViewAnnouncement() {
       try {
         const data = await getAnnouncement (id);
         setAd(data);
-        console.log(data);
       } catch (err) {
         console.error("Failed to fetch announcement:", err);
       }

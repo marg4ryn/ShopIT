@@ -135,6 +135,7 @@ export default function Announcements() {
                                 <label className={`mr-2 px-4 w-26 py-2 ${announcement.visible ? 'bg-amber-600 hover:bg-amber-700' : 'bg-neutral-500 hover:bg-neutral-600'} text-white rounded flex items-center cursor-pointer`}>
                                     <input 
                                         type="checkbox" 
+                                        id={`visible-${announcement._id}`}
                                         checked={announcement.visible} 
                                         onChange={() => handleToggleVisibility(announcement._id, !announcement.visible)} 
                                         className="sr-only"
