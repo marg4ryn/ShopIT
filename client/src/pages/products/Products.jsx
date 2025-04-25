@@ -1,16 +1,20 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from "react-router-dom";
 import { deleteProduct, getFilteredProducts } from '../../api/products';
+import { useSearchTerm } from '../../context/SearchContext';
+import { useFilterContext } from '../../context/FilterContext'; 
 import Sidebar from "../../components/Sidebar";
 import BackButton from '../../components/BackButton';
 import DeleteModal from '../../components/DeleteModal'
 import Popup from "../../components/Popup";
 
-export default function Products({ searchTerm }) {
+export default function Products() {
+    const { sortOption, filters, updateSortOption, updateFilters } = useFilterContext();
+    const { searchTerm } = useSearchTerm();
     const [products, setProducts] = useState([]);
     const [hasMore, setHasMore] = useState(true);
-    const limit = 5;
     const page = useRef(1);
+    const limit = 5;
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [productToDelete, setProductToDelete] = useState(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -18,13 +22,6 @@ export default function Products({ searchTerm }) {
     const [popupHeader, setPopupHeader] = useState('');
     const [popupContent, setPopupContent] = useState('');
     const [popupShowCloseButton, setPopupShowCloseButton] = useState(false);
-    const [sortOption, setSortOption] = useState("Most popular");
-    const [filters, setFilters] = useState({
-        selectedCategories: [],
-        priceFrom: 0,
-        priceTo: 999999,
-    });
-
     const navigate = useNavigate();
 
     const loadProducts = async (reset = false) => {
@@ -33,16 +30,20 @@ export default function Products({ searchTerm }) {
             category: filters.selectedCategories.join(','),
             minPrice: filters.priceFrom,
             maxPrice: filters.priceTo,
-            sortOption,
+            sortOption: sortOption,
             search: searchTerm,
-            page: reset ? 1 : page.current,
-            limit: reset ? page.current * limit : limit
+            page: reset ? 1 : page.current + 1,
+            limit: limit
         });
+
         if (reset) {
             setProducts(result.products);
+            page.current = 1;
         } else {
+            page.current++;
             setProducts(prev => [...prev, ...result.products]);
         }
+
         setHasMore(result.hasMore);
       } catch (err) {
         console.error('Failed to fetch products:', err);
@@ -54,16 +55,15 @@ export default function Products({ searchTerm }) {
     }, [sortOption, filters, searchTerm]);
 
     const handleLoadMore = () => {
-        page.current++;
         loadProducts(false);
     };
 
     const handleSortChange = (newSortOption) => {
-        setSortOption(newSortOption);
+        updateSortOption(newSortOption);
     };
 
     const handleFilterChange = (newFilters) => {
-        setFilters(newFilters);
+        updateFilters(newFilters);
     };
 
     useEffect(() => {
@@ -126,7 +126,7 @@ export default function Products({ searchTerm }) {
     return (
         <main className="flex flex-grow pt-18">
             <div className="flex flex-grow">
-                <Sidebar onSortChange={handleSortChange} onFilterChange={handleFilterChange} />
+                <Sidebar onSortChange={handleSortChange} onFilterChange={handleFilterChange} sortOption={sortOption} filters={filters} />
                 <div className="flex-grow p-4 container mx-auto mt-12 flex flex-col items-center">
                     <div className="text-center mt-4">
                         <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md">

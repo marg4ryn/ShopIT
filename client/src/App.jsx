@@ -18,9 +18,9 @@ import AddAnnouncement from "./pages/announcements/AddAnnouncement";
 
 function App() {
   return (
-    <FilterProvider>
-    <SearchProvider>
-      <BrowserRouter>
+    <BrowserRouter>    
+      <FilterProvider>
+      <SearchProvider>
         <div className="flex bg-neutral-900 flex-col min-h-screen">
           <Navbar />
           <Routes>
@@ -37,18 +37,16 @@ function App() {
             <Route path="/addannouncement" element={<AddAnnouncement />} />
           </Routes>
           <Footer />
-        </div>
-      </BrowserRouter>
-    </SearchProvider>
-    </FilterProvider>
+        </div>    
+      </SearchProvider>
+      </FilterProvider>
+    </BrowserRouter>
   );
 }
 
 export default App;
 
 /* TODO before next phase
-- AJAX for loading
-- search term reset
 */
 
 /* TODO

@@ -1,22 +1,19 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getFilteredProducts } from '../api/products';
+import { useSearchTerm } from '../context/SearchContext';
+import { useFilterContext } from '../context/FilterContext'; 
 import Sidebar from "../components/Sidebar";
 import AdCarousel from "../components/AdCarousel";
 
-export default function Store({ searchTerm }) {
+export default function Store() {
+    const { sortOption, filters, updateSortOption, updateFilters } = useFilterContext();
+    const { searchTerm } = useSearchTerm();
     const [products, setProducts] = useState([]);
-    const [hasMore, setHasMore] = useState(true);
-    const limit = 3;
-    const page = useRef(1);
     const [hoveredProduct, setHoveredProduct] = useState(null);
-    const [sortOption, setSortOption] = useState("Most popular");
-    const [filters, setFilters] = useState({
-        selectedCategories: [],
-        priceFrom: 0,
-        priceTo: 999999,
-    });
-
+    const [hasMore, setHasMore] = useState(true);
+    const page = useRef(1);
+    const limit = 6;
     const navigate = useNavigate();
 
     const handleViewProduct = (id) => {
@@ -31,24 +28,22 @@ export default function Store({ searchTerm }) {
                 maxPrice: filters.priceTo,
                 sortOption: sortOption,
                 search: searchTerm,
-                page: reset ? 1 : page.current,
+                page: reset ? 1 : page.current + 1,
                 limit: limit
             });
+    
             if (reset) {
                 page.current = 1;
                 setProducts(result.products);
             } else {
+                page.current++;
                 setProducts(prev => [...prev, ...result.products]);
-            }
-
-            setHasMore(result.hasMore);        
-            console.log('products:', products.length);
-            console.log('Sort Option:', sortOption);
-            console.log('Page:', page.current);
-            console.log('HasMore:', result.hasMore);
+            }        
+        
+            setHasMore(result.hasMore);
         } catch (err) {
             console.error('Failed to fetch products:', err);
-        }            
+        }
     };
 
     useEffect(() => {
@@ -64,23 +59,22 @@ export default function Store({ searchTerm }) {
     
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
-    }, [hasMore]);
-
+    }, [hasMore, sortOption, filters, searchTerm]);
+ 
     useEffect(() => {
         loadProducts(true);
     }, [sortOption, filters, searchTerm]);
 
     const handleLoadMore = () => {
-        page.current++;
         loadProducts(false);
     };
 
     const handleSortChange = (newSortOption) => {
-        setSortOption(newSortOption);
+        updateSortOption(newSortOption);
     };
 
     const handleFilterChange = (newFilters) => {
-        setFilters(newFilters);
+        updateFilters(newFilters);
     };
 
     const splitTextInTwo = (text) => {
@@ -109,7 +103,7 @@ export default function Store({ searchTerm }) {
     return (
     <main className="flex-grow flex pt-18">
         <div className="flex transition-all duration-300">
-            <Sidebar onSortChange={handleSortChange} onFilterChange={handleFilterChange} />
+            <Sidebar onSortChange={handleSortChange} onFilterChange={handleFilterChange} sortOption={sortOption} filters={filters} />
             {products.length === 0 ? (
                 <div className="flex-grow p-6 w-full mr-14 py-10">
                     <div className="col-span-full">
