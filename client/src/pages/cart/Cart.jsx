@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import QuantitySelector from '../components/QuantitySelector';
-import OrderProgress from '../components/OrderProgress';
+import QuantitySelector from '../../components/QuantitySelector';
+import OrderProgress from '../../components/OrderProgress';
 
 const cartItems = [
   { id: 1, name: "Laptop", quantity: 1, price: 1000 },

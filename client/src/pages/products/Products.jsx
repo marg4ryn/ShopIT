@@ -87,15 +87,15 @@ export default function Products() {
     };
 
     const handleAddProduct = () => {
-        navigate(`/addproduct`);
+        navigate(`/add-product`);
     };
 
     const handleViewProduct = (id) => {
-        navigate(`/viewproduct/${id}`);
+        navigate(`/view-product/${id}`);
     };
 
     const handleEditProduct = (id) => {
-        navigate(`/editproduct/${id}`);
+        navigate(`/edit-product/${id}`);
     };
 
     const handleDeleteProduct = (product) => {

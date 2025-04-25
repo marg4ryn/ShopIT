@@ -3,8 +3,13 @@ import { SearchProvider } from "./context/SearchContext";
 import { FilterProvider } from "./context/FilterContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import Store from "./pages/Store";
-import Cart from "./pages/Cart";
+import Login from "./pages/login/Login";
+import Register from "./pages/login/Register";
+import ForgotPassword from "./pages/login/ForgotPassword";
+import ResetPassword from "./pages/login/ResetPassword";
+import VerifyEmail from "./pages/login/VerifyEmail";
+import Store from "./pages/store/Store";
+import Cart from "./pages/cart/Cart";
 import Categories from "./pages/categories/Categories";
 import Products from "./pages/products/Products";
 import ViewProduct from "./pages/products/ViewProduct";
@@ -15,26 +20,29 @@ import ViewAnnouncement from "./pages/announcements/ViewAnnouncement";
 import EditAnnouncement from "./pages/announcements/EditAnnouncement";
 import AddAnnouncement from "./pages/announcements/AddAnnouncement";
 
-
 function App() {
   return (
     <BrowserRouter>    
       <FilterProvider>
       <SearchProvider>
         <div className="flex bg-neutral-900 flex-col min-h-screen">
-          <Navbar />
           <Routes>
-            <Route path="/" element={<Store />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/categories" element={<Categories />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/viewproduct/:id" element={<ViewProduct />} />
-            <Route path="/editproduct/:id" element={<EditProduct />} />
-            <Route path="/addproduct" element={<AddProduct />} />
-            <Route path="/announcements" element={<Announcements />} />
-            <Route path="/viewannouncement/:id" element={<ViewAnnouncement />} />
-            <Route path="/editannouncement/:id" element={<EditAnnouncement />} />
-            <Route path="/addannouncement" element={<AddAnnouncement />} />
+            <Route path="/login" element={<><Navbar /> <Login /></>} />\
+            <Route path="/register" element={<><Navbar /> <Register /></>} />
+            <Route path="/forgot-password" element={<><Navbar /> <ForgotPassword /></>} />
+            <Route path="/reset-password" element={<><Navbar /> <ResetPassword /></>} />
+            <Route path="/verify-email" element={<><Navbar /> <VerifyEmail /></>} />
+            <Route path="/" element={<><Navbar /> <Store /></>} />
+            <Route path="/cart" element={<><Navbar /> <Cart /></>} />
+            <Route path="/categories" element={<><Navbar /> <Categories /></>} />
+            <Route path="/products" element={<><Navbar /> <Products /></>} />
+            <Route path="/view-product/:id" element={<><Navbar /> <ViewProduct /></>} />
+            <Route path="/edit-product/:id" element={<><Navbar /> <EditProduct /></>} />
+            <Route path="/add-product" element={<><Navbar /> <AddProduct /></>} />
+            <Route path="/announcements" element={<><Navbar /> <Announcements /></>} />
+            <Route path="/view-announcement/:id" element={<><Navbar /> <ViewAnnouncement /></>} />
+            <Route path="/edit-announcement/:id" element={<><Navbar /> <EditAnnouncement /></>} />
+            <Route path="/add-announcement" element={<><Navbar /> <AddAnnouncement /></>} />
           </Routes>
           <Footer />
         </div>    
@@ -47,15 +55,18 @@ function App() {
 export default App;
 
 /* TODO before next phase
+- login pages
+- Privacy Policy
+- user profile
 */
 
 /* TODO
-- login + profile
 - shopping cart + cookies
 - orders + api
 */
 
 /* TODO at the end
+- two language versions
 - page loading animation
 - application responsiveness
 - application opening animation

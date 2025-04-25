@@ -35,7 +35,7 @@ export default function Navbar() {
     { to: "/products", icon: <FaBox className="text-3xl" />, label: "PRODUCTS" },
     { to: "/announcements", icon: <FaAd className="text-3xl" />, label: "ANNOUNCEMENTS" },
     { to: "/cart", icon: <FaShoppingCart className="text-3xl" />, label: "CART" },
-    { to: "#", icon: <FaUserAlt className="text-3xl" />, label: "PROFILE" },
+    { to: "/login", icon: <FaUserAlt className="text-3xl" />, label: "PROFILE" },
   ];
 
   return (

@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { getFilteredProducts } from '../api/products';
-import { useSearchTerm } from '../context/SearchContext';
-import { useFilterContext } from '../context/FilterContext'; 
-import Sidebar from "../components/Sidebar";
-import AdCarousel from "../components/AdCarousel";
+import { getFilteredProducts } from '../../api/products';
+import { useSearchTerm } from '../../context/SearchContext';
+import { useFilterContext } from '../../context/FilterContext'; 
+import Sidebar from "../../components/Sidebar";
+import AdCarousel from "../../components/AdCarousel";
 
 export default function Store() {
     const { sortOption, filters, updateSortOption, updateFilters } = useFilterContext();
@@ -13,7 +13,7 @@ export default function Store() {
     const [hoveredProduct, setHoveredProduct] = useState(null);
     const [hasMore, setHasMore] = useState(true);
     const page = useRef(1);
-    const limit = 6;
+    const limit = 12;
     const navigate = useNavigate();
 
     const handleViewProduct = (id) => {
