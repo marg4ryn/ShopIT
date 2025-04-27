@@ -55,8 +55,8 @@ function App() {
 export default App;
 
 /* TODO before next phase
-- login pages
-- Privacy Policy
+- logging
+- user roles
 - user profile
 */
 
