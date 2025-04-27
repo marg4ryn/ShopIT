@@ -2,15 +2,15 @@ import { ChevronLast, ChevronFirst } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { getAllCategories } from '../api/categories';
 
-export default function Sidebar({ onSortChange, onFilterChange }) {
+export default function Sidebar({ onSortChange, onFilterChange, sortOption, filters }) {
   const [expanded, setExpanded] = useState(false);
   const options = ["Most popular", "Descending price", "Rising price"];
-  const [selected, setSelected] = useState(options[0]);
   const [isOpen, setIsOpen] = useState(false);
+  const [selected, setSelected] = useState(sortOption);
   const [categories, setCategories] = useState([]);
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [priceFrom, setPriceFrom] = useState('');
-  const [priceTo, setPriceTo] = useState('');
+  const [selectedCategories, setSelectedCategories] = useState(filters?.selectedCategories || []);
+  const [priceFrom, setPriceFrom] = useState(filters?.priceFrom || '');
+  const [priceTo, setPriceTo] = useState(filters?.priceTo || '');
   const [priceErrors, setPriceErrors] = useState({
     from: '',
     to: '',
@@ -37,8 +37,48 @@ export default function Sidebar({ onSortChange, onFilterChange }) {
     getCategories();
   }, []);
 
+  useEffect(() => {
+    if (filters) {
+      setSelectedCategories(filters.selectedCategories || []);
+      setPriceFrom(filters.priceFrom || '');
+      setPriceTo(filters.priceTo || '');
+    }
+  }, [sortOption, filters]);
+
+  useEffect(() => {
+    if (selected !== sortOption) {
+      setSelected(sortOption);
+    }
+  }, [sortOption]);
+
   const handleSortChange = (option) => {
+    setSelected(option);
     onSortChange(option);
+  };
+
+  const applyFilters = () => {
+    if (!validatePrices()) {
+      onFilterChange({ selectedCategories, priceFrom, priceTo });
+    }
+  };
+
+  const clearFilters = () => {
+    const clearedSort = options[0];
+    const clearedCategories = [];
+    const clearedPriceFrom = undefined;
+    const clearedPriceTo = undefined;
+  
+    setSelected(clearedSort);
+    setPriceFrom(clearedPriceFrom);
+    setPriceTo(clearedPriceTo);
+    setSelectedCategories(clearedCategories);
+  
+    onSortChange(clearedSort);
+    onFilterChange({
+      selectedCategories: clearedCategories,
+      priceFrom: clearedPriceFrom,
+      priceTo: clearedPriceTo
+    });
   };
 
   const handlePriceChange = (type, value) => {
@@ -83,32 +123,6 @@ export default function Sidebar({ onSortChange, onFilterChange }) {
   
     return error;
   };
-
-  const applyFilters = () => {
-    if (!validatePrices()) {
-      onFilterChange({ selectedCategories, priceFrom, priceTo });
-    }
-  };
-
-  const clearFilters = () => {
-    const clearedSort = options[0];
-    const clearedCategories = [];
-    const clearedPriceFrom = undefined;
-    const clearedPriceTo = undefined;
-  
-    setSelected(clearedSort);
-    setPriceFrom(clearedPriceFrom);
-    setPriceTo(clearedPriceTo);
-    setSelectedCategories(clearedCategories);
-  
-    onSortChange(clearedSort);
-    onFilterChange({
-      selectedCategories: clearedCategories,
-      priceFrom: clearedPriceFrom,
-      priceTo: clearedPriceTo
-    });
-  };
-  
 
   return (
     <aside>

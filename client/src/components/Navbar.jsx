@@ -1,11 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaSearch, FaShoppingCart, FaUserAlt, FaListAlt, FaStore, FaBox, FaAd, FaBars, FaTimes } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
+import { useSearchTerm } from '../context/SearchContext';
 
-export default function Navbar({ searchTerm, setSearchTerm }) {
+export default function Navbar() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [inputValue, setInputValue] = useState(searchTerm);
+  const [inputValue, setInputValue] = useState("");
+  const { searchTerm, setSearchTerm } = useSearchTerm();
+
+  useEffect(() => {
+    setInputValue(searchTerm);
+  }, [searchTerm]);
+
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+  };
 
   const handleSearch = () => {
     setSearchTerm(inputValue.trim());
@@ -25,7 +35,7 @@ export default function Navbar({ searchTerm, setSearchTerm }) {
     { to: "/products", icon: <FaBox className="text-3xl" />, label: "PRODUCTS" },
     { to: "/announcements", icon: <FaAd className="text-3xl" />, label: "ANNOUNCEMENTS" },
     { to: "/cart", icon: <FaShoppingCart className="text-3xl" />, label: "CART" },
-    { to: "#", icon: <FaUserAlt className="text-3xl" />, label: "PROFILE" },
+    { to: "/login", icon: <FaUserAlt className="text-3xl" />, label: "PROFILE" },
   ];
 
   return (
@@ -47,7 +57,7 @@ export default function Navbar({ searchTerm, setSearchTerm }) {
               type="text" 
               placeholder="Search products ..." 
               value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
+              onChange={handleInputChange}
               onKeyDown={handleKeyDown}
               className="w-full px-4 py-2 rounded-lg bg-white text-black placeholder:text-black focus:outline-none focus:ring-2 focus:ring-black pr-12"
             />

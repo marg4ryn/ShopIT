@@ -99,7 +99,7 @@ export default function AdCarousel() {
   
   const handleDotClick = (index) => {
     if (index !== currentIndex) {
-      if (index === ads.length - 1 && currentIndex === 0) {
+      if (index === ads.length - 1 && currentIndex === 0 && ads.length > 2) {
         changeSlide(index, "prev");
       } else if (index === 0 && currentIndex === ads.length - 1) {
         changeSlide(index, "next");
@@ -117,6 +117,7 @@ export default function AdCarousel() {
 
   return (
     <div className="relative overflow-hidden h-60 my-10 rounded-xl bg-neutral-800 shadow-md">
+      {(ads.length > 1) && (
       <div
         onClick={handlePrevManual}
         className="absolute left-0 top-0 bottom-0 w-1/3 z-10 cursor-pointer flex group rounded-l-lg"
@@ -126,8 +127,9 @@ export default function AdCarousel() {
             <span className="text-gray-600 text-2xl"><FaChevronLeft /></span>
           </div>
         </div>
-      </div>
+      </div>)}
 
+      {(ads.length > 1) && (
       <div
         onClick={handleNextManual}
         className="absolute right-0 top-0 bottom-0 w-1/3 z-10 cursor-pointer flex group rounded-r-lg"
@@ -137,7 +139,7 @@ export default function AdCarousel() {
             <span className="text-gray-600 text-2xl"><FaChevronRight /></span>
           </div>
         </div>
-      </div>
+      </div>)}
 
       <div  className="flex w-[300%] h-full group">
         <div
@@ -149,6 +151,7 @@ export default function AdCarousel() {
           <Ad ad={ads[getNextIndex()]} />
         </div>
 
+        {(ads.length > 1) && (
         <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           {ads.map((_, index) => (
             <button
@@ -157,7 +160,7 @@ export default function AdCarousel() {
               className={`w-3 h-3 rounded-full transition-colors cursor-pointer ${index === currentIndex ? "bg-white" : "bg-gray-400"}`}
             />
           ))}
-        </div>
+        </div>)}
       </div>
     </div>
   );

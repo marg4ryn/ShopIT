@@ -58,15 +58,15 @@ export default function Announcements() {
     }, []);
 
     const handleAddAnnouncement = () => {
-        navigate(`/addannouncement`);
+        navigate(`/add-announcement`);
     };
 
     const handleViewAnnouncement = (id) => {
-        navigate(`/viewannouncement/${id}`);
+        navigate(`/view-announcement/${id}`);
     };
 
     const handleEditAnnouncement = (id) => {
-        navigate(`/editannouncement/${id}`);
+        navigate(`/edit-announcement/${id}`);
     };
 
     const handleDeleteAnnouncement = (announcement) => {

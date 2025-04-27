@@ -45,7 +45,7 @@ export default function ViewAnnouncement() {
         <BackButton onClick={() => { navigate(-1); }} />
         <button
           className="px-4 w-20 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
-          onClick={() => navigate(`/editannouncement/${id}`)}
+          onClick={() => navigate(`/edit-announcement/${id}`)}
         >
           Edit
         </button>
