@@ -32,11 +32,14 @@ export const getAllCategories = async () => {
     }
   };
   
-  export const addCategory = async (name) => {
+  export const addCategory = async (token, name) => {
     try {
       const response = await fetch(BASE_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json' 
+        },
         body: JSON.stringify({ name }),
       });
 
@@ -52,11 +55,14 @@ export const getAllCategories = async () => {
     }
   };
   
-  export const editCategory = async (id, name) => {
+  export const editCategory = async (token, id, name) => {
     try {
       const response = await fetch(`${BASE_URL}/${id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json' 
+        },
         body: JSON.stringify({ name }),
       });
 
@@ -72,10 +78,13 @@ export const getAllCategories = async () => {
     }
   };
   
-  export const deleteCategory = async (id) => {
+  export const deleteCategory = async (token, id) => {
     try {
       const response = await fetch(`${BASE_URL}/${id}`, { 
-        method: 'DELETE' 
+        method: 'DELETE',
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+       },
       });
       
       if (!response.ok) {

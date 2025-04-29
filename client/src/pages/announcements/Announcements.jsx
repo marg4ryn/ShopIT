@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 import { getAnnouncements, deleteAnnouncement, editAnnouncement } from '../../api/Announcements';
 import BackButton from '../../components/BackButton';
 import DeleteModal from '../../components/DeleteModal'
 import Popup from "../../components/Popup";
 
 export default function Announcements() {
+    const { getAccessTokenSilently } = useAuth0();
     const [announcements, setAnnouncements] = useState([]);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
@@ -75,9 +77,10 @@ export default function Announcements() {
       };
 
     const handleDelete = async (id) => {
+        const token = await getAccessTokenSilently();
         setIsPopupOpen(false);
         try {
-            await deleteAnnouncement(id);
+            await deleteAnnouncement(token, id);
             setAnnouncements(prevAnnouncements => prevAnnouncements.filter(announcement => announcement._id !== id));
             setPopupBackgroundColor("#008236");
             setPopupHeader("Success!");
@@ -95,10 +98,12 @@ export default function Announcements() {
     };
 
     const handleToggleVisibility = async (adId, newVisibility) => {
+        const token = await getAccessTokenSilently();
         try {
             const adToUpdate = announcements.find(ad => ad._id === adId);
             if (adToUpdate) {
                 await editAnnouncement(
+                    token,
                     adId, 
                     adToUpdate.title, 
                     adToUpdate.header, 

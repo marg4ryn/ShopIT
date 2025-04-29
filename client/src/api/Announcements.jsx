@@ -48,11 +48,14 @@ export const getAnnouncement = async (id) => {
   }
 };
 
-export const addAnnouncement = async (title, header, content, color) => {
+export const addAnnouncement = async (token, title, header, content, color) => {
   try {
     const response = await fetch(BASE_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json' 
+      },
       body: JSON.stringify({ title, header, content, color, visible: true }),
     });
 
@@ -68,11 +71,14 @@ export const addAnnouncement = async (title, header, content, color) => {
   }
 };
 
-export const editAnnouncement = async (id, title, header, content, color, visible) => {
+export const editAnnouncement = async (token, id, title, header, content, color, visible) => {
   try {
     const response = await fetch(`${BASE_URL}/${id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json' 
+      },
       body: JSON.stringify({ title, header, content, color, visible }),
     });
 
@@ -88,10 +94,13 @@ export const editAnnouncement = async (id, title, header, content, color, visibl
   }
 };
 
-export const deleteAnnouncement = async (id) => {
+export const deleteAnnouncement = async (token, id) => {
   try {
     const response = await fetch(`${BASE_URL}/${id}`, {
       method: 'DELETE',
+      headers: { 
+        'Authorization': `Bearer ${token}`
+      },
     });
 
     if (!response.ok) {

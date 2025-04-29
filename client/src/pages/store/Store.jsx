@@ -17,7 +17,7 @@ export default function Store() {
     const navigate = useNavigate();
 
     const handleViewProduct = (id) => {
-        navigate(`/viewproduct/${id}`);
+        navigate(`/view-product/${id}`);
     };
 
     const loadProducts = async (reset = false) => {

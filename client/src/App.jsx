@@ -1,13 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SearchProvider } from "./context/SearchContext";
 import { FilterProvider } from "./context/FilterContext";
+import { UserProvider } from "./context/UserContext";
+import { Auth0Provider } from "@auth0/auth0-react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import Login from "./pages/login/Login";
-import Register from "./pages/login/Register";
-import ForgotPassword from "./pages/login/ForgotPassword";
-import ResetPassword from "./pages/login/ResetPassword";
-import VerifyEmail from "./pages/login/VerifyEmail";
+import UserProfile from "./pages/login/UserProfile";
 import Store from "./pages/store/Store";
 import Cart from "./pages/cart/Cart";
 import Categories from "./pages/categories/Categories";
@@ -20,18 +18,26 @@ import ViewAnnouncement from "./pages/announcements/ViewAnnouncement";
 import EditAnnouncement from "./pages/announcements/EditAnnouncement";
 import AddAnnouncement from "./pages/announcements/AddAnnouncement";
 
+const domain = import.meta.env.VITE_AUTH0_DOMAIN;
+const clientId = import.meta.env.VITE_AUTH0_CLIENT_ID;
+
 function App() {
   return (
-    <BrowserRouter>    
+    <BrowserRouter>
+      <Auth0Provider 
+        domain={domain}
+        clientId={clientId}
+        authorizationParams={{ 
+          redirect_uri: window.location.origin,
+          audience: "https://shopit-api", 
+        }}
+      >
+      <UserProvider>
       <FilterProvider>
       <SearchProvider>
         <div className="flex bg-neutral-900 flex-col min-h-screen">
           <Routes>
-            <Route path="/login" element={<><Navbar /> <Login /></>} />\
-            <Route path="/register" element={<><Navbar /> <Register /></>} />
-            <Route path="/forgot-password" element={<><Navbar /> <ForgotPassword /></>} />
-            <Route path="/reset-password" element={<><Navbar /> <ResetPassword /></>} />
-            <Route path="/verify-email" element={<><Navbar /> <VerifyEmail /></>} />
+            <Route path="/user-profile" element={<><Navbar /> <UserProfile /></>} />
             <Route path="/" element={<><Navbar /> <Store /></>} />
             <Route path="/cart" element={<><Navbar /> <Cart /></>} />
             <Route path="/categories" element={<><Navbar /> <Categories /></>} />
@@ -47,7 +53,9 @@ function App() {
           <Footer />
         </div>    
       </SearchProvider>
-      </FilterProvider>
+      </FilterProvider>  
+      </UserProvider>
+      </Auth0Provider>
     </BrowserRouter>
   );
 }
@@ -55,14 +63,15 @@ function App() {
 export default App;
 
 /* TODO before next phase
-- login pages
-- Privacy Policy
+- authentication
 - user profile
+- server no role error handling
 */
 
 /* TODO
 - shopping cart + cookies
 - orders + api
+- product reviews 
 */
 
 /* TODO at the end
@@ -71,5 +80,8 @@ export default App;
 - application responsiveness
 - application opening animation
 - move application to MVP
+- Mailchimp
+- Twilio
+- Google Analytics
 - tests
 */

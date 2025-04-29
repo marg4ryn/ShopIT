@@ -47,8 +47,6 @@ ShopIt to nowoczesny sklep internetowy, który umożliwia szybkie i wygodne zaku
 
 ## 🚀 **Plany na rozwój** 
 - **System opinii i recenzji produktów**  
-- **Obsługa rabatów i kodów promocyjnych**  
 - **Mailchimp** - wysyłanie emaili z powiadomieniami o zamówieniach
 - **Twilio** - wysyłanie SMS-ów z powiadomieniami o zamówieniach
 - **Google Analytics** - monitorowanie ruchu użytkowników, analiza zachowań
-  

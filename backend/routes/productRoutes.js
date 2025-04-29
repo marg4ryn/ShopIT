@@ -2,6 +2,7 @@ require('../models/Category');
 
 const express = require('express');
 const multer = require('multer');
+const { checkJwt } = require('../auth');
 const path = require('path');
 const sharp = require('sharp');
 const Product = require('../models/Product');
@@ -172,7 +173,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.post('/', upload.array('images', 5), async (req, res) => {
+router.post('/', checkJwt, upload.array('images', 5), async (req, res) => {
   const imageUrls = [];
 
   try {
@@ -206,7 +207,7 @@ router.post('/', upload.array('images', 5), async (req, res) => {
   }
 });
 
-router.put('/:id', upload.array('images', 5), async (req, res) => {
+router.put('/:id', checkJwt, upload.array('images', 5), async (req, res) => {
   const { name, description, price, stock, category, deletedImages } = req.body;
 
   try {
@@ -261,7 +262,7 @@ router.put('/:id', upload.array('images', 5), async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', checkJwt, async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) {

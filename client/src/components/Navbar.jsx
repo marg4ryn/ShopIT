@@ -1,14 +1,18 @@
 import { useState, useEffect } from "react";
-import { FaSearch, FaShoppingCart, FaUserAlt, FaListAlt, FaStore, FaBox, FaAd, FaBars, FaTimes } from "react-icons/fa";
+import { useAuth0 } from "@auth0/auth0-react";
+import { FaSearch, FaShoppingCart, FaUserAlt, FaListAlt, FaStore, FaBox, FaAd, FaBars, FaTimes, FaSignInAlt } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 import { useSearchTerm } from '../context/SearchContext';
+import { useUser } from '../context/UserContext';
 
 export default function Navbar() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const { searchTerm, setSearchTerm } = useSearchTerm();
-
+  const { roles } = useUser();
+  const { loginWithRedirect } = useAuth0();
+  
   useEffect(() => {
     setInputValue(searchTerm);
   }, [searchTerm]);
@@ -27,16 +31,44 @@ export default function Navbar() {
     }
   };
 
+  const handleLogin = async (e) => {
+    await loginWithRedirect({
+      authorizationParams: {
+        audience: "https://shopit-api",
+      }
+    });
+  };
+
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
   const navItems = [
-    { to: "/", icon: <FaStore className="text-3xl" />, label: "STORE" },
-    { to: "/categories", icon: <FaListAlt className="text-3xl" />, label: "CATEGORIES" },
-    { to: "/products", icon: <FaBox className="text-3xl" />, label: "PRODUCTS" },
-    { to: "/announcements", icon: <FaAd className="text-3xl" />, label: "ANNOUNCEMENTS" },
-    { to: "/cart", icon: <FaShoppingCart className="text-3xl" />, label: "CART" },
-    { to: "/login", icon: <FaUserAlt className="text-3xl" />, label: "PROFILE" },
+    { to: "/", onClick: "", icon: <FaStore className="text-3xl" />, label: "STORE" },
+    { to: "/categories", onClick: "", icon: <FaListAlt className="text-3xl" />, label: "CATEGORIES" },
+    { to: "/products", onClick: "", icon: <FaBox className="text-3xl" />, label: "PRODUCTS" },
+    { to: "/announcements", onClick: "", icon: <FaAd className="text-3xl" />, label: "ANNOUNCEMENTS" },
+    { to: "/cart", onClick: "", icon: <FaShoppingCart className="text-3xl" />, label: "CART" },
+    { to: "/user-profile", onClick: "", icon: <FaUserAlt className="text-3xl" />, label: "PROFILE" },
+    { to: "", onClick: handleLogin, icon: <FaSignInAlt className="text-3xl" />, label: "LOG IN" },
   ];
+
+  const filteredNavItems = navItems.filter(({ label }) => {
+    if (roles.includes("admin")) {
+      if (label === "LOG IN") {
+        return false;
+      }
+      return true;
+    } else if (roles.includes("user")) {
+      if (label === "ANNOUNCEMENTS" || label === "PRODUCTS" || label === "CATEGORIES"|| label === "LOG IN") {
+        return false;
+      }
+      return true;
+    } else {
+      if (label === "LOG IN" || label === "STORE" || label === "CART") {
+        return true;
+      }
+      return false;
+    }
+  });
 
   return (
     <nav className="bg-green-700 text-white h-[85px] w-full fixed top-0 z-50">
@@ -75,12 +107,13 @@ export default function Navbar() {
         </button>
 
         <ul className="hidden lg:flex space-x-4 font-semibold">
-          {navItems.map(({ to, icon, label }) => {
+          {filteredNavItems.map(({ to, onClick, icon, label }) => {
             const isActive = location.pathname === to;
             return (
               <li key={label} className="flex flex-col items-center min-w-[80px]">
                 <Link
                   to={to}
+                  onClick={onClick}
                   className={`flex flex-col items-center ${
                     isActive ? 'text-black font-bold pointer-events-none opacity-60' : 'hover:text-black'
                   }`}
@@ -99,7 +132,7 @@ export default function Navbar() {
           ${menuOpen ? "max-h-[500px] py-4 opacity-100" : "max-h-0 py-0 opacity-0"}
         `}
       >
-        {navItems.map(({ to, icon, label }) => {
+        {filteredNavItems.map(({ to, icon, label }) => {
           const isActive = location.pathname === to;
           return (
             <li key={label}>

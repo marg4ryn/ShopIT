@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const Announcement = require("../models/Announcement");
+const { checkJwt } = require('../auth');
 
 const router = express.Router();
 
@@ -54,7 +55,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", checkJwt, async (req, res) => {
   const { title, header, content, color } = req.body;
 
   if (!title || !header || !content || !color) {
@@ -71,7 +72,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", checkJwt, async (req, res) => {
   const { id } = req.params;
   const { title, header, content, color, visible } = req.body;
 
@@ -102,7 +103,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", checkJwt, async (req, res) => {
   const { id } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
