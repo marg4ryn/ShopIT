@@ -58,7 +58,7 @@ export default function Navbar() {
       }
       return true;
     } else if (roles.includes("user")) {
-      if (label === "ANNOUNCEMENTS" || label === "PRODUCTS" || label === "CATEGORIES"|| label === "LOG IN") {
+      if (label === "ANNOUNCEMENTS" || label === "PRODUCTS" || label === "CATEGORIES" || label === "LOG IN") {
         return false;
       }
       return true;

@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addAnnouncement } from '../../api/Announcements';
 import BackButton from '../../components/BackButton';
 import UnsavedChangesModal from '../../components/UnsavedChangesModal';
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function AddAnnouncement() {
+  const { getAccessTokenSilently } = useAuth0();
   const [title, setTitle] = useState("");
   const [header, setHeader] = useState("");
   const [content, setContent] = useState("");
@@ -35,7 +37,8 @@ export default function AddAnnouncement() {
     }
   
     try {
-      await addAnnouncement(title, header, content, color);
+      const token = await getAccessTokenSilently();
+      await addAnnouncement(token, title, header, content, color);
       sessionStorage.setItem("popupData", JSON.stringify({
         backgroundColor: "#008236",
         header: "Success!",

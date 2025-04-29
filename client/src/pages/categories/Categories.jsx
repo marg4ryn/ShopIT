@@ -5,8 +5,10 @@ import BackButton from '../../components/BackButton';
 import EditCategoryModal from '../../components/EditCategoryModal'
 import DeleteModal from '../../components/DeleteModal'
 import Popup from "../../components/Popup";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Categories() {
+    const { getAccessTokenSilently } = useAuth0();
     const [categories, setCategories] = useState([]);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
@@ -62,7 +64,8 @@ export default function Categories() {
 
       if (newCategory.trim()) {
         try {
-          const data = await addCategory(newCategory);
+          const token = await getAccessTokenSilently();
+          const data = await addCategory(token, newCategory);
           setCategories([...categories, data]);
           setNewCategory('');
           setPopupBackgroundColor("#008236");
@@ -89,7 +92,8 @@ export default function Categories() {
     const handleSaveCategory = async (newCategoryName) => {
       setIsPopupOpen(false);
       try {
-        const updatedCategory = await editCategory(categoryToEdit._id, newCategoryName);
+        const token = await getAccessTokenSilently();
+        const updatedCategory = await editCategory(token, categoryToEdit._id, newCategoryName);
         setCategories(categories.map(category => category._id === updatedCategory._id ? updatedCategory : category));
         setIsEditModalOpen(false);
         setPopupBackgroundColor("#008236");
@@ -115,7 +119,8 @@ export default function Categories() {
 
     const handleDelete = async (id) => {
       try {
-        await deleteCategory(id);
+        const token = await getAccessTokenSilently();
+        await deleteCategory(token, id);
         setCategories(prevCategories => prevCategories.filter(category => category._id !== id));
         setPopupBackgroundColor("#008236");
         setPopupHeader("Success!");

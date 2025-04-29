@@ -6,8 +6,10 @@ import BackButton from '../../components/BackButton';
 import UnsavedChangesModal from '../../components/UnsavedChangesModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function EditProduct() {
+  const { getAccessTokenSilently } = useAuth0();
   const { id } = useParams();
   const navigate = useNavigate();
   const [name, setName] = useState("");
@@ -56,15 +58,15 @@ export default function EditProduct() {
       try {
         const product = await getProduct(id);
   
-        setName(product.name);
-        setDescription(product.description);
-        setPrice(product.price);
-        setStock(product.stock);
-        setCategory(product.category._id);
+        setName(product?.name);
+        setDescription(product?.description);
+        setPrice(product?.price);
+        setStock(product?.stock);
+        setCategory(product?.category?._id || "");
   
-        const imageUrls = product.imageUrls || [];
-        const fullImageUrls = imageUrls.map(url => `http://localhost:3000${url}`);
-        const imageObjects = fullImageUrls.map(url => ({
+        const imageUrls = product.imageUrls? product.imageUrls : [];
+        const fullImageUrls = imageUrls?.map(url => `http://localhost:3000${url}`);
+        const imageObjects = fullImageUrls?.map(url => ({
           file: null,
           url,
           previewUrl: url,
@@ -75,11 +77,11 @@ export default function EditProduct() {
         setSelectedImageUrl(fullImageUrls?.[0] || "http://localhost:3000/images/No_Image_Available.jpg");
   
         setInitialData({
-          name: product.name,
-          description: product.description,
-          price: product.price,
-          stock: product.stock,
-          category: product.category._id,
+          name: product?.name,
+          description: product?.description,
+          price: product?.price,
+          stock: product?.stock,
+          category: product?.category?._id || "",
           imageUrls: fullImageUrls,
         });
       } catch (err) {
@@ -175,7 +177,8 @@ export default function EditProduct() {
     }
   
     try {
-      await editProduct(id, formData, deletedImages);
+      const token = await getAccessTokenSilently();
+      await editProduct(token, id, formData, deletedImages);
       sessionStorage.setItem("popupData", JSON.stringify({
         backgroundColor: "#008236",
         header: "Success!",

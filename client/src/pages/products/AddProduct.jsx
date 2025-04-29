@@ -6,8 +6,10 @@ import BackButton from '../../components/BackButton';
 import UnsavedChangesModal from '../../components/UnsavedChangesModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function AddProduct() {
+  const { getAccessTokenSilently } = useAuth0();
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [name, setName] = useState("");
@@ -87,7 +89,8 @@ export default function AddProduct() {
     formData.append('imageUrls', JSON.stringify(existingUrls));
   
     try {
-      await addProduct(formData);
+      const token = await getAccessTokenSilently();
+      await addProduct(token, formData);
       sessionStorage.setItem("popupData", JSON.stringify({
         backgroundColor: "#008236",
         header: "Success!",

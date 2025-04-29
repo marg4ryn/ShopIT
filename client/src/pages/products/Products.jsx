@@ -7,8 +7,10 @@ import Sidebar from "../../components/Sidebar";
 import BackButton from '../../components/BackButton';
 import DeleteModal from '../../components/DeleteModal'
 import Popup from "../../components/Popup";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Products() {
+    const { getAccessTokenSilently } = useAuth0();
     const { sortOption, filters, updateSortOption, updateFilters } = useFilterContext();
     const { searchTerm } = useSearchTerm();
     const [products, setProducts] = useState([]);
@@ -106,7 +108,8 @@ export default function Products() {
     const handleDelete = async (id) => {
         setIsPopupOpen(false);
         try {
-            await deleteProduct(id);
+            const token = await getAccessTokenSilently();
+            await deleteProduct(token, id);
             setProducts(prevProducts => prevProducts.filter(product => product._id !== id));
             setPopupBackgroundColor("#008236");
             setPopupHeader("Success!");

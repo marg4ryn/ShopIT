@@ -3,8 +3,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getAnnouncement, editAnnouncement } from '../../api/Announcements';
 import BackButton from '../../components/BackButton';
 import UnsavedChangesModal from '../../components/UnsavedChangesModal';
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function EditAnnouncement() {
+  const { getAccessTokenSilently } = useAuth0();
   const { id } = useParams();
   const [title, setTitle] = useState("");
   const [header, setHeader] = useState("");
@@ -73,7 +75,8 @@ export default function EditAnnouncement() {
     }
 
     try {
-      await editAnnouncement(id, title, header, content, color, visible);
+      const token = await getAccessTokenSilently();
+      await editAnnouncement(token, id, title, header, content, color, visible);
       sessionStorage.setItem("popupData", JSON.stringify({
         backgroundColor: "#008236",
         header: "Success!",

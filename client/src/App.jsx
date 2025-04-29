@@ -63,9 +63,7 @@ function App() {
 export default App;
 
 /* TODO before next phase
-- JWT token
 - user profile
-- server no role error handling
 */
 
 /* TODO

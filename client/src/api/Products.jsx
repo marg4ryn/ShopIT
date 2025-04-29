@@ -91,10 +91,13 @@ const BASE_URL = 'http://localhost:3000/api/products';
     }
   };
 
-  export const addProduct = async (product) => {
+  export const addProduct = async (token, product) => {
     try {
       const response = await fetch(BASE_URL, {
         method: 'POST',
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+        },
         body: product,
       });
 
@@ -110,10 +113,13 @@ const BASE_URL = 'http://localhost:3000/api/products';
     }
   };
   
-  export const editProduct = async (id, formData) => {
+  export const editProduct = async (token, id, formData) => {
     try {
       const response = await fetch(`${BASE_URL}/${id}`, {
         method: 'PUT',
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+        },
         body: formData,
       });
 
@@ -129,10 +135,13 @@ const BASE_URL = 'http://localhost:3000/api/products';
     }
   };
   
-  export const deleteProduct = async (id) => {
+  export const deleteProduct = async (token, id) => {
     try {
       const response = await fetch(`${BASE_URL}/${id}`, {
-        method: 'DELETE' 
+        method: 'DELETE',
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+        },
       });
 
       if (!response.ok) {
