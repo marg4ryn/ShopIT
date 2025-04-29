@@ -37,17 +37,19 @@ export default function Navbar() {
         audience: "https://shopit-api",
       }
     });
+    setMenuOpen(false)
   };
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
+  const closeMenu = () => setMenuOpen(false);
 
   const navItems = [
-    { to: "/", onClick: "", icon: <FaStore className="text-3xl" />, label: "STORE" },
-    { to: "/categories", onClick: "", icon: <FaListAlt className="text-3xl" />, label: "CATEGORIES" },
-    { to: "/products", onClick: "", icon: <FaBox className="text-3xl" />, label: "PRODUCTS" },
-    { to: "/announcements", onClick: "", icon: <FaAd className="text-3xl" />, label: "ANNOUNCEMENTS" },
-    { to: "/cart", onClick: "", icon: <FaShoppingCart className="text-3xl" />, label: "CART" },
-    { to: "/user-profile", onClick: "", icon: <FaUserAlt className="text-3xl" />, label: "PROFILE" },
+    { to: "/", onClick: closeMenu, icon: <FaStore className="text-3xl" />, label: "STORE" },
+    { to: "/categories", onClick: closeMenu, icon: <FaListAlt className="text-3xl" />, label: "CATEGORIES" },
+    { to: "/products", onClick: closeMenu, icon: <FaBox className="text-3xl" />, label: "PRODUCTS" },
+    { to: "/announcements", onClick: closeMenu, icon: <FaAd className="text-3xl" />, label: "ANNOUNCEMENTS" },
+    { to: "/cart", onClick: closeMenu, icon: <FaShoppingCart className="text-3xl" />, label: "CART" },
+    { to: "/user-profile", onClick: closeMenu, icon: <FaUserAlt className="text-3xl" />, label: "PROFILE" },
     { to: "", onClick: handleLogin, icon: <FaSignInAlt className="text-3xl" />, label: "LOG IN" },
   ];
 
@@ -107,13 +109,15 @@ export default function Navbar() {
         </button>
 
         <ul className="hidden lg:flex space-x-4 font-semibold">
-          {filteredNavItems.map(({ to, onClick, icon, label }) => {
+          
+          {
+          filteredNavItems.map(({ to, onClick, icon, label }) => {
             const isActive = location.pathname === to;
             return (
               <li key={label} className="flex flex-col items-center min-w-[80px]">
                 <Link
                   to={to}
-                  onClick={onClick}
+                  onClick={typeof onClick === 'function' ? onClick : undefined}
                   className={`flex flex-col items-center ${
                     isActive ? 'text-black font-bold pointer-events-none opacity-60' : 'hover:text-black'
                   }`}
@@ -132,14 +136,14 @@ export default function Navbar() {
           ${menuOpen ? "max-h-[500px] py-4 opacity-100" : "max-h-0 py-0 opacity-0"}
         `}
       >
-        {filteredNavItems.map(({ to, icon, label }) => {
+        {filteredNavItems.map(({ to, onClick, icon, label }) => {
           const isActive = location.pathname === to;
           return (
             <li key={label}>
               <div className="w-48 text-left">
                 <Link
                   to={to}
-                  onClick={() => !isActive && setMenuOpen(false)}
+                  onClick={typeof onClick === 'function' ? onClick : undefined}
                   className={`flex items-center gap-3 ${
                     isActive
                       ? "text-black font-bold pointer-events-none opacity-60"

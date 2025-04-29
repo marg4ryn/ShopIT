@@ -194,7 +194,7 @@ export default function Categories() {
                 {hasMore && (
                   <button
                     onClick={handleLoadMore}
-                    className="px-4 py-2  bg-green-600 hover:bg-green-700 text-white rounded flex-shrink-0"
+                    className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded flex-shrink-0"
                   >
                     Load more
                   </button>

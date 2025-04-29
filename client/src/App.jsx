@@ -73,7 +73,7 @@ export default App;
 */
 
 /* TODO at the end
-- two language versions
+- two languages versions
 - page loading animation
 - application responsiveness
 - application opening animation
