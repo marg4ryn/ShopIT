@@ -63,7 +63,12 @@ function App() {
 export default App;
 
 /* TODO before next phase
+<<<<<<< HEAD
 - authentication
+=======
+- logging
+- user roles
+>>>>>>> 1c15baded720cfdda35a3e7a81de9507086177db
 - user profile
 - server no role error handling
 */
