@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { getProduct } from "../../api/products";
+import { useUser } from '../../context/UserContext';
 import BackButton from '../../components/BackButton';
 
+
 export default function ViewProduct() {
+  const { roles } = useUser();
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -122,12 +125,14 @@ export default function ViewProduct() {
             <button className="p-2 bg-green-600 hover:bg-green-700 text-white rounded w-40">
               Add to cart
             </button>
+            {roles.includes("admin") && (
             <button
               className="px-4 w-20 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
               onClick={() => navigate(`/edit-product/${id}`)}
             >
               Edit
             </button>
+            )}
           </div>
         </div>
       )}

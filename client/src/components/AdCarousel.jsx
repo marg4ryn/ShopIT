@@ -27,6 +27,11 @@ export default function AdCarousel() {
         const data = await getAllAnnouncements();
         const visibleAds = data.filter(ad => ad.visible === true);
         setAds(visibleAds);
+        if (visibleAds.length > 1) {
+          setCurrentIndex(0);
+          prevIndexRef.current = (visibleAds.length - 1) % visibleAds.length;
+          nextIndexRef.current = 1 % visibleAds.length;
+        }
       } catch (error) {
         console.error("Error loading announcements:", error);
         setAds([]);

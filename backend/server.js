@@ -1,5 +1,6 @@
 require('./db');
 
+const logger = require('./logger');
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -22,5 +23,5 @@ app.use('/api/products', productRoutes);
 app.use('/api/announcements', announcementRoutes);
 
 app.listen(process.env.PORT, () => {
-  console.log(`The server runs on port ${process.env.PORT}`);
+  logger.info(`The server runs on port ${process.env.PORT}`);
 });
