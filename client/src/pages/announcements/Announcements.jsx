@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { getAnnouncements, deleteAnnouncement, editAnnouncement } from '../../api/Announcements';
 import BackButton from '../../components/BackButton';
-import DeleteModal from '../../components/DeleteModal'
-import Popup from "../../components/Popup";
+import DeleteModal from '../../components/modals/DeleteModal'
+import Popup from "../../components/modals/Popup";
 
 export default function Announcements() {
     const { getAccessTokenSilently } = useAuth0();

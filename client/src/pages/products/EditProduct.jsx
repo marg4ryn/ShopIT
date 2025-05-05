@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getProduct, editProduct } from "../../api/products";
 import { getAllCategories } from "../../api/categories";
 import BackButton from '../../components/BackButton';
-import UnsavedChangesModal from '../../components/UnsavedChangesModal';
+import UnsavedChangesModal from '../../components/modals/UnsavedChangesModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useAuth0 } from "@auth0/auth0-react";

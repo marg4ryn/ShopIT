@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { getCategories, addCategory, editCategory, deleteCategory } from '../../api/categories';
 import BackButton from '../../components/BackButton';
-import EditCategoryModal from '../../components/EditCategoryModal'
-import DeleteModal from '../../components/DeleteModal'
-import Popup from "../../components/Popup";
+import EditCategoryModal from '../../components/modals/EditCategoryModal'
+import DeleteModal from '../../components/modals/DeleteModal'
+import Popup from "../../components/modals/Popup";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Categories() {

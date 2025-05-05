@@ -28,7 +28,7 @@ function Popup({ isOpen, onClose, backgroundColor, header, content, showCloseBut
 
   return (
     <div
-      className={`fixed bottom-30 left-0 right-0 bg-opacity-50 flex items-center justify-center z-50 transition-all duration-500
+      className={`fixed bottom-15 left-0 right-0 bg-opacity-50 flex items-center justify-center z-50 transition-all duration-500
         ${isClosing || !isOpen ? 'pointer-events-none opacity-0' : 'opacity-100'}
       `}
     >

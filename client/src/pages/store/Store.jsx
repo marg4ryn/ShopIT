@@ -5,13 +5,22 @@ import { useSearchTerm } from '../../context/SearchContext';
 import { useFilterContext } from '../../context/FilterContext'; 
 import Sidebar from "../../components/Sidebar";
 import AdCarousel from "../../components/AdCarousel";
+import AddToCartModal from '../../components/modals/AddToCartModal';
+import Popup from "../../components/modals/Popup";
 
 export default function Store() {
     const { sortOption, filters, updateSortOption, updateFilters } = useFilterContext();
     const { searchTerm } = useSearchTerm();
     const [products, setProducts] = useState([]);
     const [hoveredProduct, setHoveredProduct] = useState(null);
+    const [lastHoveredProduct, setLastHoveredProduct] = useState(null);
     const [hasMore, setHasMore] = useState(true);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [popupBackgroundColor, setPopupBackgroundColor] = useState('');
+    const [popupHeader, setPopupHeader] = useState('');
+    const [popupContent, setPopupContent] = useState('');
+    const [popupShowCloseButton, setPopupShowCloseButton] = useState(false);
     const page = useRef(1);
     const limit = 12;
     const navigate = useNavigate();
@@ -19,6 +28,63 @@ export default function Store() {
     const handleViewProduct = (id) => {
         navigate(`/view-product/${id}`);
     };
+
+    useEffect(() => {
+        const popupData = sessionStorage.getItem("popupData");
+        
+        if (popupData) {
+            setIsPopupOpen(false);
+            const parsed = JSON.parse(popupData);
+            setPopupBackgroundColor(parsed.backgroundColor);
+            setPopupHeader(parsed.header);
+            setPopupContent(parsed.content);
+            setPopupShowCloseButton(parsed.showCloseButton);
+            setIsPopupOpen(true);
+        
+            sessionStorage.removeItem("popupData");
+        }
+    }, []);
+
+    const closePopup = () => {
+        setIsPopupOpen(false);
+    };
+    
+    const closeModal = () => {
+        setIsModalOpen(false);
+    }
+
+    const handleHoverProduct = (product) => {
+        setHoveredProduct(product._id);
+        setLastHoveredProduct(product._id);
+    }
+
+    const addToCart = (quantity) => {
+        setIsPopupOpen(false);
+        try {
+          const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      
+          const index = cart.findIndex(item => item.id === lastHoveredProduct._id);
+          if (index !== -1) {
+            cart[index].quantity += quantity;
+          } else {
+            cart.push({ id: lastHoveredProduct._id, quantity });
+          }
+        
+          localStorage.setItem('cart', JSON.stringify(cart));
+          setPopupBackgroundColor("#008236");
+          setPopupHeader("Success!");
+          setPopupContent("Product has been added to your cart!");
+          setPopupShowCloseButton(false);
+          setIsPopupOpen(true);
+        } catch (err) {
+          setPopupBackgroundColor("red");
+          setPopupHeader(`Failed to add product to cart.`);
+          setPopupContent(`${err}`);
+          setPopupShowCloseButton(true);
+          setIsPopupOpen(true);
+          console.error('Failed to add product to cart:', err);
+        }
+      };
 
     const loadProducts = async (reset = false) => {
         try {
@@ -132,7 +198,7 @@ export default function Store() {
                         <div
                             key={product._id}
                             className="relative bg-white p-4 rounded-lg text-center min-w-[180px] max-w-[400px] max-h-[440px] overflow-hidden group z-10"
-                            onMouseEnter={() => setHoveredProduct(product._id)}
+                            onMouseEnter={() => handleHoverProduct(product)}
                             onMouseLeave={() => setHoveredProduct(null)}
                             onClick={() => handleViewProduct(product._id)}
                         >
@@ -164,7 +230,13 @@ export default function Store() {
                                         ? `${product.description.substring(0, 150)}...`
                                         : product.description}
                                 </p>
-                                <button className="mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                                <button 
+                                    className="mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setIsModalOpen(true);
+                                      }}
+                                >
                                     Add to cart
                                 </button>
                             </div>
@@ -180,6 +252,20 @@ export default function Store() {
             )}
             </div>)}
         </div>
+        <AddToCartModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onConfirm={addToCart}
+        />
+        <Popup
+          isOpen={isPopupOpen}
+          onClose={closePopup}
+          backgroundColor={popupBackgroundColor}
+          header={popupHeader}
+          content={popupContent}
+          showCloseButton={popupShowCloseButton}
+          autoCloseTime={3000}
+        />
     </main>
     );
 }

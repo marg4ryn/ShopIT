@@ -1,1 +1,12 @@
 @import "tailwindcss";
+
+@layer utilities {
+  .spin-white::-webkit-inner-spin-button,
+  .spin-white::-webkit-outer-spin-button {
+    -webkit-appearance: inner-spin-button;
+    appearance: auto;
+    background: transparent;
+    color: white;
+    filter: invert(1);
+  }
+}

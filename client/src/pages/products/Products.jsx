@@ -5,8 +5,8 @@ import { useSearchTerm } from '../../context/SearchContext';
 import { useFilterContext } from '../../context/FilterContext'; 
 import Sidebar from "../../components/Sidebar";
 import BackButton from '../../components/BackButton';
-import DeleteModal from '../../components/DeleteModal'
-import Popup from "../../components/Popup";
+import DeleteModal from '../../components/modals/DeleteModal'
+import Popup from "../../components/modals/Popup";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Products() {

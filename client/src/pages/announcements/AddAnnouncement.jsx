@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addAnnouncement } from '../../api/Announcements';
 import BackButton from '../../components/BackButton';
-import UnsavedChangesModal from '../../components/UnsavedChangesModal';
+import UnsavedChangesModal from '../../components/modals/UnsavedChangesModal';
 import { useAuth0 } from "@auth0/auth0-react";
 
 export default function AddAnnouncement() {

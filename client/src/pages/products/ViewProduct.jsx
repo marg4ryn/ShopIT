@@ -4,14 +4,37 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { getProduct } from "../../api/products";
 import { useUser } from '../../context/UserContext';
 import BackButton from '../../components/BackButton';
-
+import Popup from "../../components/modals/Popup";
+import AddToCartModal from '../../components/modals/AddToCartModal';
 
 export default function ViewProduct() {
   const { roles } = useUser();
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [popupBackgroundColor, setPopupBackgroundColor] = useState('');
+  const [popupHeader, setPopupHeader] = useState('');
+  const [popupContent, setPopupContent] = useState('');
+  const [popupShowCloseButton, setPopupShowCloseButton] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+        const popupData = sessionStorage.getItem("popupData");
+        
+        if (popupData) {
+            setIsPopupOpen(false);
+            const parsed = JSON.parse(popupData);
+            setPopupBackgroundColor(parsed.backgroundColor);
+            setPopupHeader(parsed.header);
+            setPopupContent(parsed.content);
+            setPopupShowCloseButton(parsed.showCloseButton);
+            setIsPopupOpen(true);
+        
+            sessionStorage.removeItem("popupData");
+        }
+    }, []);
 
   useEffect(() => {
     const loadProduct = async () => {
@@ -27,6 +50,10 @@ export default function ViewProduct() {
     loadProduct();
   }, [id]);
 
+  const closePopup = () => {
+    setIsPopupOpen(false);
+  };
+
   const nextImage = () => {
     const currentIndex = product.imageUrls.indexOf(selectedImage);
     const nextIndex = (currentIndex + 1) % product.imageUrls.length;
@@ -37,6 +64,39 @@ export default function ViewProduct() {
     const currentIndex = product.imageUrls.indexOf(selectedImage);
     const prevIndex = (currentIndex - 1 + product.imageUrls.length) % product.imageUrls.length;
     setSelectedImage(product.imageUrls[prevIndex]);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  }
+
+  const addToCart = (quantity) => {
+    setIsPopupOpen(false);
+    try {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  
+      const index = cart.findIndex(item => item.id === id);
+      if (index !== -1) {
+        cart[index].quantity += quantity;
+      } else {
+        cart.push({ id, quantity });
+      }
+      console.log(cart);
+    
+      localStorage.setItem('cart', JSON.stringify(cart));
+      setPopupBackgroundColor("#008236");
+      setPopupHeader("Success!");
+      setPopupContent("Product has been added to your cart!");
+      setPopupShowCloseButton(false);
+      setIsPopupOpen(true);
+    } catch (err) {
+      setPopupBackgroundColor("red");
+      setPopupHeader(`Failed to add product to cart.`);
+      setPopupContent(`${err}`);
+      setPopupShowCloseButton(true);
+      setIsPopupOpen(true);
+      console.error('Failed to add product to cart:', err);
+    }
   };
 
   return (
@@ -122,7 +182,10 @@ export default function ViewProduct() {
 
           <div className="flex text-center gap-8 items-center justify-center my-4">
             <BackButton onClick={() => { navigate(-1); }} />
-            <button className="p-2 bg-green-600 hover:bg-green-700 text-white rounded w-40">
+            <button 
+              className="p-2 bg-green-600 hover:bg-green-700 text-white rounded w-40"
+              onClick={() => {setIsModalOpen(true);}}
+            >
               Add to cart
             </button>
             {roles.includes("admin") && (
@@ -136,6 +199,20 @@ export default function ViewProduct() {
           </div>
         </div>
       )}
+       <AddToCartModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onConfirm={addToCart}
+        />
+        <Popup
+          isOpen={isPopupOpen}
+          onClose={closePopup}
+          backgroundColor={popupBackgroundColor}
+          header={popupHeader}
+          content={popupContent}
+          showCloseButton={popupShowCloseButton}
+          autoCloseTime={3000}
+        />
     </main>
   );
 }
