@@ -62,17 +62,13 @@ function App() {
 
 export default App;
 
-/* TODO before next phase
-- user profile
-- shopping cart + cookies
-*/
-
 /* TODO
+- user profile
 - orders + api
-- product reviews 
 */
 
-/* TODO at the end
+/* TODO on my own
+- product reviews 
 - two languages versions
 - page loading animation
 - application responsiveness

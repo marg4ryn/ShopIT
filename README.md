@@ -21,7 +21,7 @@ ShopIt is a modern online store that enables fast and convenient online shopping
 - Browsing products from the store offer
 - Searching, filtering and sorting products
 - User registration and login
-- Adding products to the basket stored in cookies
+- Adding products to the cart stored in localStorage
 - Placing an order with the choice of payment and delivery method
 - Order history and the ability to track them
 
@@ -41,7 +41,7 @@ ShopIt to nowoczesny sklep internetowy, który umożliwia szybkie i wygodne zaku
 - Przeglądanie produktów z oferty sklepu
 - Wyszukiwanie, filtrowanie i sortowanie produktów 
 - Rejestracja i logowanie użytkowników  
-- Dodawanie produktów do koszyka przechowywanego w formie ciasteczek
+- Dodawanie produktów do koszyka przechowywanego w localStorage
 - Składanie zamówienia z wyborem metody płatności i dostawy
 - Historia zamówień i możliwość ich śledzenia  
 

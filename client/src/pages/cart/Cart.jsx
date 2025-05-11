@@ -73,7 +73,7 @@ export default function Cart() {
   const total = cartItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
 
   return (
-    <div className="flex flex-col flex-grow justify-center items-center pt-10 mt-16 text-white">
+    <div className="flex flex-col flex-grow justify-center items-center pt-10 mt-16 ml-32 text-white">
         <h1 className="text-2xl font-bold text-center p-6">Your Cart</h1>
 
         <div className="flex flex-grow gap-4 justify-center items-center w-full">
@@ -87,7 +87,7 @@ export default function Cart() {
                 {cartItems.map((item) => (
                   <li key={item._id} className="flex gap-6">
 
-                      <div className="flex justify-start items-center p-4 rounded-md bg-white w-26">
+                      <div className="flex justify-start items-center p-4 rounded-lg bg-white w-26">
                         <img
                           src={`http://localhost:3000${item.imageUrls?.[0] || "/images/No_Image_Available.jpg"}`}
                           alt={item.name}
@@ -95,16 +95,16 @@ export default function Cart() {
                         />
                       </div>
 
-                      <div className="flex justify-start items-center p-4 rounded-md bg-white w-80">
-                        <h3 className="text-l font-semibold">{item.name}</h3>
+                      <div className="flex justify-start items-center p-4 rounded-lg bg-white w-80">
+                        <h3 className="font-semibold">{item.name}</h3>
                       </div>
 
                       <div className="flex justify-center items-center">
                         <QuantitySelector productId={item._id} initialQuantity={item.quantity} stock={item.stock} onChange={handleQuantityChange} onValueZero={handleDeleteProduct}/>
                       </div>
 
-                      <div className="flex justify-center items-center p-4 rounded-md bg-white w-30">
-                        <span className="text-lg font-semibold">${(item.quantity * item.price).toFixed(2)}</span>
+                      <div className="flex justify-center items-center p-4 rounded-lg bg-white w-30">
+                        <span className="font-semibold">${(item.quantity * item.price).toFixed(2)}</span>
                       </div>
 
                   </li>
@@ -115,7 +115,7 @@ export default function Cart() {
             <div className="flex flex-col my-8 space-y-4 justify-center items-center">
               <div className="flex gap-8 justify-between items-center mt-8 p-4 w-80 text-xl font-semibold">
                 <h3 className="font-bold">Total:</h3>
-                <div className="flex justify-center items-center bg-white text-black rounded-md p-4 w-40">
+                <div className="flex justify-center items-center bg-white text-black rounded-lg p-4 w-40">
                   <p className="text-center">${total.toFixed(2)}</p>
                 </div>
               </div>
