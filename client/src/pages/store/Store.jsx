@@ -12,8 +12,8 @@ export default function Store() {
     const { sortOption, filters, updateSortOption, updateFilters } = useFilterContext();
     const { searchTerm } = useSearchTerm();
     const [products, setProducts] = useState([]);
-    const [hoveredProduct, setHoveredProduct] = useState(null);
-    const [lastHoveredProduct, setLastHoveredProduct] = useState(null);
+    const [hoveredProductId, setHoveredProductId] = useState(null);
+    const [lastHoveredProductId, setLastHoveredProductId] = useState(null);
     const [hasMore, setHasMore] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -54,23 +54,24 @@ export default function Store() {
     }
 
     const handleHoverProduct = (product) => {
-        setHoveredProduct(product._id);
-        setLastHoveredProduct(product._id);
+        setHoveredProductId(product._id);
+        setLastHoveredProductId(product._id);
     }
 
-    const addToCart = (quantity) => {
+    const addToCart = (productId, quantity) => {
         setIsPopupOpen(false);
         try {
           const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      
-          const index = cart.findIndex(item => item.id === lastHoveredProduct._id);
+          const index = cart.findIndex(item => item.id === productId);
+
           if (index !== -1) {
             cart[index].quantity += quantity;
           } else {
-            cart.push({ id: lastHoveredProduct._id, quantity });
+            cart.push({ id: productId, quantity });
           }
         
           localStorage.setItem('cart', JSON.stringify(cart));
+
           setPopupBackgroundColor("#008236");
           setPopupHeader("Success!");
           setPopupContent("Product has been added to your cart!");
@@ -125,7 +126,7 @@ export default function Store() {
     
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
-    }, [hasMore, sortOption, filters, searchTerm]);
+    }, []);
  
     useEffect(() => {
         loadProducts(true);
@@ -199,7 +200,7 @@ export default function Store() {
                             key={product._id}
                             className="relative bg-white p-4 rounded-lg text-center min-w-[180px] max-w-[400px] max-h-[440px] overflow-hidden group z-10"
                             onMouseEnter={() => handleHoverProduct(product)}
-                            onMouseLeave={() => setHoveredProduct(null)}
+                            onMouseLeave={() => setHoveredProductId(null)}
                             onClick={() => handleViewProduct(product._id)}
                         >
                             <img
@@ -218,7 +219,7 @@ export default function Store() {
 
                             <div
                                 className={`absolute top-0 left-0 w-full h-full bg-white flex flex-col items-center justify-center p-6 text-black transition-all duration-300 ease-in-out 
-                                ${hoveredProduct === product._id ? "translate-x-0" : "-translate-x-full"}`}
+                                ${hoveredProductId === product._id ? "translate-x-0" : "-translate-x-full"}`}
                             >
                                 <p className="text-lg font-bold pb-2">
                                     <span>{leftPart}</span>
@@ -256,6 +257,7 @@ export default function Store() {
           isOpen={isModalOpen}
           onClose={closeModal}
           onConfirm={addToCart}
+          productId={lastHoveredProductId}
         />
         <Popup
           isOpen={isPopupOpen}

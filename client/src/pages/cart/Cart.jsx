@@ -1,29 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { getProduct } from "../../api/products";
+import DeleteModal from '../../components/modals/DeleteModal'
 import QuantitySelector from '../../components/QuantitySelector';
 import OrderProgress from '../../components/OrderProgress';
 
 export default function Cart() {
-  const [cart, setCart] = useState(getCartFromCookie());
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
+  const [cart, setCart] = useState([]);
   const [cartItems, setCartItems] = useState([]);
   const [currentStep, setCurrentStep] = useState(1);
   const steps = ['Cart', 'Shipping', 'Payment', 'Summary'];
 
   useEffect(() => {
+    const getCartFromCookie = async () => {
+      try {
+        setCart(JSON.parse(localStorage.getItem('cart')));
+      } catch (error) {
+        setCart([]);
+      }
+    }
+    getCartFromCookie();
+  }, []);
+
+  useEffect(() => {
     const fetchCartDetails = async () => {
-      console.log(cart);
       if (cart.length === 0) {
         setCartItems([]);
         return;
       }
 
-      const ids = cart.map(item => item.productId).join(',');
-      const res = await fetch(`http://localhost:5000/products/bulk?ids=${ids}`, {
-        credentials: 'include',
-      });
-      const products = await res.json();
+      const productPromises = cart.map(item => getProduct(item.id));
+      const products = await Promise.all(productPromises);
 
       const merged = cart.map(item => {
-        const product = products.find(p => p._id === item.productId);
+        const product = products.find(p => p._id === item.id);
         return product ? { ...product, quantity: item.quantity } : null;
       }).filter(Boolean);
 
@@ -33,25 +44,30 @@ export default function Cart() {
     fetchCartDetails();
   }, [cart]);
 
-  function getCartFromCookie() {
-    const cookie = document.cookie
-      .split('; ')
-      .find(row => row.startsWith('cart='));
-    if (!cookie) return [];
-    try {
-      return JSON.parse(decodeURIComponent(cookie.split('=')[1]));
-    } catch (e) {
-      return [];
-    }
-  }
-
   const handleQuantityChange = (productId, newQuantity) => {
     const updatedCart = cart.map(item =>
-      item.productId === productId ? { ...item, quantity: newQuantity } : item
+      item.id === productId ? { ...item, quantity: newQuantity } : item
     );
 
     setCart(updatedCart);
-    document.cookie = `cart=${encodeURIComponent(JSON.stringify(updatedCart))}; path=/; max-age=${7 * 24 * 60 * 60}`;
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
+  };
+
+  const handleDeleteProduct = (productId) => {
+    const productToDelete = cartItems.find(item => item._id === productId);
+    setProductToDelete(productToDelete);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDelete = (productId) => {
+    const updatedCart = cart.filter(item => item.id !== productId);
+    setCart(updatedCart);
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleClose = () => {
+    setIsDeleteModalOpen(false)
   };
 
   const total = cartItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
@@ -61,7 +77,7 @@ export default function Cart() {
         <h1 className="text-2xl font-bold text-center p-6">Your Cart</h1>
 
         <div className="flex flex-grow gap-4 justify-center items-center w-full">
-          <div className="ml-12 w-24 mb-8">
+          <div className="fixed top-32 left-12 w-24 mb-8">
             <OrderProgress currentStep={currentStep} steps={steps} />
           </div>
     
@@ -69,18 +85,26 @@ export default function Cart() {
             <div className="mt-8">
               <ul className="space-y-4 text-black">
                 {cartItems.map((item) => (
-                  <li key={item.id} className="flex gap-6">
+                  <li key={item._id} className="flex gap-6">
+
+                      <div className="flex justify-start items-center p-4 rounded-md bg-white w-26">
+                        <img
+                          src={`http://localhost:3000${item.imageUrls?.[0] || "/images/No_Image_Available.jpg"}`}
+                          alt={item.name}
+                          className="h-22 object-contain"
+                        />
+                      </div>
 
                       <div className="flex justify-start items-center p-4 rounded-md bg-white w-80">
-                        <h3 className="text-xl font-semibold">{item.name}</h3>
+                        <h3 className="text-l font-semibold">{item.name}</h3>
                       </div>
 
-                      <div className="flex">
-                        <QuantitySelector initialQuantity={item.quantity} onChange={handleQuantityChange} />
+                      <div className="flex justify-center items-center">
+                        <QuantitySelector productId={item._id} initialQuantity={item.quantity} stock={item.stock} onChange={handleQuantityChange} onValueZero={handleDeleteProduct}/>
                       </div>
 
-                      <div className="flex justify-start items-center p-4 rounded-md bg-white w-25">
-                        <span className="text-lg font-semibold">${item.quantity * item.price}</span>
+                      <div className="flex justify-center items-center p-4 rounded-md bg-white w-30">
+                        <span className="text-lg font-semibold">${(item.quantity * item.price).toFixed(2)}</span>
                       </div>
 
                   </li>
@@ -92,7 +116,7 @@ export default function Cart() {
               <div className="flex gap-8 justify-between items-center mt-8 p-4 w-80 text-xl font-semibold">
                 <h3 className="font-bold">Total:</h3>
                 <div className="flex justify-center items-center bg-white text-black rounded-md p-4 w-40">
-                  <p className="text-center">${total}</p>
+                  <p className="text-center">${total.toFixed(2)}</p>
                 </div>
               </div>
 
@@ -103,6 +127,14 @@ export default function Cart() {
 
           </div>
         </div>
+          <DeleteModal 
+            isOpen={isDeleteModalOpen} 
+            onClose={handleClose} 
+            onDelete={handleDelete} 
+            item={productToDelete}
+            titleItem="product from your cart"
+            itemLabel={productToDelete?.name}
+          />
     </div>
   );
 }

@@ -10,7 +10,7 @@ const DeleteModal = ({
 
   return (
     <div className="fixed inset-0 bg-opacity-50 backdrop-blur-md flex justify-center items-center">
-      <div className="bg-white p-6 rounded-lg w-96 shadow-lg">
+      <div className="bg-white p-6 rounded-lg w-96 shadow-lg text-black">
         <h3 className="text-xl text-center font-bold mb-4">Are you sure you want to delete this {titleItem}?</h3>
         <p className="text-lg text-center font-semibold">{itemLabel}</p>
         <div className="flex justify-center mt-6 gap-6">

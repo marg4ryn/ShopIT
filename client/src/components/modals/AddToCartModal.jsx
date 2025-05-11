@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const AddToCartModal = ({ isOpen, onClose, onConfirm }) => {
+const AddToCartModal = ({ isOpen, onClose, onConfirm, productId}) => {
   const [quantity, setQuantity] = useState(1);
 
   if (!isOpen) return null;
@@ -9,7 +9,7 @@ const AddToCartModal = ({ isOpen, onClose, onConfirm }) => {
   const decrease = () => setQuantity(prev => (prev > 1 ? prev - 1 : 1));
 
   const handleConfirm = () => {
-    onConfirm(quantity);
+    onConfirm(productId, quantity);
     onClose();
     setQuantity(1);
   };

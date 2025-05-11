@@ -64,10 +64,10 @@ export default App;
 
 /* TODO before next phase
 - user profile
+- shopping cart + cookies
 */
 
 /* TODO
-- shopping cart + cookies
 - orders + api
 - product reviews 
 */
@@ -81,5 +81,4 @@ export default App;
 - Mailchimp
 - Twilio
 - Google Analytics
-- tests
 */
