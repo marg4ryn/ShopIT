@@ -63,12 +63,13 @@ function App() {
 export default App;
 
 /* TODO
-- user profile
-- orders + api
+- inpost api
+- payU api
+- orders
 */
 
 /* TODO on my own
-- product reviews 
+- reviews 
 - two languages versions
 - page loading animation
 - application responsiveness

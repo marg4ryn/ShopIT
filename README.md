@@ -12,9 +12,9 @@ ShopIt is a modern online store that enables fast and convenient online shopping
 - MongoDB + Mongoose
 
 ### 🔗 **Integrations**
-- **Delivery** – InPost, DHL
-- **Payments** – PayU, Przelewy24
-- **Authorization** - Auth0, reCAPTCHA
+- **Delivery** – InPost
+- **Payments** – PayU
+- **Authorization** - Auth0
 
 ## 🧩 **Functionalities**
 - Administration panels for managing products, categories and announcements

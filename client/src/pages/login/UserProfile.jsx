@@ -12,10 +12,9 @@ const UserProfile = () => {
 							<div>
 								<div className="flex justify-center mb-4 relative">
 										<img
-												src={userData.picture || "/user-profile-default.png"}
-												alt="User Profile"
-												className="w-32 h-32 rounded-full robject-cove border-2 border-gray-300"
-												onClick={() => {}}
+											src={userData.picture || "/user-profile-default.png"}
+											alt="User Profile"
+											className="w-32 h-32 rounded-full robject-cove border-2 border-gray-300"
 										/>       
 								</div>
 
@@ -24,10 +23,10 @@ const UserProfile = () => {
 										<input
 												id="userName"
 												type="text"
+												autoComplete="username"
 												disabled={true}
 												className={`w-full border text-black border-gray-300 bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
 												value={userData.name}
-												onChange={() => {}}
 										/>
 								</div>
 
