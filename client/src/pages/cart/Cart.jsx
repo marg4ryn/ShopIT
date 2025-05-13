@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 import { getProduct } from "../../api/products";
+import { useUser } from '../../context/UserContext';
+import { useOrderContext } from '../../context/OrderContext';
+import { useNavigate } from "react-router-dom";
 import DeleteModal from '../../components/modals/DeleteModal'
 import QuantitySelector from '../../components/QuantitySelector';
 import OrderProgress from '../../components/OrderProgress';
@@ -9,8 +12,9 @@ export default function Cart() {
   const [productToDelete, setProductToDelete] = useState(null);
   const [cart, setCart] = useState([]);
   const [cartItems, setCartItems] = useState([]);
-  const [currentStep, setCurrentStep] = useState(1);
-  const steps = ['Cart', 'Shipping', 'Payment', 'Summary'];
+  const { currentStep, setCurrentStep } = useOrderContext();
+  const { userData } = useUser();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getCartFromCookie = async () => {
@@ -20,12 +24,14 @@ export default function Cart() {
         setCart([]);
       }
     }
+
+    setCurrentStep(1);
     getCartFromCookie();
   }, []);
 
   useEffect(() => {
     const fetchCartDetails = async () => {
-      if (cart.length === 0) {
+      if (cart?.length === 0) {
         setCartItems([]);
         return;
       }
@@ -77,8 +83,8 @@ export default function Cart() {
         <h1 className="text-2xl font-bold text-center p-6">Your Cart</h1>
 
         <div className="flex flex-grow gap-4 justify-center items-center w-full">
-          <div className="fixed top-32 left-12 w-24 mb-8">
-            <OrderProgress currentStep={currentStep} steps={steps} />
+          <div className="fixed justify-center left-12 w-24 mb-8">
+            <OrderProgress currentStep={currentStep}/>
           </div>
     
           <div className="flex flex-1 flex-col items-center justify-center">
@@ -112,18 +118,40 @@ export default function Cart() {
               </ul>
             </div>
     
-            <div className="flex flex-col my-8 space-y-4 justify-center items-center">
-              <div className="flex gap-8 justify-between items-center mt-8 p-4 w-80 text-xl font-semibold">
-                <h3 className="font-bold">Total:</h3>
-                <div className="flex justify-center items-center bg-white text-black rounded-lg p-4 w-40">
-                  <p className="text-center">${total.toFixed(2)}</p>
-                </div>
+            {cart?.length === 0 ? (
+              <div className="flex justify-center items-center bg-white text-black rounded-lg p-4 w-64">
+                <p className="text-center font-bold">No items in your cart</p>
               </div>
+            ) : (
+              <div className="flex flex-col my-8 space-y-4 justify-center items-center">
+                <div className="flex gap-8 justify-between items-center mt-8 p-4 w-80 text-xl font-semibold">
+                  <h3 className="font-bold">Total:</h3>
+                  <div className="flex justify-center items-center bg-white text-black rounded-lg p-4 w-40">
+                    <p className="text-center">${total.toFixed(2)}</p>
+                  </div>
+                </div>
+                {userData ? (
+                  <button className="bg-green-600 hover:bg-green-700 font-semibold text-white px-2 py-4 rounded-lg w-80"
+                   onClick={() => 
+                    navigate(`/shipment`)
+                  }
+                   >
+                    Proceed to Checkout
+                  </button>
+                ) : (
+                  <div className="flex flex-col justify-between items-center mt-8 p-4 w-80 text-md font-semibold">
+                    <p className="font-semibold mb-2">If you wish to continue, please log in.</p>
+                  <button 
+                    className="text-xl bg-gray-700 font-semibold text-white px-2 py-4 rounded-lg w-80"
+                    disabled={true}
+                  >
+                    Proceed to Checkout
+                  </button>
+                </div>
 
-              <button className="bg-green-600 hover:bg-green-700 font-semibold text-white px-2 py-4 rounded-lg w-80">
-                Proceed to Checkout
-              </button>
-            </div>
+                )}
+              </div>
+            )}
 
           </div>
         </div>

@@ -2,12 +2,14 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SearchProvider } from "./context/SearchContext";
 import { FilterProvider } from "./context/FilterContext";
 import { UserProvider } from "./context/UserContext";
+import { OrderProvider } from "./context/OrderContext";
 import { Auth0Provider } from "@auth0/auth0-react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import UserProfile from "./pages/login/UserProfile";
 import Store from "./pages/store/Store";
 import Cart from "./pages/cart/Cart";
+import Shipment from "./pages/cart/Shipment";
 import Categories from "./pages/categories/Categories";
 import Products from "./pages/products/Products";
 import ViewProduct from "./pages/products/ViewProduct";
@@ -32,6 +34,7 @@ function App() {
           audience: "https://shopit-api", 
         }}
       >
+      <OrderProvider>
       <UserProvider>
       <FilterProvider>
       <SearchProvider>
@@ -40,6 +43,7 @@ function App() {
             <Route path="/user-profile" element={<><Navbar /> <UserProfile /></>} />
             <Route path="/" element={<><Navbar /> <Store /></>} />
             <Route path="/cart" element={<><Navbar /> <Cart /></>} />
+            <Route path="/shipment" element={<><Navbar /> <Shipment /></>} />
             <Route path="/categories" element={<><Navbar /> <Categories /></>} />
             <Route path="/products" element={<><Navbar /> <Products /></>} />
             <Route path="/view-product/:id" element={<><Navbar /> <ViewProduct /></>} />
@@ -55,6 +59,7 @@ function App() {
       </SearchProvider>
       </FilterProvider>  
       </UserProvider>
+      </OrderProvider>
       </Auth0Provider>
     </BrowserRouter>
   );
@@ -63,7 +68,7 @@ function App() {
 export default App;
 
 /* TODO
-- inpost api
+- furgonetka api
 - payU api
 - orders
 */

@@ -1,0 +1,33 @@
+{
+  "product.noResults": "No products matching given criteria.",
+  "product.loading": "Loading more products...",
+  "product.add.success": "Product has been added to your cart!",
+  "product.add.failed": "Failed to add product to cart.",
+  "product.create.success": "Product has been successfully created!",
+  "product.create.failed": "Failed to create product.",
+
+  "form.name": "Name",
+  "form.description": "Description",
+  "form.price": "Price ($)",
+  "form.stock": "Stock",
+  "form.category": "Category",
+  "form.image": "Image",
+  "form.select": "-- Select --",
+  "form.descriptionPlaceholder": "Enter product description...",
+
+  "error.nameRequired": "Name is required",
+  "error.descriptionRequired": "Description is required",
+  "error.priceRequired": "Price is required",
+  "error.stockRequired": "Stock is required",
+  "error.categoryRequired": "Category is required",
+  "error.addProductFailed": "Failed to add product to cart:",
+  "error.fetchProductsFailed": "Failed to fetch products:",
+  "error.fetchCategoriesFailed": "Failed to fetch categories:",
+
+  "status.success": "Success!",
+  
+  "button.add": "Add",
+  "button.addToCart": "Add to cart",
+
+  "header.addProduct": "Add Product"
+}

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from "react-router-dom";
 import { getAllCategories } from "../../api/categories";
 import { addProduct } from '../../api/products';
@@ -28,6 +29,7 @@ export default function AddProduct() {
     category: "",
   });
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const loadCategories = async () => {

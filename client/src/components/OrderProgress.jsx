@@ -1,6 +1,5 @@
-import React from 'react';
-
-export default function OrderProgress({ currentStep, steps }) {
+export default function OrderProgress({ currentStep }) {
+  const steps = ['Cart', 'Shipment', 'Payment', 'Summary'];
   const progress = (currentStep / steps.length) * 100;
 
   return (

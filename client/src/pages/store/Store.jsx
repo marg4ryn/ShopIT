@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from "react-router-dom";
 import { getFilteredProducts } from '../../api/products';
 import { useSearchTerm } from '../../context/SearchContext';
@@ -21,6 +22,7 @@ export default function Store() {
     const [popupHeader, setPopupHeader] = useState('');
     const [popupContent, setPopupContent] = useState('');
     const [popupShowCloseButton, setPopupShowCloseButton] = useState(false);
+    const { t } = useTranslation();
     const page = useRef(1);
     const limit = 12;
     const navigate = useNavigate();
@@ -73,17 +75,17 @@ export default function Store() {
           localStorage.setItem('cart', JSON.stringify(cart));
 
           setPopupBackgroundColor("#008236");
-          setPopupHeader("Success!");
-          setPopupContent("Product has been added to your cart!");
+          setPopupHeader(t('status.success'));
+          setPopupContent(t('product.add.success'));
           setPopupShowCloseButton(false);
           setIsPopupOpen(true);
         } catch (err) {
           setPopupBackgroundColor("red");
-          setPopupHeader(`Failed to add product to cart.`);
+          setPopupHeader(t('product.add.failed'));
           setPopupContent(`${err}`);
           setPopupShowCloseButton(true);
           setIsPopupOpen(true);
-          console.error('Failed to add product to cart:', err);
+          console.error(t('error.addProductFailed'), err);
         }
       };
 
@@ -109,7 +111,7 @@ export default function Store() {
         
             setHasMore(result.hasMore);
         } catch (err) {
-            console.error('Failed to fetch products:', err);
+            console.error(t('error.fetchProductsFailed'), err);
         }
     };
 
@@ -177,7 +179,7 @@ export default function Store() {
                         <AdCarousel />
                     </div>
                     <div className="col-span-full flex text-center items-center justify-center text-white bg-neutral-800 text-xl font-medium py-20 rounded-md">
-                        No products matching given criteria.
+                        {t('product.noResults')}
                     </div>
                 </div>
             ) : (
@@ -238,7 +240,7 @@ export default function Store() {
                                         setIsModalOpen(true);
                                       }}
                                 >
-                                    Add to cart
+                                    {t('button.addToCart')}
                                 </button>
                             </div>
                         </div>
@@ -248,7 +250,7 @@ export default function Store() {
                 }, [])}
             {hasMore && (
                 <div className="col-span-full flex justify-center py-6">
-                    <span className="text-white">Loading more products...</span>
+                    <span className="text-white">{t('product.loading')}</span>
                 </div>
             )}
             </div>)}

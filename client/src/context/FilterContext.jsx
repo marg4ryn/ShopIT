@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useState, useContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 const FilterContext = createContext();
