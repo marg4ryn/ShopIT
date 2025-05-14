@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from "react-router-dom";
 import { addAnnouncement } from '../../api/Announcements';
 import BackButton from '../../components/BackButton';
@@ -13,6 +14,7 @@ export default function AddAnnouncement() {
   const [color, setColor] = useState("#30b404");
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); 
+  const { t } = useTranslation();
   const [errors, setErrors] = useState({
     title: "",
     header: "",

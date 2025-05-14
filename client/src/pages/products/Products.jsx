@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from "react-router-dom";
 import { deleteProduct, getFilteredProducts } from '../../api/products';
 import { useSearchTerm } from '../../context/SearchContext';
@@ -25,6 +26,7 @@ export default function Products() {
     const [popupContent, setPopupContent] = useState('');
     const [popupShowCloseButton, setPopupShowCloseButton] = useState(false);
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const loadProducts = async (reset = false) => {
       try {

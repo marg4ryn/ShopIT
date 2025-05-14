@@ -1,4 +1,8 @@
+import { useTranslation } from 'react-i18next';
+
 const ConfirmModal = ({ isOpen, message, onCancel, onConfirm }) => {
+    const { t } = useTranslation();
+
     if (!isOpen) return null;
   
     return (

@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 const DeleteModal = ({ 
   isOpen, 
   onClose, 
@@ -6,6 +8,8 @@ const DeleteModal = ({
   titleItem, 
   itemLabel
 }) => {
+  const { t } = useTranslation();
+
   if (!isOpen) return null;
 
   return (

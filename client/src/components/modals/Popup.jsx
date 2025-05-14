@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function Popup({ isOpen, onClose, backgroundColor, header, content, showCloseButton, autoCloseTime }) {
   const [isOpening, setIsOpening] = useState(false);

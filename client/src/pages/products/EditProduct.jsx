@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from "react-router-dom";
 import { getProduct, editProduct } from "../../api/products";
 import { getAllCategories } from "../../api/categories";
@@ -38,6 +39,7 @@ export default function EditProduct() {
     stock: "",
     category: "",
   });
+  const { t } = useTranslation();
   
   const isModified =
     name !== initialData.name ||

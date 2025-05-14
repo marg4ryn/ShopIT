@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useUser } from '../../context/UserContext';
 import { useOrderContext } from '../../context/OrderContext';
 import { useNavigate } from "react-router-dom";
@@ -8,6 +9,7 @@ import BackButton from '../../components/BackButton';
 export default function Shipment() {
   const { currentStep, setCurrentStep } = useOrderContext();
   const { userData } = useUser();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
 	useEffect(() => {

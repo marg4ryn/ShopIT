@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from 'react-i18next';
 import { useAuth0 } from "@auth0/auth0-react";
 import { FaSearch, FaShoppingCart, FaUserAlt, FaListAlt, FaStore, FaBox, FaAd, FaBars, FaTimes, FaSignInAlt } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
@@ -11,6 +12,7 @@ export default function Navbar() {
   const [inputValue, setInputValue] = useState("");
   const { searchTerm, setSearchTerm } = useSearchTerm();
   const { roles } = useUser();
+  const { t } = useTranslation();
   const { loginWithRedirect } = useAuth0();
   
   useEffect(() => {
@@ -44,28 +46,28 @@ export default function Navbar() {
   const closeMenu = () => setMenuOpen(false);
 
   const navItems = [
-    { to: "/", onClick: closeMenu, icon: <FaStore className="text-3xl" />, label: "STORE" },
-    { to: "/categories", onClick: closeMenu, icon: <FaListAlt className="text-3xl" />, label: "CATEGORIES" },
-    { to: "/products", onClick: closeMenu, icon: <FaBox className="text-3xl" />, label: "PRODUCTS" },
-    { to: "/announcements", onClick: closeMenu, icon: <FaAd className="text-3xl" />, label: "ANNOUNCEMENTS" },
-    { to: "/cart", onClick: closeMenu, icon: <FaShoppingCart className="text-3xl" />, label: "CART" },
-    { to: "/user-profile", onClick: closeMenu, icon: <FaUserAlt className="text-3xl" />, label: "PROFILE" },
-    { to: "", onClick: handleLogin, icon: <FaSignInAlt className="text-3xl" />, label: "LOG IN" },
+    { to: "/", onClick: closeMenu, icon: <FaStore className="text-3xl" />, label: t('navbar.store') },
+    { to: "/categories", onClick: closeMenu, icon: <FaListAlt className="text-3xl" />, label: t('navbar.categories') },
+    { to: "/products", onClick: closeMenu, icon: <FaBox className="text-3xl" />, label: t('navbar.products') },
+    { to: "/announcements", onClick: closeMenu, icon: <FaAd className="text-3xl" />, label: t('navbar.announcements') },
+    { to: "/cart", onClick: closeMenu, icon: <FaShoppingCart className="text-3xl" />, label: t('navbar.cart') },
+    { to: "/user-profile", onClick: closeMenu, icon: <FaUserAlt className="text-3xl" />, label: t('navbar.profile') },
+    { to: "", onClick: handleLogin, icon: <FaSignInAlt className="text-3xl" />, label: t('navbar.logIn') },
   ];
 
   const filteredNavItems = navItems.filter(({ label }) => {
     if (roles.includes("admin")) {
-      if (label === "LOG IN") {
+      if (label === t('navbar.logIn')) {
         return false;
       }
       return true;
     } else if (roles.includes("user")) {
-      if (label === "ANNOUNCEMENTS" || label === "PRODUCTS" || label === "CATEGORIES" || label === "LOG IN") {
+      if (label === t('navbar.announcements') || label === t('navbar.products') || label === t('navbar.categories') || label === t('navbar.logIn')) {
         return false;
       }
       return true;
     } else {
-      if (label === "LOG IN" || label === "STORE" || label === "CART") {
+      if (label === t('navbar.logIn') || label === t('navbar.store') || label === t('navbar.cart')) {
         return true;
       }
       return false;
@@ -81,7 +83,7 @@ export default function Navbar() {
             alt="ShopIt logo"
             className="w-14 h-14 object-contain"
           />
-          <h1 className="text-3xl font-bold">ShopIt</h1>
+          <h1 className="text-3xl font-bold">{t('others.ShopIt')}</h1>
         </div>
 
         {(location.pathname === "/" || location.pathname === "/products") && (
@@ -89,7 +91,7 @@ export default function Navbar() {
             <input 
               id="searchBar"
               type="text" 
-              placeholder="Search products ..." 
+              placeholder={t('navbar.searchBar')}
               value={inputValue}
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from "react-router-dom";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { getProduct } from "../../api/products";
@@ -18,6 +19,7 @@ export default function ViewProduct() {
   const [popupHeader, setPopupHeader] = useState('');
   const [popupContent, setPopupContent] = useState('');
   const [popupShowCloseButton, setPopupShowCloseButton] = useState(false);
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   useEffect(() => {

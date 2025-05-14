@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from "react-router-dom";
 import { getAnnouncement, editAnnouncement } from '../../api/Announcements';
+import { useAuth0 } from "@auth0/auth0-react";
 import BackButton from '../../components/BackButton';
 import UnsavedChangesModal from '../../components/modals/UnsavedChangesModal';
-import { useAuth0 } from "@auth0/auth0-react";
 
 export default function EditAnnouncement() {
   const { getAccessTokenSilently } = useAuth0();
@@ -15,6 +16,7 @@ export default function EditAnnouncement() {
   const [visible, setVisible] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); 
+  const { t } = useTranslation();
   const [initialData, setInitialData] = useState({
     title: "",
     header: "",

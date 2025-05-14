@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getProduct } from "../../api/products";
 import { useUser } from '../../context/UserContext';
 import { useOrderContext } from '../../context/OrderContext';
@@ -14,6 +15,7 @@ export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
   const { currentStep, setCurrentStep } = useOrderContext();
   const { userData } = useUser();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   useEffect(() => {

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from "react-router-dom";
 import { getAnnouncement } from "../../api/Announcements";
 import BackButton from '../../components/BackButton';
@@ -6,6 +7,7 @@ import BackButton from '../../components/BackButton';
 export default function ViewAnnouncement() {
   const { id } = useParams();
   const [ad, setAd] = useState(null);
+  const { t } = useTranslation();
   const navigate = useNavigate();
   
   useEffect(() => {

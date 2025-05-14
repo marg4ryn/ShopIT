@@ -1,4 +1,7 @@
+import { useTranslation } from 'react-i18next';
+
 const BackButton = ({ onClick }) => {
+  const { t } = useTranslation();
 
   return (
     <button

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const QuantitySelector = ({ productId, initialQuantity, stock, onChange, onValueZero }) => {
   const [quantity, setQuantity] = useState(initialQuantity);

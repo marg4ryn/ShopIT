@@ -1,9 +1,11 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { useUser } from '../../context/UserContext';
+import { useTranslation } from 'react-i18next';
 
 const UserProfile = () => {
     const { logout } = useAuth0();
-    const { userData } = useUser();    
+    const { userData } = useUser();  
+  	const { t } = useTranslation();
 
 		return (
 			<div className="flex-grow flex pt-18 justify-center items-center">

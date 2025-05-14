@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const EditCategoryModal = ({ isOpen, onClose, onSave, category }) => {
   const [newCategoryName, setNewCategoryName] = useState("");
   const [initialData, setInitialData] = useState({ categoryName: "" });
   const [errors, setErrors] = useState({ categoryName: "" });
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (category?.name) {

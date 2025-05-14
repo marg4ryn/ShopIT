@@ -1,8 +1,12 @@
+import { useTranslation } from 'react-i18next';
+
 const UnsavedChangesModal = ({ 
     isOpen, 
     onClose,
     onExit
   }) => {
+    const { t } = useTranslation();
+    
     if (!isOpen) return null;
   
     return (

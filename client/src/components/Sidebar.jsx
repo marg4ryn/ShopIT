@@ -1,16 +1,19 @@
 import { ChevronLast, ChevronFirst } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { useTranslation } from 'react-i18next';
+import { useEffect, useState } from "react";
 import { getAllCategories } from '../api/categories';
 
 export default function Sidebar({ onSortChange, onFilterChange, sortOption, filters }) {
+  const { t } = useTranslation();
   const [expanded, setExpanded] = useState(false);
-  const options = ["Most popular", "Descending price", "Rising price"];
+  const options = [t('sorting.mostPopular'), t('sorting.descPrice'), t('sorting.risingPrice')];
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState(sortOption);
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState(filters?.selectedCategories || []);
   const [priceFrom, setPriceFrom] = useState(filters?.priceFrom || '');
   const [priceTo, setPriceTo] = useState(filters?.priceTo || '');
+ 
   const [priceErrors, setPriceErrors] = useState({
     from: '',
     to: '',
@@ -30,7 +33,7 @@ export default function Sidebar({ onSortChange, onFilterChange, sortOption, filt
         const data = await getAllCategories();
         setCategories(data); 
       } catch (error) {
-        console.error("Error fetching categories:", error);
+        console.error(t('error.category.fetchCategories'), error);
       }
     };
 
@@ -105,17 +108,17 @@ export default function Sidebar({ onSortChange, onFilterChange, sortOption, filt
     const newErrors = { from: '', to: '' };
   
     if (priceFrom && (priceFrom < 0 || priceFrom > 999999)) {
-      newErrors.from = 'The value must be between 1 and 999,999';
+      newErrors.from = t('filterError.invalidPrice');
       error = true;
     }
   
     if (priceTo && (priceTo < 0 || priceTo > 999999)) {
-      newErrors.to = 'The value must be between 1 and 999,999';
+      newErrors.to = t('filterError.invalidPrice');
       error = true;
     }
   
     if (priceFrom !== '' && priceTo !== '' && priceFrom > priceTo) {
-      newErrors.from = "'From' cannot be greater than 'To'";
+      newErrors.from = t('filterError.invalidPriceRatio');
       error = true;
     }
   
@@ -129,7 +132,7 @@ export default function Sidebar({ onSortChange, onFilterChange, sortOption, filt
       <nav className={`h-full pt-6 flex flex-col items-center border-0 transition-all duration-300 overflow-hidden ${expanded ? 'bg-neutral-800' : 'bg-neutral-900'}`}>
         
         <div className="p-4 pb-2 flex">
-          <p className={`overflow-hidden transition-all text-xl font-bold text-center text-white ${expanded ? "w-64" : "w-0" }`}>SORTING</p>
+          <p className={`overflow-hidden transition-all text-xl font-bold text-center text-white ${expanded ? "w-64" : "w-0" }`}>{t('subHeader.sorting')}</p>
           <button 
             onClick={() => setExpanded((curr) => !curr)} 
             className="p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100">
@@ -177,20 +180,20 @@ export default function Sidebar({ onSortChange, onFilterChange, sortOption, filt
         </div>
 
         <div className="p-4">
-          <p className={`text-xl font-bold text-center text-white ${expanded ? "w-68 opacity-100" : "w-0 opacity-0 overflow-hidden" } ${isOpen ? "mt-2" : "mt-0"}`}>FILTERING</p>
+          <p className={`text-xl font-bold text-center text-white ${expanded ? "w-68 opacity-100" : "w-0 opacity-0 overflow-hidden" } ${isOpen ? "mt-2" : "mt-0"}`}>{t('subHeader.filtering')}</p>
         </div>
 
         <div className={`p-4 pb-2 flex justify-center items-center transition-all duration-300 ${expanded ? "w-68 opacity-100" : "w-0 opacity-0 overflow-hidden"}`}>
           {expanded && (
             <div className="text-center w-64">
-              <h2 className="font-bold text-white">Price:</h2>
+              <h2 className="font-bold text-white">{t('filtering.price')}</h2>
               <div className="flex justify-center gap-4 mt-2">
                 <input
                   id="priceFrom"
                   type="number"
                   min="0"
                   max="999999"
-                  placeholder="From"
+                  placeholder={t('filtering.priceFrom')}
                   className={`w-full px-4 py-2 bg-white text-black rounded-md flex justify-between items-center focus:outline-none focus:ring-3 focus:ring-black
                     transition-all duration-300 ${expanded ? "w-68 opacity-100" : "w-0 opacity-0 overflow-hidden"} ${
                       priceErrors.from ? 'border-red-500' : 'border-gray-300'
@@ -203,7 +206,7 @@ export default function Sidebar({ onSortChange, onFilterChange, sortOption, filt
                   type="number"
                   min="0"
                   max="999999"
-                  placeholder="To"
+                  placeholder={t('filtering.priceTo')}
                   className={`w-full px-4 py-2 bg-white text-black rounded-md flex justify-between items-center focus:outline-none focus:ring-3 focus:ring-black
                     transition-all duration-300 ${expanded ? "w-68 opacity-100" : "w-0 opacity-0 overflow-hidden"} ${
                       priceErrors.to ? 'border-red-500' : 'border-gray-300'
@@ -228,7 +231,7 @@ export default function Sidebar({ onSortChange, onFilterChange, sortOption, filt
         <div className={`p-4 pb-2 flex transition-all duration-300 ${expanded ? "w-64 opacity-100" : "w-0 opacity-0 overflow-hidden"}`}>
           {expanded && (
             <div className="text-center w-64">
-              <h2 className="font-bold text-white">Categories:</h2>
+              <h2 className="font-bold text-white">{t('filtering.categories')}</h2>
               <ul className={`space-y-2 mt-2`}>
                 {categories.map((category) => (
                   <li 
@@ -257,7 +260,7 @@ export default function Sidebar({ onSortChange, onFilterChange, sortOption, filt
             onClick={applyFilters}
             className={`mb-4 w-40 justify-center flex bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded`}
           >
-            Apply filters
+            {t('button.applyFilters')}
           </button>
         )}
         {expanded && (
@@ -265,7 +268,7 @@ export default function Sidebar({ onSortChange, onFilterChange, sortOption, filt
             onClick={clearFilters}
             className={`flex w-40 justify-center bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded`}
           >
-            Clear all
+            {t('button.clearFilters')}
           </button>
         )}
         </div>

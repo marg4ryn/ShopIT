@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const AddToCartModal = ({ isOpen, onClose, onConfirm, productId}) => {
   const [quantity, setQuantity] = useState(1);
+  const { t } = useTranslation();
 
   if (!isOpen) return null;
 

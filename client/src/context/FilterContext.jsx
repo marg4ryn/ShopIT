@@ -1,4 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 
 const FilterContext = createContext();
@@ -8,7 +9,8 @@ export const useFilterContext = () => {
 };
 
 export const FilterProvider = ({ children }) => {
-    const [sortOption, setSortOption] = useState("Most popular");
+    const { t } = useTranslation();
+    const [sortOption, setSortOption] = useState(t('sorting.mostPopular'));
     const [filters, setFilters] = useState({
         selectedCategories: [],
         priceFrom: undefined,
@@ -18,7 +20,7 @@ export const FilterProvider = ({ children }) => {
     const location = useLocation();
 
     useEffect(() => {
-        setSortOption("Most popular");
+        setSortOption(t('sorting.mostPopular'));
         setFilters({
             selectedCategories: [],
             priceFrom: undefined,

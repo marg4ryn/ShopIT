@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { getAnnouncements, deleteAnnouncement, editAnnouncement } from '../../api/Announcements';
@@ -19,6 +20,7 @@ export default function Announcements() {
     const [popupHeader, setPopupHeader] = useState('');
     const [popupContent, setPopupContent] = useState('');
     const [popupShowCloseButton, setPopupShowCloseButton] = useState(false);
+    const { t } = useTranslation();
     const navigate = useNavigate();
 
     useEffect(() => {

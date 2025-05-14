@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from "react-router-dom";
 import { getCategories, addCategory, editCategory, deleteCategory } from '../../api/categories';
+import { useAuth0 } from "@auth0/auth0-react";
 import BackButton from '../../components/BackButton';
 import EditCategoryModal from '../../components/modals/EditCategoryModal'
 import DeleteModal from '../../components/modals/DeleteModal'
 import Popup from "../../components/modals/Popup";
-import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Categories() {
     const { getAccessTokenSilently } = useAuth0();
@@ -23,6 +24,7 @@ export default function Categories() {
     const [popupHeader, setPopupHeader] = useState('');
     const [popupContent, setPopupContent] = useState('');
     const [popupShowCloseButton, setPopupShowCloseButton] = useState(false);
+    const { t } = useTranslation();
     const [errors, setErrors] = useState({
       categoryName: ""
     });

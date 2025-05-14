@@ -1,4 +1,7 @@
+import { useTranslation } from 'react-i18next';
+
 export default function OrderProgress({ currentStep }) {
+  const { t } = useTranslation();
   const steps = ['Cart', 'Shipment', 'Payment', 'Summary'];
   const progress = (currentStep / steps.length) * 100;
 
