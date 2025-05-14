@@ -5,8 +5,10 @@ import { useOrderContext } from '../../context/OrderContext';
 import { useNavigate } from "react-router-dom";
 import OrderProgress from '../../components/OrderProgress';
 import BackButton from '../../components/BackButton';
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 export default function Shipment() {
+  const [loading, setLoading] = useState(true);
   const { currentStep, setCurrentStep } = useOrderContext();
   const { userData } = useUser();
   const { t } = useTranslation();

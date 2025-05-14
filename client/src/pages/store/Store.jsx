@@ -8,10 +8,11 @@ import Sidebar from "../../components/Sidebar";
 import AdCarousel from "../../components/AdCarousel";
 import AddToCartModal from '../../components/modals/AddToCartModal';
 import Popup from "../../components/modals/Popup";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 export default function Store() {
-    const { sortOption, filters, updateSortOption, updateFilters } = useFilterContext();
-    const { searchTerm } = useSearchTerm();
+    const appUrl = import.meta.env.VITE_APP_URL;
+    const [loading, setLoading] = useState(true);
     const [products, setProducts] = useState([]);
     const [hoveredProductId, setHoveredProductId] = useState(null);
     const [lastHoveredProductId, setLastHoveredProductId] = useState(null);
@@ -21,13 +22,14 @@ export default function Store() {
     const [popupBackgroundColor, setPopupBackgroundColor] = useState('');
     const [popupHeader, setPopupHeader] = useState('');
     const [popupContent, setPopupContent] = useState('');
-    const [popupShowCloseButton, setPopupShowCloseButton] = useState(false);
+    const [popupShowCloseButton, setPopupShowCloseButton] = useState(false);   
+    const { sortOption, filters, updateSortOption, updateFilters } = useFilterContext();
+    const { searchTerm } = useSearchTerm();
     const { t } = useTranslation();
     const page = useRef(1);
     const limit = 12;
-	const scrollTriggerRef = useRef(null);
+		const scrollTriggerRef = useRef(null);
     const navigate = useNavigate();
-    const appUrl = import.meta.env.VITE_APP_URL;
 
     const handleViewProduct = (id) => {
         navigate(`/view-product/${id}`);
@@ -92,29 +94,31 @@ export default function Store() {
       };
 
     const loadProducts = async (reset = false) => {
-        try {
-            const result = await getFilteredProducts({
-                category: filters.selectedCategories.join(','),
-                minPrice: filters.priceFrom,
-                maxPrice: filters.priceTo,
-                sortOption: sortOption,
-                search: searchTerm,
-                page: reset ? 1 : page.current + 1,
-                limit: limit
-            });
-    
-            if (reset) {
-                page.current = 1;
-                setProducts(result.products);
-            } else {
-                page.current++;
-                setProducts(prev => [...prev, ...result.products]);
-            }        
-        
-            setHasMore(result.hasMore);
-        } catch (err) {
-            console.error(t('error.product.fetchProducts'), err);
-        }
+			try {
+				const result = await getFilteredProducts({
+					category: filters.selectedCategories.join(','),
+					minPrice: filters.priceFrom,
+					maxPrice: filters.priceTo,
+					sortOption: sortOption,
+					search: searchTerm,
+					page: reset ? 1 : page.current + 1,
+					limit: limit
+				});
+
+				if (reset) {
+					page.current = 1;
+					setProducts(result.products);
+				} else {
+					page.current++;
+					setProducts(prev => [...prev, ...result.products]);
+				}        
+		
+				setHasMore(result.hasMore);
+			} catch (err) {
+					console.error(t('error.product.fetchProducts'), err);
+			} finally {
+				setLoading(false);
+      }
     };
 
 		useEffect(() => {
@@ -184,6 +188,7 @@ export default function Store() {
 
     return (
     <main className="flex-grow flex pt-18">
+		{loading ? <LoadingSpinner /> : (
         <div className="flex w-full max-w-full">
             <Sidebar onSortChange={handleSortChange} onFilterChange={handleFilterChange} sortOption={sortOption} filters={filters} />
             {products.length === 0 ? (
@@ -269,6 +274,7 @@ export default function Store() {
             )}
             </div>)}
         </div>
+			)}
         <AddToCartModal
           isOpen={isModalOpen}
           onClose={closeModal}

@@ -5,10 +5,10 @@ import { getAnnouncement, editAnnouncement } from '../../api/Announcements';
 import { useAuth0 } from "@auth0/auth0-react";
 import BackButton from '../../components/BackButton';
 import UnsavedChangesModal from '../../components/modals/UnsavedChangesModal';
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 export default function EditAnnouncement() {
-  const { getAccessTokenSilently } = useAuth0();
-  const { id } = useParams();
+  const [loading, setLoading] = useState(true);
   const [title, setTitle] = useState("");
   const [header, setHeader] = useState("");
   const [content, setContent] = useState("");
@@ -16,7 +16,6 @@ export default function EditAnnouncement() {
   const [visible, setVisible] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); 
-  const { t } = useTranslation();
   const [initialData, setInitialData] = useState({
     title: "",
     header: "",
@@ -29,7 +28,9 @@ export default function EditAnnouncement() {
     content: "",
     color: "",
   });
-
+  const { getAccessTokenSilently } = useAuth0();
+  const { t } = useTranslation();
+  const { id } = useParams();
   const navigate = useNavigate();
 
   const isModified =
@@ -55,6 +56,8 @@ export default function EditAnnouncement() {
         });
       } catch (error) {
         console.error(t('error.announcement.fetchAnnouncement'), error);
+      } finally {
+				setLoading(false);
       }
     };
   
@@ -111,6 +114,8 @@ export default function EditAnnouncement() {
 
   return (
     <main className="flex flex-col flex-grow">
+      {loading ? <LoadingSpinner /> : (
+        <div className="flex flex-col space-y-6 place-items-center">
       <div className="text-center pt-10 mt-26">
         <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md">
           {t('header.editAnnouncement')}
@@ -233,6 +238,8 @@ export default function EditAnnouncement() {
           </div>
         </form>
       </div>
+      </div>
+    )}
       <UnsavedChangesModal 
         isOpen={isModalOpen} 
         onClose={handleStay} 

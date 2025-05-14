@@ -4,21 +4,25 @@ import { useAuth0 } from '@auth0/auth0-react';
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const { user, getAccessTokenSilently } = useAuth0();
+  const authRoles = import.meta.env.VITE_AUTH0_ROLES;
   const [userData, setUserData] = useState(null);
   const [roles, setRoles] = useState([]);
-  const authRoles = import.meta.env.VITE_AUTH0_ROLES;
+  const [isUserLoading, setIsUserLoading] = useState(true);
+  const { user, getAccessTokenSilently, isLoading: authLoading } = useAuth0();
 
-  useEffect(() => {
-    if (user) {
-      setUserData(user);
-      const userRoles = user[authRoles] || ["guest"];
-      setRoles(userRoles);
+ useEffect(() => {
+    if (!authLoading) {
+      if (user) {
+        setUserData(user);
+        const userRoles = user[authRoles] || ["guest"];
+        setRoles(userRoles);
+      }
+      setIsUserLoading(false);
     }
-  }, [user]);
+  }, [user, authLoading]);
 
   return (
-    <UserContext.Provider value={{ userData, roles, getAccessTokenSilently }}>
+    <UserContext.Provider value={{ userData, roles, getAccessTokenSilently, isUserLoading }}>
       {children}
     </UserContext.Provider>
   );

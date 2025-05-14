@@ -8,10 +8,11 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useAuth0 } from "@auth0/auth0-react";
 import BackButton from '../../components/BackButton';
 import UnsavedChangesModal from '../../components/modals/UnsavedChangesModal';
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 export default function AddProduct() {
   const noImageUrl = import.meta.env.VITE_NO_IMAGE_URL;
-  const { getAccessTokenSilently } = useAuth0();
+  const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [name, setName] = useState("");
@@ -29,9 +30,10 @@ export default function AddProduct() {
     stock: "",
     category: "",
   });
-  const navigate = useNavigate();
+  const { getAccessTokenSilently } = useAuth0();
   const { t } = useTranslation();
-
+  const navigate = useNavigate();
+  
   useEffect(() => {
     const loadCategories = async () => {
       try {
@@ -39,6 +41,8 @@ export default function AddProduct() {
         setCategories(data);
       } catch (err) {
         console.error(t('error.category.fetchCategories'), err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -135,6 +139,8 @@ export default function AddProduct() {
 
   return (
     <main className="flex flex-col flex-grow">
+      {loading ? <LoadingSpinner /> : (
+        <div className="flex flex-col space-y-6 place-items-center">
       <div className="text-center pt-10 mt-26">
         <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md">
           {t('header.addProduct')}
@@ -316,6 +322,8 @@ export default function AddProduct() {
           </div>
         </form>
       </div>
+      </div>
+    )}
       <UnsavedChangesModal 
         isOpen={isModalOpen} 
         onClose={handleStay} 

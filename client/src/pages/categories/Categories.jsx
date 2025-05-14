@@ -7,13 +7,13 @@ import BackButton from '../../components/BackButton';
 import EditCategoryModal from '../../components/modals/EditCategoryModal'
 import DeleteModal from '../../components/modals/DeleteModal'
 import Popup from "../../components/modals/Popup";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 export default function Categories() {
-    const { getAccessTokenSilently } = useAuth0();
+    const [loading, setLoading] = useState(true);
     const [categories, setCategories] = useState([]);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
-    const limit = 10;
     const [newCategory, setNewCategory] = useState('');
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -24,11 +24,10 @@ export default function Categories() {
     const [popupHeader, setPopupHeader] = useState('');
     const [popupContent, setPopupContent] = useState('');
     const [popupShowCloseButton, setPopupShowCloseButton] = useState(false);
+    const [errors, setErrors] = useState({categoryName: "" });
+    const { getAccessTokenSilently } = useAuth0();
     const { t } = useTranslation();
-    const [errors, setErrors] = useState({
-      categoryName: ""
-    });
-
+    const limit = 10;
     const navigate = useNavigate();
 
     const loadCategories = async (pageToLoad = 1) => {
@@ -42,6 +41,8 @@ export default function Categories() {
         setHasMore(result.hasMore);
       } catch (err) {
         console.error(t('error.category.fetchCategories'), err);
+      } finally {
+        setLoading(false);
       }
     };
     
@@ -147,6 +148,7 @@ export default function Categories() {
 
     return (
         <main className="flex-grow pt-18">
+        {loading ? <LoadingSpinner /> : (
         <div className="flex flex-col md:flex-row p-4 mt-4 items-center justify-center">
           <div className="w-120 p-4 mt-4 flex flex-col items-center justify-center">            
             <div className="text-center mt-4">
@@ -204,6 +206,7 @@ export default function Categories() {
               </div>
             </div>
         </div>
+      )}
         <EditCategoryModal
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}

@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SearchProvider } from "./context/SearchContext";
 import { FilterProvider } from "./context/FilterContext";
-import { UserProvider } from "./context/UserContext";
+import { UserProvider, useUser } from "./context/UserContext";
 import { OrderProvider } from "./context/OrderContext";
 import { Auth0Provider } from "@auth0/auth0-react";
 import Navbar from "./components/Navbar";
@@ -19,24 +19,20 @@ import Announcements from "./pages/announcements/Announcements";
 import ViewAnnouncement from "./pages/announcements/ViewAnnouncement";
 import EditAnnouncement from "./pages/announcements/EditAnnouncement";
 import AddAnnouncement from "./pages/announcements/AddAnnouncement";
+import LoadingSpinner from "./components/LoadingSpinner";
 
 const domain = import.meta.env.VITE_AUTH0_DOMAIN;
 const clientId = import.meta.env.VITE_AUTH0_CLIENT_ID;
 const audience = import.meta.env.VITE_AUTH0_AUDIENCE;
 
-function App() {
+const AppContent = () => {
+  const { isUserLoading } = useUser();
+
+  if (isUserLoading) return <LoadingSpinner />;
+
   return (
     <BrowserRouter>
-      <Auth0Provider 
-        domain={domain}
-        clientId={clientId}
-        authorizationParams={{ 
-          redirect_uri: window.location.origin,
-          audience: audience, 
-        }}
-      >
       <OrderProvider>
-      <UserProvider>
       <FilterProvider>
       <SearchProvider>
         <div className="flex bg-neutral-900 flex-col min-h-screen">
@@ -59,10 +55,25 @@ function App() {
         </div>    
       </SearchProvider>
       </FilterProvider>  
-      </UserProvider>
       </OrderProvider>
-      </Auth0Provider>
     </BrowserRouter>
+  );
+};
+
+function App() {
+  return (
+    <Auth0Provider 
+      domain={domain}
+      clientId={clientId}
+      authorizationParams={{ 
+        redirect_uri: window.location.origin,
+        audience: audience, 
+      }}
+    >
+    <UserProvider>
+      <AppContent />
+    </UserProvider>
+    </Auth0Provider>
   );
 }
 
@@ -72,12 +83,7 @@ export default App;
 - furgonetka api
 - payU api
 - orders
-*/
-
-/* TODO on my own
 - reviews 
-- page loading animation
-- application opening animation
 - move application to MVP
 - Mailchimp
 - Twilio

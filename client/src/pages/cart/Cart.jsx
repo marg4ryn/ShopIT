@@ -7,8 +7,10 @@ import { useNavigate } from "react-router-dom";
 import DeleteModal from '../../components/modals/DeleteModal'
 import QuantitySelector from '../../components/QuantitySelector';
 import OrderProgress from '../../components/OrderProgress';
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 export default function Cart() {
+  const [loading, setLoading] = useState(true);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
   const [cart, setCart] = useState([]);
@@ -24,6 +26,8 @@ export default function Cart() {
         setCart(JSON.parse(localStorage.getItem('cart')));
       } catch (error) {
         setCart([]);
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -82,8 +86,12 @@ export default function Cart() {
 
   return (
     <div className="flex flex-col flex-grow justify-center items-center pt-10 mt-26 ml-32 text-white">
-        <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md text-center w-60">
-          {t('header.cart')}
+      {loading ? <LoadingSpinner /> : (
+        <div className="flex flex-col space-y-6 place-items-center">
+        <div className="fixed top-1/10 pt-10">
+          <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md">
+            {t('header.cart')}
+          </div>
         </div>
 
         <div className="flex flex-grow gap-4 justify-center items-center w-full">
@@ -159,6 +167,8 @@ export default function Cart() {
 
           </div>
         </div>
+        </div>
+      )}
           <DeleteModal 
             isOpen={isDeleteModalOpen} 
             onClose={handleClose} 

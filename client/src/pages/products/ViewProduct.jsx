@@ -7,11 +7,11 @@ import { useUser } from '../../context/UserContext';
 import BackButton from '../../components/BackButton';
 import Popup from "../../components/modals/Popup";
 import AddToCartModal from '../../components/modals/AddToCartModal';
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 export default function ViewProduct() {
   const appUrl = import.meta.env.VITE_APP_URL;
-  const { roles } = useUser();
-  const { id } = useParams();
+  const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,23 +20,25 @@ export default function ViewProduct() {
   const [popupHeader, setPopupHeader] = useState('');
   const [popupContent, setPopupContent] = useState('');
   const [popupShowCloseButton, setPopupShowCloseButton] = useState(false);
+  const { roles } = useUser();
+  const { id } = useParams();
   const { t } = useTranslation();
   const navigate = useNavigate();
 
   useEffect(() => {
-        const popupData = sessionStorage.getItem("popupData");
-        
-        if (popupData) {
-            setIsPopupOpen(false);
-            const parsed = JSON.parse(popupData);
-            setPopupBackgroundColor(parsed.backgroundColor);
-            setPopupHeader(parsed.header);
-            setPopupContent(parsed.content);
-            setPopupShowCloseButton(parsed.showCloseButton);
-            setIsPopupOpen(true);
-        
-            sessionStorage.removeItem("popupData");
-        }
+      const popupData = sessionStorage.getItem("popupData");
+      
+      if (popupData) {
+        setIsPopupOpen(false);
+        const parsed = JSON.parse(popupData);
+        setPopupBackgroundColor(parsed.backgroundColor);
+        setPopupHeader(parsed.header);
+        setPopupContent(parsed.content);
+        setPopupShowCloseButton(parsed.showCloseButton);
+        setIsPopupOpen(true);
+    
+        sessionStorage.removeItem("popupData");
+      }
     }, []);
 
   useEffect(() => {
@@ -47,6 +49,8 @@ export default function ViewProduct() {
         setSelectedImage(data.imageUrls?.[0] || "/images/No_Image_Available.jpg");
       } catch (err) {
         console.error(t('error.product.fetchProduct'), err);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -104,9 +108,7 @@ export default function ViewProduct() {
 
   return (
     <main className="flex flex-col flex-grow">
-      {!product ? (
-        <p className="text-white text-center">Loading product...</p>
-      ) : (
+      {loading ? <LoadingSpinner /> : (
         <div className="flex flex-col space-y-6 place-items-center">
           <div className="text-center pt-10 mt-26">
             <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md">

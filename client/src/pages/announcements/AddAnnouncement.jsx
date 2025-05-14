@@ -7,21 +7,20 @@ import BackButton from '../../components/BackButton';
 import UnsavedChangesModal from '../../components/modals/UnsavedChangesModal';
 
 export default function AddAnnouncement() {
-  const { getAccessTokenSilently } = useAuth0();
   const [title, setTitle] = useState("");
   const [header, setHeader] = useState("");
   const [content, setContent] = useState("");
   const [color, setColor] = useState("#30b404");
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); 
-  const { t } = useTranslation();
   const [errors, setErrors] = useState({
     title: "",
     header: "",
     content: "",
     color: "",
   });
-  
+  const { getAccessTokenSilently } = useAuth0();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {

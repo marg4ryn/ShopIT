@@ -4,132 +4,137 @@ import { useNavigate } from "react-router-dom";
 import { deleteProduct, getFilteredProducts } from '../../api/products';
 import { useSearchTerm } from '../../context/SearchContext';
 import { useFilterContext } from '../../context/FilterContext'; 
+import { useAuth0 } from "@auth0/auth0-react";
 import Sidebar from "../../components/Sidebar";
 import BackButton from '../../components/BackButton';
 import DeleteModal from '../../components/modals/DeleteModal'
 import Popup from "../../components/modals/Popup";
-import { useAuth0 } from "@auth0/auth0-react";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 export default function Products() {
-    const { getAccessTokenSilently } = useAuth0();
-    const { sortOption, filters, updateSortOption, updateFilters } = useFilterContext();
-    const { searchTerm } = useSearchTerm();
-    const [products, setProducts] = useState([]);
-    const [hasMore, setHasMore] = useState(true);
-    const page = useRef(1);
-    const limit = 5;
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [productToDelete, setProductToDelete] = useState(null);
-    const [isPopupOpen, setIsPopupOpen] = useState(false);
-    const [popupBackgroundColor, setPopupBackgroundColor] = useState('');
-    const [popupHeader, setPopupHeader] = useState('');
-    const [popupContent, setPopupContent] = useState('');
-    const [popupShowCloseButton, setPopupShowCloseButton] = useState(false);
-    const navigate = useNavigate();
-    const { t } = useTranslation();
+	const [loading, setLoading] = useState(true);
+	const [products, setProducts] = useState([]);
+	const [hasMore, setHasMore] = useState(true);
+	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+	const [productToDelete, setProductToDelete] = useState(null);
+	const [isPopupOpen, setIsPopupOpen] = useState(false);
+	const [popupBackgroundColor, setPopupBackgroundColor] = useState('');
+	const [popupHeader, setPopupHeader] = useState('');
+	const [popupContent, setPopupContent] = useState('');
+	const [popupShowCloseButton, setPopupShowCloseButton] = useState(false);
+	const { sortOption, filters, updateSortOption, updateFilters } = useFilterContext();
+	const { searchTerm } = useSearchTerm();
+	const { t } = useTranslation(); 
+	const { getAccessTokenSilently } = useAuth0();   
+	const page = useRef(1);
+	const limit = 5;
+	const navigate = useNavigate();	
 
-    const loadProducts = async (reset = false) => {
-      try {
-        const result = await getFilteredProducts({
-            category: filters.selectedCategories.join(','),
-            minPrice: filters.priceFrom,
-            maxPrice: filters.priceTo,
-            sortOption: sortOption,
-            search: searchTerm,
-            page: reset ? 1 : page.current + 1,
-            limit: limit
-        });
+	const loadProducts = async (reset = false) => {
+		try {
+			const result = await getFilteredProducts({
+					category: filters.selectedCategories.join(','),
+					minPrice: filters.priceFrom,
+					maxPrice: filters.priceTo,
+					sortOption: sortOption,
+					search: searchTerm,
+					page: reset ? 1 : page.current + 1,
+					limit: limit
+			});
 
-        if (reset) {
-            setProducts(result.products);
-            page.current = 1;
-        } else {
-            page.current++;
-            setProducts(prev => [...prev, ...result.products]);
-        }
+			if (reset) {
+					setProducts(result.products);
+					page.current = 1;
+			} else {
+					page.current++;
+					setProducts(prev => [...prev, ...result.products]);
+			}
 
-        setHasMore(result.hasMore);
-      } catch (err) {
-        console.error(t('error.products.fetchProducts'), err);
-      }
-    };
+			setHasMore(result.hasMore);
+		} catch (err) {
+			console.error(t('error.products.fetchProducts'), err);
+		} finally {
+			setLoading(false);
+		}
+	};
 
-    useEffect(() => {
-        loadProducts(true);
-    }, [sortOption, filters, searchTerm]);
+	useEffect(() => {
+			loadProducts(true);
+	}, [sortOption, filters, searchTerm]);
 
-    const handleLoadMore = () => {
-        loadProducts(false);
-    };
+	const handleLoadMore = () => {
+			loadProducts(false);
+	};
 
-    const handleSortChange = (newSortOption) => {
-        updateSortOption(newSortOption);
-    };
+	const handleSortChange = (newSortOption) => {
+			updateSortOption(newSortOption);
+	};
 
-    const handleFilterChange = (newFilters) => {
-        updateFilters(newFilters);
-    };
+	const handleFilterChange = (newFilters) => {
+			updateFilters(newFilters);
+	};
 
-    useEffect(() => {
-        const popupData = sessionStorage.getItem("popupData");
-        
-        if (popupData) {
-            setIsPopupOpen(false);
-            const parsed = JSON.parse(popupData);
-            setPopupBackgroundColor(parsed.backgroundColor);
-            setPopupHeader(parsed.header);
-            setPopupContent(parsed.content);
-            setPopupShowCloseButton(parsed.showCloseButton);
-            setIsPopupOpen(true);
-        
-            sessionStorage.removeItem("popupData");
-        }
-    }, []);
-        
-    const closePopup = () => {
-        setIsPopupOpen(false);
-    };
+	useEffect(() => {
+			const popupData = sessionStorage.getItem("popupData");
+			
+			if (popupData) {
+					setIsPopupOpen(false);
+					const parsed = JSON.parse(popupData);
+					setPopupBackgroundColor(parsed.backgroundColor);
+					setPopupHeader(parsed.header);
+					setPopupContent(parsed.content);
+					setPopupShowCloseButton(parsed.showCloseButton);
+					setIsPopupOpen(true);
+			
+					sessionStorage.removeItem("popupData");
+			}
+	}, []);
+			
+	const closePopup = () => {
+			setIsPopupOpen(false);
+	};
 
-    const handleAddProduct = () => {
-        navigate(`/add-product`);
-    };
+	const handleAddProduct = () => {
+			navigate(`/add-product`);
+	};
 
-    const handleViewProduct = (id) => {
-        navigate(`/view-product/${id}`);
-    };
+	const handleViewProduct = (id) => {
+			navigate(`/view-product/${id}`);
+	};
 
-    const handleEditProduct = (id) => {
-        navigate(`/edit-product/${id}`);
-    };
+	const handleEditProduct = (id) => {
+			navigate(`/edit-product/${id}`);
+	};
 
-    const handleDeleteProduct = (product) => {
-        setProductToDelete(product);
-        setIsDeleteModalOpen(true);
-      };
+	const handleDeleteProduct = (product) => {
+			setProductToDelete(product);
+			setIsDeleteModalOpen(true);
+		};
 
-    const handleDelete = async (id) => {
-        setIsPopupOpen(false);
-        try {
-            const token = await getAccessTokenSilently();
-            await deleteProduct(token, id);
-            setProducts(prevProducts => prevProducts.filter(product => product._id !== id));
-            setPopupBackgroundColor("#008236");
-            setPopupHeader(t('status.success'));
-            setPopupContent(t('products.delete.success'));
-            setPopupShowCloseButton(false);
-            setIsPopupOpen(true);
-            } catch (err) {
-            setPopupBackgroundColor("red");
-            setPopupHeader(t('products.delete.failed'));
-            setPopupContent(`${err}`);
-            setPopupShowCloseButton(true);
-            setIsPopupOpen(true);
-            console.error(t('error.products.delete'), err);
-        }
-    };
+	const handleDelete = async (id) => {
+			setIsPopupOpen(false);
+			try {
+					const token = await getAccessTokenSilently();
+					await deleteProduct(token, id);
+					setProducts(prevProducts => prevProducts.filter(product => product._id !== id));
+					setPopupBackgroundColor("#008236");
+					setPopupHeader(t('status.success'));
+					setPopupContent(t('products.delete.success'));
+					setPopupShowCloseButton(false);
+					setIsPopupOpen(true);
+					} catch (err) {
+					setPopupBackgroundColor("red");
+					setPopupHeader(t('products.delete.failed'));
+					setPopupContent(`${err}`);
+					setPopupShowCloseButton(true);
+					setIsPopupOpen(true);
+					console.error(t('error.products.delete'), err);
+			}
+	};
 
     return (
         <main className="flex flex-grow pt-18">
+					{loading ? <LoadingSpinner /> : (
             <div className="flex flex-grow">
                 <Sidebar onSortChange={handleSortChange} onFilterChange={handleFilterChange} sortOption={sortOption} filters={filters} />
                 <div className="flex-grow p-4 container mx-auto mt-12 flex flex-col items-center">
@@ -200,7 +205,8 @@ export default function Products() {
                         )}
                     </div>
                 </div>
-            </div>    
+            </div>
+					)}    
             <DeleteModal 
             isOpen={isDeleteModalOpen} 
             onClose={() => setIsDeleteModalOpen(false)} 
