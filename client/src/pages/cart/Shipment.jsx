@@ -17,11 +17,13 @@ export default function Shipment() {
 	}, []);
 	
   return (
-    <div className="flex flex-col flex-grow justify-center items-center pt-10 mt-16 ml-32 text-white">
-        <h1 className="text-2xl font-bold text-center p-6">Shipment</h1>
+    <div className="flex flex-col flex-grow justify-center items-center pt-10 mt-26 ml-32 text-white">
+        <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md text-center w-60">
+          {t('header.shipment')}
+        </div>
 
         <div className="flex flex-grow gap-4 justify-center items-center w-full">
-          <div className="fixed justify-center left-12 w-24 mb-8">
+          <div className="fixed top-1/4 left-12 w-24 mb-8">
             <OrderProgress currentStep={currentStep}/>
           </div>
     

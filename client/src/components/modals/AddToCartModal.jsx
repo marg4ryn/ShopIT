@@ -25,7 +25,7 @@ const AddToCartModal = ({ isOpen, onClose, onConfirm, productId}) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md bg-opacity-50">
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
         <h2 className="text-xl font-semibold text-center mb-4">
-            How many items would you like to add to your cart?
+            {t('modal.addToCart')}
         </h2>
 
         <div className="flex items-center justify-center gap-4 text-lg font-medium mb-6">
@@ -49,13 +49,13 @@ const AddToCartModal = ({ isOpen, onClose, onConfirm, productId}) => {
             onClick={handleClose}
             className="bg-gray-300 hover:bg-gray-400 text-black font-semibold py-2 px-4 rounded"
           >
-            Cancel
+            {t('button.cancel')}
           </button>
           <button
             onClick={handleConfirm}
             className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded"
           >
-            Add to cart
+            {t('button.addToCart')}
           </button>
         </div>
       </div>

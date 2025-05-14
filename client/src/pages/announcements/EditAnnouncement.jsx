@@ -54,7 +54,7 @@ export default function EditAnnouncement() {
           color: data.color,
         });
       } catch (error) {
-        console.error("Error fetching announcement:", error);
+        console.error(t('error.announcement.fetchAnnouncement'), error);
       }
     };
   
@@ -66,10 +66,10 @@ export default function EditAnnouncement() {
     e.preventDefault();
 
     const newErrors = {};
-    if (!title) newErrors.title = "Title is required";
-    if (!header) newErrors.header = "Header is required";
-    if (!content) newErrors.content = "Content is required";
-    if (!color) newErrors.color = "Color is required";
+    if (!title) newErrors.title = t('form.error.titleRequired');
+    if (!header) newErrors.header = t('form.error.headerRequired');
+    if (!content) newErrors.content = t('form.error.contentRequired');
+    if (!color) newErrors.color = t('form.error.colorRequired');
   
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -81,15 +81,15 @@ export default function EditAnnouncement() {
       await editAnnouncement(token, id, title, header, content, color, visible);
       sessionStorage.setItem("popupData", JSON.stringify({
         backgroundColor: "#008236",
-        header: "Success!",
-        content: "Announcement has been successfully saved!",
+        header: t('status.success'),
+        content: t('announcement.edit.success'),
         showCloseButton: false
       }));
       setUnsavedChanges(false);
     } catch (error) {
       sessionStorage.setItem("popupData", JSON.stringify({
         backgroundColor: "red",
-        header: "Failed to save announcement.",
+        header: t('announcement.edit.failed'),
         content: `${error}` ,
         showCloseButton: true
       }));
@@ -113,7 +113,7 @@ export default function EditAnnouncement() {
     <main className="flex flex-col flex-grow">
       <div className="text-center pt-10 mt-26">
         <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md">
-          Edit Announcement
+          {t('header.editAnnouncement')}
         </div>
       </div>
 
@@ -138,7 +138,7 @@ export default function EditAnnouncement() {
         <div className="bg-neutral-800 p-6 rounded-md shadow-md mx-6 w-200">
            <div className="flex flex-col space-y-6 w-full max-w-md mx-auto">
             <div className="flex flex-col w-full">
-              <label htmlFor="announcementTitle" className="text-white font-lg font-bold">Title</label>
+              <label htmlFor="announcementTitle" className="text-white font-lg font-bold">{t('form.title')}</label>
               <input
                 id="announcementTitle"
                 type="text"
@@ -155,7 +155,7 @@ export default function EditAnnouncement() {
             </div>
 
             <div className="flex flex-col w-full">
-              <label htmlFor="announcementHeader" className="text-white font-lg font-bold">Header</label>
+              <label htmlFor="announcementHeader" className="text-white font-lg font-bold">{t('form.header')}</label>
               <input
                 id="announcementHeader"
                 type="text"
@@ -172,7 +172,7 @@ export default function EditAnnouncement() {
             </div>
 
             <div className="flex flex-col w-full justify-center items-center">
-              <label htmlFor="announcementColor" className="text-white font-lg font-bold">Color</label>
+              <label htmlFor="announcementColor" className="text-white font-lg font-bold">{t('form.color')}</label>
               <input
                 id="announcementColor"
                 type="color"
@@ -191,14 +191,14 @@ export default function EditAnnouncement() {
             <div className="p-4 rounded-md border-0">
               <div className="flex-grow container mx-auto mt-4">
                 <label htmlFor="announcementContent" className="block text-white font-lg font-bold pb-2">
-                  Content
+                  {t('form.content')}
                 </label>
                 <textarea
                   id="announcementContent"
                   maxLength={200}
                   className={`w-180 border ${errors.content ? 'border-red-500' : 'border-gray-300'} bg-white text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black`}
                   rows="4"
-                  placeholder="Enter content..."
+                  placeholder={t('placeholder.announcementContent')}
                   value={content}
                   onChange={(e) => {
                     setContent(e.target.value);
@@ -228,7 +228,7 @@ export default function EditAnnouncement() {
                   : "bg-gray-500"
               }`}
             >
-              Save
+              {t('button.save')}
             </button>
           </div>
         </form>

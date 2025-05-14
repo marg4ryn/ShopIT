@@ -53,7 +53,7 @@ export default function Announcements() {
         }
         setHasMore(result.hasMore);
       } catch (err) {
-        console.error('Failed to fetch announcements:', err);
+        console.error(t('error.announcement.fetchAnnouncements'), err);
       }
     };
     
@@ -85,17 +85,17 @@ export default function Announcements() {
             await deleteAnnouncement(token, id);
             setAnnouncements(prevAnnouncements => prevAnnouncements.filter(announcement => announcement._id !== id));
             setPopupBackgroundColor("#008236");
-            setPopupHeader("Success!");
-            setPopupContent("Announcement has been successfully deleted!");
+            setPopupHeader(t('status.success'));
+            setPopupContent(t('announcement.delete.success'));
             setPopupShowCloseButton(false);
             setIsPopupOpen(true);
         } catch (err) {
             setPopupBackgroundColor("red");
-            setPopupHeader(`Failed to delete announcement.`);
+            setPopupHeader(t('announcement.delete.failed'));
             setPopupContent(`${err}`);
             setPopupShowCloseButton(true);
             setIsPopupOpen(true);
-            console.error('Failed to delete announcement:', err);
+            console.error(t('error.announcement.delete'), err);
         }
     };
 
@@ -121,7 +121,7 @@ export default function Announcements() {
                 );
             }
         } catch (error) {
-            console.error('Error updating visibility:', error);
+            console.error(t('error.announcement.editVisibility'), error);
         }
     };
 
@@ -137,14 +137,14 @@ export default function Announcements() {
                 <div className="w-120 p-4 mt-4 flex flex-col items-center justify-center">   
                     <div className="text-center mt-4">
                         <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md">
-                            Announcements Management
+                            {t('header.announcements')}
                         </div>
                     </div>
                     <div className="mb-4 mt-8">
                         <button className="ml-2 p-2 bg-green-600 hover:bg-green-700 text-white rounded"
                             onClick={() => handleAddAnnouncement()}
                         >
-                            Add new announcement
+                            {t('button.addAnnouncement')}
                         </button>
                     </div>
                     <ul className="mt-8">
@@ -154,7 +154,7 @@ export default function Announcements() {
                                 <span className="font-semibold">{announcement.title}</span>
                             </div>
                             <div className="flex items-center">
-                                <label className={`mr-2 px-4 w-26 py-2 ${announcement.visible ? 'bg-amber-600 hover:bg-amber-700' : 'bg-neutral-500 hover:bg-neutral-600'} text-white rounded flex items-center cursor-pointer`}>
+                                <label className={`mr-2 px-4 w-32 py-2 ${announcement.visible ? 'bg-amber-600 hover:bg-amber-700' : 'bg-neutral-500 hover:bg-neutral-600'} text-white rounded flex items-center cursor-pointer`}>
                                     <input 
                                         type="checkbox" 
                                         id={`visible-${announcement._id}`}
@@ -169,20 +169,20 @@ export default function Announcements() {
                                             </svg>
                                         )}
                                     </span>
-                                    Visible
+                                    {t('button.visible')}
                                 </label>
 
-                                <button className="mr-2 px-4 w-20 py-2 bg-green-600 hover:bg-green-700 text-white rounded"
+                                <button className="mr-2 px-2 w-20 py-2 bg-green-600 hover:bg-green-700 text-white rounded"
                                     onClick={() => handleViewAnnouncement(announcement._id)}>
-                                    View
+                                    {t('button.view')}
                                 </button>
                                 <button className="mr-2 px-4 w-20 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
                                     onClick={() => handleEditAnnouncement(announcement._id)}>
-                                    Edit
+                                    {t('button.edit')}
                                 </button>
                                 <button className="mr-2 px-4 w-20 py-2 bg-red-600 hover:bg-red-700 text-white rounded"
                                 onClick={() => handleDeleteAnnouncement(announcement)}>
-                                    Delete
+                                    {t('button.delete')}
                                 </button>
                             </div>
                         </li>
@@ -195,7 +195,7 @@ export default function Announcements() {
                             onClick={handleLoadMore}
                             className="px-4 py-2  bg-green-600 hover:bg-green-700 text-white rounded flex-shrink-0"
                             >
-                            Load more
+                            {t('button.loadMore')}
                             </button>
                         )}
                     </div>
@@ -206,7 +206,7 @@ export default function Announcements() {
             onClose={() => setIsDeleteModalOpen(false)} 
             onDelete={handleDelete} 
             item={announcementToDelete}
-            titleItem="announcement"
+            titleItem={t('modal.deleteAnnouncement')}
             itemLabel={announcementToDelete?.title}
             />
             <Popup

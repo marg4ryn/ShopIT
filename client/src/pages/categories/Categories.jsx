@@ -41,7 +41,7 @@ export default function Categories() {
         }
         setHasMore(result.hasMore);
       } catch (err) {
-        console.error('Failed to fetch categories:', err);
+        console.error(t('error.category.fetchCategories'), err);
       }
     };
     
@@ -57,7 +57,7 @@ export default function Categories() {
       setIsPopupOpen(false);
 
       const newErrors = {};
-      if (!newCategory) newErrors.categoryName = "Category name is required";
+      if (!newCategory) newErrors.categoryName = t('form.error.categoryNameRequired');
     
       if (Object.keys(newErrors).length > 0) {
         setErrors(newErrors);
@@ -71,17 +71,17 @@ export default function Categories() {
           setCategories([...categories, data]);
           setNewCategory('');
           setPopupBackgroundColor("#008236");
-          setPopupHeader("Success!");
-          setPopupContent("Category has been successfully created!");
+          setPopupHeader(t('status.success'));
+          setPopupContent(t('category.create.success'));
           setPopupShowCloseButton(false);
           setIsPopupOpen(true);
         } catch (err) {
           setPopupBackgroundColor("red");
-          setPopupHeader(`Failed to create category.`);
+          setPopupHeader(t('category.create.failed'));
           setPopupContent(`${err}`);
           setPopupShowCloseButton(true);
           setIsPopupOpen(true);
-          console.error('Failed to create category:', err);
+          console.error(t('error.category.create'), err);
         }
       }
     };
@@ -99,17 +99,17 @@ export default function Categories() {
         setCategories(categories.map(category => category._id === updatedCategory._id ? updatedCategory : category));
         setIsEditModalOpen(false);
         setPopupBackgroundColor("#008236");
-        setPopupHeader("Success!");
-        setPopupContent("Category has been successfully saved!");
+        setPopupHeader(t('status.success'));
+        setPopupContent(t('category.edit.success'));
         setPopupShowCloseButton(false);
         setIsPopupOpen(true);
       } catch (err) {
         setPopupBackgroundColor("red");
-        setPopupHeader(`Failed to save category.`);
+        setPopupHeader(t('category.edit.failed'));
         setPopupContent(`${err}`);
         setPopupShowCloseButton(true);
         setIsPopupOpen(true);
-        console.error('Failed to save category:', err);
+        console.error(t('error.category.edit'), err);
       }
     };
 
@@ -125,17 +125,17 @@ export default function Categories() {
         await deleteCategory(token, id);
         setCategories(prevCategories => prevCategories.filter(category => category._id !== id));
         setPopupBackgroundColor("#008236");
-        setPopupHeader("Success!");
-        setPopupContent("Category has been successfully deleted!");
+        setPopupHeader(t('status.success'));
+        setPopupContent(t('category.delete.success'));
         setPopupShowCloseButton(false);
         setIsPopupOpen(true);
       } catch (err) {
         setPopupBackgroundColor("red");
-        setPopupHeader(`Failed to delete category.`);
+        setPopupHeader(t('category.delete.failed'));
         setPopupContent(`${err}`);
         setPopupShowCloseButton(true);
         setIsPopupOpen(true);
-        console.error('Failed to delete category:', err);
+        console.error(t('error.category.delete'), err);
       }
     };
 
@@ -151,7 +151,7 @@ export default function Categories() {
           <div className="w-120 p-4 mt-4 flex flex-col items-center justify-center">            
             <div className="text-center mt-4">
               <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md">
-                  Categories Management
+                  {t('header.categories')}
               </div>
             </div>
             <div className="mb-4 mt-8 flex items-center">
@@ -164,14 +164,14 @@ export default function Categories() {
                   setNewCategory(e.target.value);
                   setErrors({ ...errors, categoryName: "" });
                 }}
-                className={`${errors.categoryName ? 'border-red-500' : 'border-gray-300'} p-2 border rounded bg-white focus:outline-none focus:ring-3 focus:ring-black`}
-                placeholder="Enter category name"
+                className={`${errors.categoryName ? 'border-red-500' : 'border-gray-300'} w-60 p-2 border rounded bg-white focus:outline-none focus:ring-3 focus:ring-black`}
+                placeholder={t('placeholder.categoryName')}
               />
               <button 
                 onClick={handleAddCategory} 
                 className="ml-2 p-2 bg-green-600 hover:bg-green-700 text-white rounded flex-shrink-0"
               >
-                Add new category
+                {t('button.addCategory')}
               </button>
             </div>
             {errors.categoryName && <p className="text-red-500 text-sm mt-2">{errors.categoryName}</p>}
@@ -182,10 +182,10 @@ export default function Categories() {
                     <span className="font-semibold">{category.name}</span>
                     <div>
                     <button onClick={() => handleEditCategory(category)} className="mr-2 px-4 w-20 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">
-                        Edit
+                        {t('button.edit')}
                     </button>
                     <button onClick={() => handleDeleteCategory(category)} className="mr-2 px-4 w-20 py-2 bg-red-600 hover:bg-red-700 text-white rounded">
-                        Delete
+                        {t('button.delete')}
                     </button>
                     </div>
                 </li>
@@ -198,7 +198,7 @@ export default function Categories() {
                     onClick={handleLoadMore}
                     className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded flex-shrink-0"
                   >
-                    Load more
+                    {t('button.loadMore')}
                   </button>
                 )}
               </div>
@@ -215,7 +215,7 @@ export default function Categories() {
           onClose={() => setIsDeleteModalOpen(false)} 
           onDelete={handleDelete} 
           item={categoryToDelete}
-          titleItem="category"
+          titleItem={t('modal.deleteCategory')}
           itemLabel={categoryToDelete?.name}
         />
         <Popup

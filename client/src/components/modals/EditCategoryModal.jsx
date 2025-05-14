@@ -21,7 +21,7 @@ const EditCategoryModal = ({ isOpen, onClose, onSave, category }) => {
 
     const newErrors = {};
     if (!newCategoryName.trim()) {
-      newErrors.categoryName = "Category name is required";
+      newErrors.categoryName = t('form.error.categoryNameRequired');
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -33,7 +33,7 @@ const EditCategoryModal = ({ isOpen, onClose, onSave, category }) => {
       await onSave(newCategoryName);
       onClose();
     } catch (error) {
-      console.error("Saving failed:", error);
+      console.error(t('error.category.edit'), error);
     }
   };
 
@@ -42,7 +42,7 @@ const EditCategoryModal = ({ isOpen, onClose, onSave, category }) => {
   return (
     <div className="fixed inset-0 bg-opacity-50 backdrop-blur-md flex justify-center items-center z-50">
       <div className="bg-white p-6 rounded-lg w-96">
-        <h3 className="text-xl text-center font-bold mb-4">Edit Category Name</h3>
+        <h3 className="text-xl text-center font-bold mb-4">{t('modal.editCategoryName')}</h3>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <input
@@ -64,7 +64,7 @@ const EditCategoryModal = ({ isOpen, onClose, onSave, category }) => {
               onClick={onClose}
               className="w-40 px-4 py-2 text-white rounded bg-gray-500 hover:bg-gray-600"
             >
-              Cancel
+              {t('button.cancel')}
             </button>
             <button
               type="submit"
@@ -73,7 +73,7 @@ const EditCategoryModal = ({ isOpen, onClose, onSave, category }) => {
                 isModified ? "bg-green-600 hover:bg-green-700" : "bg-gray-500"
               }`}
             >
-              Save
+              {t('button.save')}
             </button>
           </div>
         </form>

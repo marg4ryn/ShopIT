@@ -50,7 +50,7 @@ export default function Products() {
 
         setHasMore(result.hasMore);
       } catch (err) {
-        console.error('Failed to fetch products:', err);
+        console.error(t('error.products.fetchProducts'), err);
       }
     };
 
@@ -114,17 +114,17 @@ export default function Products() {
             await deleteProduct(token, id);
             setProducts(prevProducts => prevProducts.filter(product => product._id !== id));
             setPopupBackgroundColor("#008236");
-            setPopupHeader("Success!");
-            setPopupContent("Product has been successfully deleted!");
+            setPopupHeader(t('status.success'));
+            setPopupContent(t('products.delete.success'));
             setPopupShowCloseButton(false);
             setIsPopupOpen(true);
             } catch (err) {
             setPopupBackgroundColor("red");
-            setPopupHeader(`Failed to delete product.`);
+            setPopupHeader(t('products.delete.failed'));
             setPopupContent(`${err}`);
             setPopupShowCloseButton(true);
             setIsPopupOpen(true);
-            console.error('Failed to delete product:', err);
+            console.error(t('error.products.delete'), err);
         }
     };
 
@@ -135,7 +135,7 @@ export default function Products() {
                 <div className="flex-grow p-4 container mx-auto mt-12 flex flex-col items-center">
                     <div className="text-center mt-4">
                         <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md">
-                            Products Management
+                            {t('header.products')}
                         </div>
                     </div>
                     <div className="mb-4 mt-8">
@@ -143,14 +143,14 @@ export default function Products() {
                             className="ml-2 p-2 bg-green-600 hover:bg-green-700 text-white rounded"
                             onClick={() => handleAddProduct()}
                         >
-                            Add new product
+                            {t('button.addProduct')}
                         </button>
                     </div>
                     <ul className="mt-8 w-full max-w-3xl">
                         {products.length === 0 ? (
                             <div className="flex-grow p-6 w-full py-10">
                                 <div className="col-span-full flex text-center items-center justify-center text-white bg-neutral-800 text-xl font-medium py-20 rounded-md">
-                                    No products matching given criteria.
+                                    {t('others.noResults')}
                                 </div>
                             </div>
                         ) : (
@@ -161,27 +161,27 @@ export default function Products() {
                                         <span>{product.category?.name}</span>
                                     </div>
                                     <div className="flex flex-col w-1/5">
-                                        <span className="font-semibold">Price: ${parseFloat(product.price).toFixed(2)}</span>
-                                        <span>Stock: {product.stock}</span>
+                                        <span className="font-semibold">{t('form.price2')}{parseFloat(product.price).toFixed(2)}</span>
+                                        <span>{t('form.stock2')} {product.stock}</span>
                                     </div>
                                     <div className="flex gap-2">
                                         <button
-                                            className="px-4 w-20 py-2 bg-green-600 hover:bg-green-700 text-white rounded"
+                                            className="px-2 w-20 py-2 bg-green-600 hover:bg-green-700 text-white rounded"
                                             onClick={() => handleViewProduct(product._id)}
                                         >
-                                            View
+                                            {t('button.view')}
                                         </button>
                                         <button
                                             className="px-4 w-20 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
                                             onClick={() => handleEditProduct(product._id)}
                                         >
-                                            Edit
+                                            {t('button.edit')}
                                         </button>
                                         <button
                                             className="px-4 w-20 py-2 bg-red-600 hover:bg-red-700 text-white rounded"
                                             onClick={() => handleDeleteProduct(product)}
                                         >
-                                            Delete
+                                            {t('button.delete')}
                                         </button>
                                     </div>
                                 </li>
@@ -193,9 +193,9 @@ export default function Products() {
                         {hasMore && (
                             <button
                             onClick={handleLoadMore}
-                            className="px-4 py-2  bg-green-600 hover:bg-green-700 text-white rounded flex-shrink-0"
+                            className="w-40 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded flex-shrink-0 round-lg"
                             >
-                            Load more
+                            {t('button.loadMore')}
                             </button>
                         )}
                     </div>
@@ -206,7 +206,7 @@ export default function Products() {
             onClose={() => setIsDeleteModalOpen(false)} 
             onDelete={handleDelete} 
             item={productToDelete}
-            titleItem="product"
+            titleItem={t('modal.deleteProduct')}
             itemLabel={productToDelete?.name}
             />
             <Popup

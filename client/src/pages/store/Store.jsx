@@ -76,16 +76,16 @@ export default function Store() {
 
           setPopupBackgroundColor("#008236");
           setPopupHeader(t('status.success'));
-          setPopupContent(t('product.add.success'));
+          setPopupContent(t('product.addToCart.success'));
           setPopupShowCloseButton(false);
           setIsPopupOpen(true);
         } catch (err) {
           setPopupBackgroundColor("red");
-          setPopupHeader(t('product.add.failed'));
+          setPopupHeader(t('product.addToCart.failed'));
           setPopupContent(`${err}`);
           setPopupShowCloseButton(true);
           setIsPopupOpen(true);
-          console.error(t('error.addProductFailed'), err);
+          console.error(t('error.product.addToCart'), err);
         }
       };
 
@@ -111,7 +111,7 @@ export default function Store() {
         
             setHasMore(result.hasMore);
         } catch (err) {
-            console.error(t('error.fetchProductsFailed'), err);
+            console.error(t('error.product.fetchProducts'), err);
         }
     };
 
@@ -179,7 +179,7 @@ export default function Store() {
                         <AdCarousel />
                     </div>
                     <div className="col-span-full flex text-center items-center justify-center text-white bg-neutral-800 text-xl font-medium py-20 rounded-md">
-                        {t('product.noResults')}
+                        {t('others.noResults')}
                     </div>
                 </div>
             ) : (
@@ -250,7 +250,7 @@ export default function Store() {
                 }, [])}
             {hasMore && (
                 <div className="col-span-full flex justify-center py-6">
-                    <span className="text-white">{t('product.loading')}</span>
+                    <span className="text-white">{t('others.loading')}</span>
                 </div>
             )}
             </div>)}

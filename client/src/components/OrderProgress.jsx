@@ -2,11 +2,11 @@ import { useTranslation } from 'react-i18next';
 
 export default function OrderProgress({ currentStep }) {
   const { t } = useTranslation();
-  const steps = ['Cart', 'Shipment', 'Payment', 'Summary'];
+  const steps = [t('order.cart'), t('order.shipment'), t('order.payment'), t('order.summary')];
   const progress = (currentStep / steps.length) * 100;
 
   return (
-    <div className="container grid grid-cols-1 md:grid-cols-2 gap-2 w-20">
+    <div className="container grid grid-cols-1 md:grid-cols-2 gap-2 w-25">
 
       <div className="dlex pt-1">
         <div className="flex">

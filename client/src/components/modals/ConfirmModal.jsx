@@ -11,8 +11,8 @@ const ConfirmModal = ({ isOpen, message, onCancel, onConfirm }) => {
           <h3 className="text-xl text-center font-bold mb-4">{message.title}</h3>
           <p className="text-center text-gray-600 mb-4">{message.body}</p>
           <div className="flex justify-center mt-6 gap-6">
-            <button onClick={onCancel} className="px-4 py-2 bg-green-600 text-white rounded">Cancel</button>
-            <button onClick={onConfirm} className="px-4 py-2 bg-red-600 text-white rounded">Leave</button>
+            <button onClick={onCancel} className="px-4 py-2 bg-green-600 text-white rounded">{t('button.cancel')}</button>
+            <button onClick={onConfirm} className="px-4 py-2 bg-red-600 text-white rounded">{t('button.leave')}</button>
           </div>
         </div>
       </div>

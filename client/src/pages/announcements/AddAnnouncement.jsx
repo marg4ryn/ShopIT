@@ -2,9 +2,9 @@ import { useState } from "react";
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from "react-router-dom";
 import { addAnnouncement } from '../../api/Announcements';
+import { useAuth0 } from "@auth0/auth0-react";
 import BackButton from '../../components/BackButton';
 import UnsavedChangesModal from '../../components/modals/UnsavedChangesModal';
-import { useAuth0 } from "@auth0/auth0-react";
 
 export default function AddAnnouncement() {
   const { getAccessTokenSilently } = useAuth0();
@@ -28,10 +28,10 @@ export default function AddAnnouncement() {
     e.preventDefault();
   
     const newErrors = {};
-    if (!title) newErrors.title = "Title is required";
-    if (!header) newErrors.header = "Header is required";
-    if (!content) newErrors.content = "Content is required";
-    if (!color) newErrors.color = "Color is required";
+    if (!title) newErrors.title = t('form.error.titleRequired');
+    if (!header) newErrors.header = t('form.error.headerRequired');
+    if (!content) newErrors.content = t('form.error.contentRequired');
+    if (!color) newErrors.color = t('form.error.colorRequired');
   
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -43,15 +43,15 @@ export default function AddAnnouncement() {
       await addAnnouncement(token, title, header, content, color);
       sessionStorage.setItem("popupData", JSON.stringify({
         backgroundColor: "#008236",
-        header: "Success!",
-        content: "Announcement has been successfully created!",
+        header: t('status.success'),
+        content: t('announcement.create.success'),
         showCloseButton: false
       }));
       setUnsavedChanges(false);
     } catch (error) {
       sessionStorage.setItem("popupData", JSON.stringify({
         backgroundColor: "red",
-        header: "Failed to create announcement.",
+        header: t('announcement.create.failed'),
         content: `${error}` ,
         showCloseButton: true
       }));
@@ -75,7 +75,7 @@ export default function AddAnnouncement() {
   <main className="flex flex-col flex-grow">
     <div className="text-center pt-10 mt-26">
       <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md">
-        Add Announcement
+        {t('header.addAnnouncement')}
       </div>
     </div>
 
@@ -105,7 +105,7 @@ export default function AddAnnouncement() {
                 id="announcementTitle"
                 type="text"
                 maxLength={50}
-                placeholder="Enter title..."
+                placeholder={t('placeholder.announcementTitle')}
                 className={`border text-black ${errors.title ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
                 value={title}
                 onChange={(e) => {
@@ -118,12 +118,12 @@ export default function AddAnnouncement() {
             </div>
 
             <div className="flex flex-col w-full">
-              <label htmlFor="announcementHeader" className="text-white font-lg font-bold mb-2">Header</label>
+              <label htmlFor="announcementHeader" className="text-white font-lg font-bold mb-2">{t('form.header')}</label>
               <input
                 id="announcementHeader"
                 type="text"
                 maxLength={50}
-                placeholder="Enter header..."
+                placeholder={t('placeholder.announcementHeader')}
                 className={`border text-black ${errors.header ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
                 value={header}
                 onChange={(e) => {
@@ -136,7 +136,7 @@ export default function AddAnnouncement() {
             </div>
 
             <div className="flex flex-col w-full justify-center items-center">
-              <label htmlFor="announcementColor" className="text-white font-lg font-bold mb-2">Color</label>
+              <label htmlFor="announcementColor" className="text-white font-lg font-bold mb-2">{t('form.color')}</label>
               <input
                 id="announcementColor"
                 type="color"
@@ -155,7 +155,7 @@ export default function AddAnnouncement() {
           <div className="p-4 rounded-md border-0 ">
             <div className="flex-grow container mx-auto mt-4">
                 <label htmlFor="announcementContent" className="block text-white font-lg font-bold pb-2">
-                  Content
+                  {t('form.content')}
                 </label>
                 <textarea
                   id="announcementContent"
@@ -163,7 +163,7 @@ export default function AddAnnouncement() {
                   maxLength={200}
                   className={`w-180 border ${errors.content ? 'border-red-500' : 'border-gray-300'} bg-white text-black p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-black`}
                   rows="4"
-                  placeholder="Enter content..."
+                  placeholder={t('placeholder.announcementContent')}
                   value={content}
                   onChange={(e) => {
                     setContent(e.target.value);
@@ -188,7 +188,7 @@ export default function AddAnnouncement() {
             type="submit"
             className="p-2 bg-green-600 hover:bg-green-700 text-white rounded w-40"
             >
-            Add
+            {t('button.add')}
         </button>
         </div>
         </form>

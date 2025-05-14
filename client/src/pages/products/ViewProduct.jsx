@@ -45,7 +45,7 @@ export default function ViewProduct() {
         setProduct(data);
         setSelectedImage(data.imageUrls?.[0] || "/images/No_Image_Available.jpg");
       } catch (err) {
-        console.error("Failed to fetch product:", err);
+        console.error(t('error.product.fetchProduct'), err);
       }
     };
 
@@ -87,17 +87,17 @@ export default function ViewProduct() {
     
       localStorage.setItem('cart', JSON.stringify(cart));
       setPopupBackgroundColor("#008236");
-      setPopupHeader("Success!");
-      setPopupContent("Product has been added to your cart!");
+      setPopupHeader(t('status.success'));
+      setPopupContent(t('product.addToCart.success'));
       setPopupShowCloseButton(false);
       setIsPopupOpen(true);
     } catch (err) {
       setPopupBackgroundColor("red");
-      setPopupHeader(`Failed to add product to cart.`);
+      setPopupHeader(t('product.addToCart.failed'));
       setPopupContent(`${err}`);
       setPopupShowCloseButton(true);
       setIsPopupOpen(true);
-      console.error('Failed to add product to cart:', err);
+      console.error(t('error.product.addToCart'), err);
     }
   };
 
@@ -162,11 +162,15 @@ export default function ViewProduct() {
               <div className="rounded-md border-0 flex flex-col h-full">
                 <div className="text-white mx-auto pr-4 container py-10 space-y-5 flex flex-col items-center flex-grow">
                   <div className="flex justify-between w-full">
-                    <span className="text-sm">{product.category?.name || "Unknown"}</span>
+                    <span className="text-sm">
+                      {product.category?.name?.trim() || t('others.unknown')}
+                    </span>
                     <span
                       className={`text-sm ${product.stock < 20 ? 'text-red-500 font-bold' : ''}`}
                     >
-                      {product.stock < 20 ? `Only ${product.stock} products left!` : `In stock: ${product.stock}`}
+                    {product.stock < 20
+                      ? `${t('others.onlyLeft1')} ${product.stock} ${t('others.onlyLeft2')}`
+                      : `${t('others.inStock')} ${product.stock}`}
                     </span>
                   </div>
 
@@ -188,14 +192,14 @@ export default function ViewProduct() {
               className="p-2 bg-green-600 hover:bg-green-700 text-white rounded w-40"
               onClick={() => {setIsModalOpen(true);}}
             >
-              Add to cart
+              {t('button.addToCart')}
             </button>
             {roles.includes("admin") && (
             <button
-              className="px-4 w-20 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
+              className="px-4 w-40 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
               onClick={() => navigate(`/edit-product/${id}`)}
             >
-              Edit
+              {t('button.edit')}
             </button>
             )}
           </div>

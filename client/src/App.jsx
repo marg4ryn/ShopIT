@@ -75,7 +75,7 @@ export default App;
 
 /* TODO on my own
 - reviews 
-- two languages versions
+- move variables to env file
 - page loading animation
 - application responsiveness
 - application opening animation

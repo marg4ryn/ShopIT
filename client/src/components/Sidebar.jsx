@@ -2,6 +2,7 @@ import { ChevronLast, ChevronFirst } from "lucide-react";
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from "react";
 import { getAllCategories } from '../api/categories';
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Sidebar({ onSortChange, onFilterChange, sortOption, filters }) {
   const { t } = useTranslation();
@@ -131,13 +132,23 @@ export default function Sidebar({ onSortChange, onFilterChange, sortOption, filt
     <aside>
       <nav className={`h-full pt-6 flex flex-col items-center border-0 transition-all duration-300 overflow-hidden ${expanded ? 'bg-neutral-800' : 'bg-neutral-900'}`}>
         
-        <div className="p-4 pb-2 flex">
-          <p className={`overflow-hidden transition-all text-xl font-bold text-center text-white ${expanded ? "w-64" : "w-0" }`}>{t('subHeader.sorting')}</p>
-          <button 
-            onClick={() => setExpanded((curr) => !curr)} 
-            className="p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100">
+        <div className="p-4 pb-2 flex items-center gap-2">
+          {expanded && (
+            <div className="transition-all duration-300 mr-2">
+              <LanguageSwitcher />
+            </div>
+          )}
+
+          <button
+            onClick={() => setExpanded((curr) => !curr)}
+            className="p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100"
+          >
             {expanded ? <ChevronFirst /> : <ChevronLast />}
           </button>
+        </div>
+
+        <div className="p-4">
+          <p className={`text-xl font-bold text-center text-white ${expanded ? "w-68 opacity-100" : "w-0 opacity-0 overflow-hidden" } ${isOpen ? "mt-2" : "mt-0"}`}>{t('subHeader.sorting')}</p>
         </div>
 
         <div className={`p-4 pb-2 flex justify-between items-center transition-all duration-300 ${expanded ? "w-72 opacity-100" : "w-0 opacity-0 overflow-hidden"}`}>

@@ -16,7 +16,7 @@ export default function ViewAnnouncement() {
         const data = await getAnnouncement (id);
         setAd(data);
       } catch (err) {
-        console.error("Failed to fetch announcement:", err);
+        console.error(t('error.announcement.fetchAnnouncement'), err);
       }
     };
 
@@ -27,7 +27,7 @@ export default function ViewAnnouncement() {
     <main className="flex flex-col flex-grow">
       <div className="text-center pt-10 mt-26">
         <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md">
-          Announcement Preview
+           {t('header.viewAnnouncement')}
         </div>
       </div>
       <div className="flex flex-col items-center mt-10"> 
@@ -49,7 +49,7 @@ export default function ViewAnnouncement() {
           className="px-4 w-20 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
           onClick={() => navigate(`/edit-announcement/${id}`)}
         >
-          Edit
+          {t('button.edit')}
         </button>
       </div>
       </div>

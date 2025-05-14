@@ -21,7 +21,7 @@ const UserProfile = () => {
 								</div>
 
 								<div className="flex flex-col">
-										<label htmlFor="userName" className="text-black font-lg font-bold pb-2">Username</label>
+										<label htmlFor="userName" className="text-black font-lg font-bold pb-2">{t('form.username')}</label>
 										<input
 												id="userName"
 												type="text"
@@ -33,7 +33,7 @@ const UserProfile = () => {
 								</div>
 
 								<div className="flex flex-col mt-2">
-										<label htmlFor="userEmail" className="text-black font-lg font-bold pb-2">Email</label>
+										<label htmlFor="userEmail" className="text-black font-lg font-bold pb-2">{t('form.email')}</label>
 										<input
 												id="userEmail"
 												type="text"
@@ -55,16 +55,16 @@ const UserProfile = () => {
 											}
 											className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 w-30"
 									>
-											Log Out
+											{t('button.logOut')}
 									</button>
 							</div>
 					</div>
 					<div className="flex-grow flex flex-col gap-4">
 							<div className="flex-grow bg-white rounded-lg p-4 w-150 h-50">
-									<h3 className="text-lg font-semibold">YOUR ORDERS</h3>
+									<h3 className="text-lg font-semibold">{t('subHeader.yourOrders')}</h3>
 							</div>
 							<div className="flex-grow bg-white rounded-lg p-4 w-150 h-50">
-									<h3 className="text-lg font-semibold">YOUR REVIEWS</h3>
+									<h3 className="text-lg font-semibold">{t('subHeader.yourReviews')}</h3>
 							</div>
 					</div>
 					</div>

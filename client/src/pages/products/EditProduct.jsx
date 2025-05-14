@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from "react-router-dom";
 import { getProduct, editProduct } from "../../api/products";
 import { getAllCategories } from "../../api/categories";
-import BackButton from '../../components/BackButton';
-import UnsavedChangesModal from '../../components/modals/UnsavedChangesModal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useAuth0 } from "@auth0/auth0-react";
+import BackButton from '../../components/BackButton';
+import UnsavedChangesModal from '../../components/modals/UnsavedChangesModal';
 
 export default function EditProduct() {
   const { getAccessTokenSilently } = useAuth0();
@@ -87,7 +87,7 @@ export default function EditProduct() {
           imageUrls: fullImageUrls,
         });
       } catch (err) {
-        console.error("Failed to fetch product:", err);
+        console.error(t('error.product.fetchProduct'), err);
       }
     };
 
@@ -96,7 +96,7 @@ export default function EditProduct() {
         const categories = await getAllCategories();
         setCategories(categories);
       } catch (err) {
-        console.error("Failed to fetch categories:", err);
+        console.error(t('error.category.fetchCategories'), err);
       }
     };
   
@@ -145,11 +145,11 @@ export default function EditProduct() {
     e.preventDefault();
   
     const newErrors = {};
-    if (!name) newErrors.name = "Name is required";
-    if (!description) newErrors.description = "Description is required";
-    if (!price) newErrors.price = "Price is required";
-    if (!stock) newErrors.stock = "Stock is required";
-    if (!category) newErrors.category = "Category is required";
+    if (!name) newErrors.name = t('form.error.nameRequired');
+    if (!description) newErrors.description = t('form.error.descriptionRequired');
+    if (!price) newErrors.price = t('form.error.priceRequired');
+    if (!stock) newErrors.stock = t('form.error.stockRequired');
+    if (!category) newErrors.category = t('form.error.categoryRequired');
   
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -183,15 +183,15 @@ export default function EditProduct() {
       await editProduct(token, id, formData, deletedImages);
       sessionStorage.setItem("popupData", JSON.stringify({
         backgroundColor: "#008236",
-        header: "Success!",
-        content: "Product has been successfully saved!",
+        header: t('status.success'),
+        content: t('product.edit.success'),
         showCloseButton: false
       }));
       setUnsavedChanges(false);
     } catch (error) {
       sessionStorage.setItem("popupData", JSON.stringify({
         backgroundColor: "red",
-        header: "Failed to save product.",
+        header: t('product.edit.failed'),
         content: `${error}`,
         showCloseButton: true
       }));
@@ -215,7 +215,7 @@ export default function EditProduct() {
     <main className="flex flex-col flex-grow">
       <div className="text-center pt-10 mt-26">
         <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md">
-          Edit Product
+          {t('header.editProduct')}
         </div>
       </div>
 
@@ -224,7 +224,7 @@ export default function EditProduct() {
         <div className="bg-neutral-800 p-6 rounded-md shadow-md mx-6 w-200">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="p-4 rounded-md border-0 flex flex-col items-center justify-center">
-              <span className="text-white font-lg font-bold pb-2">Image</span>
+              <span className="text-white font-lg font-bold pb-2">{t('form.image')}</span>
               <div className="mb-4 relative w-full max-w-md mx-auto">
                 <img
                   src={selectedImageUrl}
@@ -279,7 +279,7 @@ export default function EditProduct() {
 
             <div className="space-y-4">
               <div className="flex flex-col mt-4">
-                <label htmlFor="productName" className="text-white font-lg font-bold pb-2">Name</label>
+                <label htmlFor="productName" className="text-white font-lg font-bold pb-2">{t('form.name')}</label>
                 <input
                   id="productName"
                   type="text"
@@ -296,7 +296,7 @@ export default function EditProduct() {
               </div>
 
               <div className="flex flex-col">
-                <label htmlFor="productPrice" className="text-white font-lg font-bold pb-2">Price ($)</label>
+                <label htmlFor="productPrice" className="text-white font-lg font-bold pb-2">{t('form.price')}</label>
                 <input
                   id="productPrice"
                   type="number"
@@ -313,7 +313,7 @@ export default function EditProduct() {
               </div>
 
               <div className="flex flex-col">
-                <label htmlFor="productStock" className="text-white font-lg font-bold pb-2">Stock</label>
+                <label htmlFor="productStock" className="text-white font-lg font-bold pb-2">{t('form.stock')}</label>
                 <input
                   id="productStock"
                   type="number"
@@ -330,7 +330,7 @@ export default function EditProduct() {
               </div>
 
               <div className="flex flex-col">
-                <label htmlFor="productCategory" className="text-white font-lg font-bold pb-2">Category</label>
+                <label htmlFor="productCategory" className="text-white font-lg font-bold pb-2">{t('form.category')}</label>
                 <select
                   id="productCategory"
                   className={`w-full border text-black ${errors.category ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
@@ -341,7 +341,7 @@ export default function EditProduct() {
                     setUnsavedChanges(true);
                   }}
                 >
-                <option value="">-- Select --</option>
+                <option value="">{t('placeholder.select')}</option>
                 {categories.map((category) => (
                   <option key={category._id} value={category._id}>
                     {category.name}
@@ -355,14 +355,14 @@ export default function EditProduct() {
 
           <div className="mt-6">
             <label htmlFor="productDescription" className="block text-white font-lg font-bold pb-2">
-              Description
+              {t('form.description')}
             </label>
             <textarea
               id="productDescription"
               maxLength={400}
               className={`w-full border text-black ${errors.description ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
               rows="4"
-              placeholder="Enter product description..."
+              placeholder={t('placeholder.description')}
               value={description}
               onChange={(e) => {
                 setDescription(e.target.value);
@@ -391,7 +391,7 @@ export default function EditProduct() {
                   : "bg-gray-500"
               }`}
               >
-              Save
+              {t('button.save')}
             </button>
           </div>
         </form>
