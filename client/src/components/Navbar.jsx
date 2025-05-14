@@ -14,6 +14,7 @@ export default function Navbar() {
   const { roles } = useUser();
   const { t } = useTranslation();
   const { loginWithRedirect } = useAuth0();
+  const audience = import.meta.env.VITE_AUTH0_AUDIENCE;
   
   useEffect(() => {
     setInputValue(searchTerm);
@@ -36,7 +37,7 @@ export default function Navbar() {
   const handleLogin = async (e) => {
     await loginWithRedirect({
       authorizationParams: {
-        audience: "https://shopit-api",
+        audience: audience,
       }
     });
     setMenuOpen(false)

@@ -10,6 +10,8 @@ import BackButton from '../../components/BackButton';
 import UnsavedChangesModal from '../../components/modals/UnsavedChangesModal';
 
 export default function EditProduct() {
+  const noImageUrl = import.meta.env.VITE_NO_IMAGE_URL;
+  const appUrl = import.meta.env.VITE_APP_URL;
   const { getAccessTokenSilently } = useAuth0();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -23,7 +25,7 @@ export default function EditProduct() {
   const [isModalOpen, setIsModalOpen] = useState(false); 
   const [images, setImages] = useState([]);
   const [visibleImages, setVisibleImages] = useState([]);
-  const [selectedImageUrl, setSelectedImageUrl] = useState("http://localhost:3000/images/No_Image_Available.jpg");
+  const [selectedImageUrl, setSelectedImageUrl] = useState(noImageUrl);
   const [initialData, setInitialData] = useState({
     name: "",
     description: "",
@@ -67,7 +69,7 @@ export default function EditProduct() {
         setCategory(product?.category?._id || "");
   
         const imageUrls = product.imageUrls? product.imageUrls : [];
-        const fullImageUrls = imageUrls?.map(url => `http://localhost:3000${url}`);
+        const fullImageUrls = imageUrls?.map(url => `${appUrl}${url}`);
         const imageObjects = fullImageUrls?.map(url => ({
           file: null,
           url,
@@ -76,7 +78,7 @@ export default function EditProduct() {
         }));
         
         setImages(imageObjects);
-        setSelectedImageUrl(fullImageUrls?.[0] || "http://localhost:3000/images/No_Image_Available.jpg");
+        setSelectedImageUrl(fullImageUrls?.[0] || noImageUrl);
   
         setInitialData({
           name: product?.name,
@@ -132,7 +134,7 @@ export default function EditProduct() {
   
       const nextAvailable = updated.find((img) => !img.isDeleted);
       setSelectedImageUrl(
-        nextAvailable ? (nextAvailable.url || nextAvailable.previewUrl) : "http://localhost:3000/images/No_Image_Available.jpg"
+        nextAvailable ? (nextAvailable.url || nextAvailable.previewUrl) : noImageUrl
       );
   
       return updated;
@@ -167,7 +169,7 @@ export default function EditProduct() {
   
     images.forEach((imgObj) => {
       if (imgObj.isDeleted) {
-        const imagePath = imgObj.url.replace("http://localhost:3000", "");
+        const imagePath = imgObj.url.replace(appUrl, "");
         deletedImages.push(imagePath);
       } else if (imgObj.file) {
         formData.append("images", imgObj.file);

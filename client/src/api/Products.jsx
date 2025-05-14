@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:3000/api/products';
+const BASE_URL = import.meta.env.VITE_API_PRODUCTS;
 
   export const getAllFilteredProducts = async (filters) => {
     try {

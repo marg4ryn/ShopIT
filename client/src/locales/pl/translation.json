@@ -44,6 +44,7 @@
   "placeholder.announcementTitle": "Wprowadź tytuł...",
   "placeholder.announcementHeader": "Wprowadź nagłówek...",
   "placeholder.announcementContent": "Wprowadź treść...",
+  "placeholder.productName": "Wprowadź nazwę produktu...",
 
   "form.error.nameRequired": "Nazwa jest wymagana",
   "form.error.descriptionRequired": "Opis jest wymagany",

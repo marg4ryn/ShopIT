@@ -10,15 +10,16 @@ import BackButton from '../../components/BackButton';
 import UnsavedChangesModal from '../../components/modals/UnsavedChangesModal';
 
 export default function AddProduct() {
+  const noImageUrl = import.meta.env.VITE_NO_IMAGE_URL;
   const { getAccessTokenSilently } = useAuth0();
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [stock, setStock] = useState("");
+  const [price, setPrice] = useState("0");
+  const [stock, setStock] = useState("0");
   const [images, setImages] = useState([]);
-  const [selectedImageUrl, setSelectedImageUrl] = useState("http://localhost:3000/images/No_Image_Available.jpg");
+  const [selectedImageUrl, setSelectedImageUrl] = useState(noImageUrl);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); 
   const [errors, setErrors] = useState({
@@ -128,7 +129,7 @@ export default function AddProduct() {
       const url = img.previewUrl || img.url;
       return url !== selectedImageUrl;
     }));
-    setSelectedImageUrl("http://localhost:3000/images/No_Image_Available.jpg");
+    setSelectedImageUrl(noImageUrl);
     setUnsavedChanges(true);
   };
 
@@ -207,6 +208,7 @@ export default function AddProduct() {
                     maxLength={50}
                     className={`w-full border text-black ${errors.name ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
                     value={name}
+                    placeholder={t('placeholder.productName')}
                     onChange={(e) => {
                       setName(e.target.value);
                       setErrors({ ...errors, name: "" });
@@ -223,6 +225,7 @@ export default function AddProduct() {
                     type="number"
                     className={`w-full border text-black ${errors.price ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
                     value={price}
+                    min={0}
                     max={999999}
                     onChange={(e) => {
                       setPrice(e.target.value);
@@ -238,6 +241,7 @@ export default function AddProduct() {
                   <input
                     id="productStock"
                     type="number"
+                    min={0}
                     max={999999}
                     className={`w-full border text-black ${errors.stock ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
                     value={stock}

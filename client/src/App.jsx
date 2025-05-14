@@ -22,6 +22,7 @@ import AddAnnouncement from "./pages/announcements/AddAnnouncement";
 
 const domain = import.meta.env.VITE_AUTH0_DOMAIN;
 const clientId = import.meta.env.VITE_AUTH0_CLIENT_ID;
+const audience = import.meta.env.VITE_AUTH0_AUDIENCE;
 
 function App() {
   return (
@@ -31,7 +32,7 @@ function App() {
         clientId={clientId}
         authorizationParams={{ 
           redirect_uri: window.location.origin,
-          audience: "https://shopit-api", 
+          audience: audience, 
         }}
       >
       <OrderProvider>
@@ -75,7 +76,6 @@ export default App;
 
 /* TODO on my own
 - reviews 
-- move variables to env file
 - page loading animation
 - application opening animation
 - move application to MVP

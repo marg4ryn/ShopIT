@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { useTranslation } from 'react-i18next';
 import { getAllAnnouncements } from "../api/Announcements";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
@@ -7,6 +8,7 @@ export default function AdCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [slideDirection, setSlideDirection] = useState("reset");
+  const { t } = useTranslation();
   const intervalRef = useRef(null);
   const currentIndexRef = useRef(0);
   const prevIndexRef = useRef(0);
@@ -33,7 +35,7 @@ export default function AdCarousel() {
           nextIndexRef.current = 1 % visibleAds.length;
         }
       } catch (error) {
-        console.error("Error loading announcements:", error);
+        console.error(t('error.announcement.fetchAnnouncements'), error);
         setAds([]);
       }
     };

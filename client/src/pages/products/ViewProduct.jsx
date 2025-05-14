@@ -9,6 +9,7 @@ import Popup from "../../components/modals/Popup";
 import AddToCartModal from '../../components/modals/AddToCartModal';
 
 export default function ViewProduct() {
+  const appUrl = import.meta.env.VITE_APP_URL;
   const { roles } = useUser();
   const { id } = useParams();
   const [product, setProduct] = useState(null);
@@ -118,7 +119,7 @@ export default function ViewProduct() {
               <div>
               <div className="flex justify-center px-4 bg-white rounded-xl border-0 relative">
                   <img
-                    src={`http://localhost:3000${selectedImage}`}
+                    src={`${appUrl}${selectedImage}`}
                     alt={product.name}
                     className="h-128 object-contain"
                   />
@@ -149,7 +150,7 @@ export default function ViewProduct() {
                   {product.imageUrls?.map((img, index) => (
                     <img
                       key={index}
-                      src={`http://localhost:3000${img}`}
+                      src={`${appUrl}${img}`}
                       alt={`Mini ${index}`}
                       className={`w-16 h-16 object-contain rounded cursor-pointer border-4 bg-white
                         ${selectedImage === img ? 'border-blue-600' : 'border-gray-300'}`}                      

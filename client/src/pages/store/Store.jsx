@@ -25,8 +25,9 @@ export default function Store() {
     const { t } = useTranslation();
     const page = useRef(1);
     const limit = 12;
-		const scrollTriggerRef = useRef(null);
+	const scrollTriggerRef = useRef(null);
     const navigate = useNavigate();
+    const appUrl = import.meta.env.VITE_APP_URL;
 
     const handleViewProduct = (id) => {
         navigate(`/view-product/${id}`);
@@ -218,7 +219,7 @@ export default function Store() {
                             onClick={() => handleViewProduct(product._id)}
                         >
                             <img
-                                src={`http://localhost:3000${product.imageUrls[0]}`}
+                                src={`${appUrl}${product.imageUrls[0]}`}
                                 alt={product.name}
                                 className="w-full h-80 object-contain rounded-md mb-4"
                             />
@@ -262,8 +263,8 @@ export default function Store() {
                 }, [])}
             {hasMore && (
                 <div className="col-span-full flex justify-center py-6">
-									<span className="text-white">{t('others.loading')}</span>
-									<div ref={scrollTriggerRef} className="h-1 col-span-full" />
+					<span className="text-white">{t('others.loading')}</span>
+				    <div ref={scrollTriggerRef} className="h-1 col-span-full" />
                 </div>
             )}
             </div>)}
