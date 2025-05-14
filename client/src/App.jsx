@@ -77,7 +77,6 @@ export default App;
 - reviews 
 - move variables to env file
 - page loading animation
-- application responsiveness
 - application opening animation
 - move application to MVP
 - Mailchimp

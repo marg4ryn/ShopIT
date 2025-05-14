@@ -91,7 +91,7 @@ export default function Cart() {
             <OrderProgress currentStep={currentStep}/>
           </div>
     
-          <div className="flex flex-1 flex-col items-center justify-center">
+          <div className="fixed top-1/4 flex-col items-center justify-center">
             <div className="mt-8">
               <ul className="space-y-4 text-black">
                 {cartItems.map((item) => (

@@ -25,6 +25,7 @@ export default function Store() {
     const { t } = useTranslation();
     const page = useRef(1);
     const limit = 12;
+		const scrollTriggerRef = useRef(null);
     const navigate = useNavigate();
 
     const handleViewProduct = (id) => {
@@ -115,20 +116,31 @@ export default function Store() {
         }
     };
 
-    useEffect(() => {
-        const handleScroll = () => {
-            const scrollTop = window.scrollY;
-            const windowHeight = window.innerHeight;
-            const documentHeight = document.documentElement.scrollHeight;
-    
-            if (scrollTop + windowHeight >= documentHeight - 100 && hasMore) {
-                handleLoadMore();
-            }
-        };
-    
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
+		useEffect(() => {
+			if (!scrollTriggerRef.current) return;
+
+			const observer = new IntersectionObserver(
+				(entries) => {
+					if (entries[0].isIntersecting && hasMore) {
+						handleLoadMore();
+					}
+				},
+				{
+					root: null,
+					rootMargin: '100px',
+					threshold: 1.0,
+				}
+			);
+
+			observer.observe(scrollTriggerRef.current);
+
+			return () => {
+				if (scrollTriggerRef.current) {
+					observer.unobserve(scrollTriggerRef.current);
+				}
+				observer.disconnect();
+			};
+		}, [products.length, hasMore]);
  
     useEffect(() => {
         loadProducts(true);
@@ -171,10 +183,10 @@ export default function Store() {
 
     return (
     <main className="flex-grow flex pt-18">
-        <div className="flex transition-all duration-300">
+        <div className="flex w-full max-w-full">
             <Sidebar onSortChange={handleSortChange} onFilterChange={handleFilterChange} sortOption={sortOption} filters={filters} />
             {products.length === 0 ? (
-                <div className="flex-grow p-6 w-full mr-14 py-10">
+                <div className="flex-grow items-center justify-center p-6 w-full mr-14 py-10">
                     <div className="col-span-full">
                         <AdCarousel />
                     </div>
@@ -183,7 +195,7 @@ export default function Store() {
                     </div>
                 </div>
             ) : (
-            <div className="flex-grow p-6 w-full mr-14 py-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <div className="flex-grow p-6 mr-14 py-10 min-h-screen grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 {products.reduce((acc, product, index) => {
                     const { leftPart, rightPart } = splitTextInTwo(product.name);
                     const columns = 4;
@@ -250,7 +262,8 @@ export default function Store() {
                 }, [])}
             {hasMore && (
                 <div className="col-span-full flex justify-center py-6">
-                    <span className="text-white">{t('others.loading')}</span>
+									<span className="text-white">{t('others.loading')}</span>
+									<div ref={scrollTriggerRef} className="h-1 col-span-full" />
                 </div>
             )}
             </div>)}
