@@ -98,6 +98,8 @@
   "button.leave": "Wyjdź",
   "button.cancel": "Anuluj",
   "button.yes": "Tak",
+  "button.statute": "Regulamin",
+  "button.privacyPolicy": "Polityka prywatności",
 
   "header.addProduct": "Dodaj Produkt",
   "header.editProduct": "Edytuj Produkt",

@@ -188,7 +188,7 @@ export default function Store() {
 
     return (
     <main className="flex-grow flex pt-18">
-		{loading ? <LoadingSpinner /> : (
+		{loading ? <div className="flex justify-center items-center w-full max-w-full"><LoadingSpinner /> </div>: (
         <div className="flex w-full max-w-full">
             <Sidebar onSortChange={handleSortChange} onFilterChange={handleFilterChange} sortOption={sortOption} filters={filters} />
             {products.length === 0 ? (

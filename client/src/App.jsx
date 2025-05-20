@@ -8,6 +8,8 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import UserProfile from "./pages/login/UserProfile";
 import Store from "./pages/store/Store";
+import Statute from "./pages/store/Statute";
+import PrivacyPolicy from "./pages/store/PrivacyPolicy";
 import Cart from "./pages/cart/Cart";
 import Shipment from "./pages/cart/Shipment";
 import Categories from "./pages/categories/Categories";
@@ -39,6 +41,8 @@ const AppContent = () => {
           <Routes>
             <Route path="/user-profile" element={<><Navbar /> <UserProfile /></>} />
             <Route path="/" element={<><Navbar /> <Store /></>} />
+            <Route path="/statute" element={<><Navbar /> <Statute /></>} />
+            <Route path="/privacy-policy" element={<><Navbar /> <PrivacyPolicy /></>} />
             <Route path="/cart" element={<><Navbar /> <Cart /></>} />
             <Route path="/shipment" element={<><Navbar /> <Shipment /></>} />
             <Route path="/categories" element={<><Navbar /> <Categories /></>} />
