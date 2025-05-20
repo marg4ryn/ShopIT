@@ -80,10 +80,12 @@ function App() {
 export default App;
 
 /* TODO
+- polityka prywatności + regulamin
 - furgonetka api
 - payU api
 - orders
 - reviews 
+- change view product layout
 - move application to MVP
 - Mailchimp
 - Twilio
