@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from "react-router-dom";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 const Footer = () => {
     const { t } = useTranslation();
@@ -20,6 +21,7 @@ const Footer = () => {
         >
           {t('button.privacyPolicy')}
         </button>
+        <LanguageSwitcher direction="up"/>
       </footer>
     );
   };
