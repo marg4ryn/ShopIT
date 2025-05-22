@@ -6,7 +6,7 @@ export default function Statute() {
   return (
 <div className="flex flex-col flex-grow justify-center items-center pt-10 mt-26 mb-16 text-white">
       <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md text-center w-100">
-        {t('others.ShopIt')} {t('statute.title')} 
+        {t('statute.title')} 
       </div>
 
       <div className="flex flex-grow gap-4 justify-center items-center w-3/5">

@@ -2,19 +2,6 @@ const { expressjwt: jwt } = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
 require('dotenv').config();
 
-const FURGONETKA_TOKEN = 'a1b2c3d4e5f6g7h8i9j0';
-
-const checkStaticToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'] || '';
-  const token = authHeader.replace('Bearer ', '');
-
-  if (token !== FURGONETKA_TOKEN) {
-    return res.status(401).json({ message: 'Unauthorized - invalid token' });
-  }
-
-  next();
-};
-
 const checkJwt = jwt({
   secret: jwksRsa.expressJwtSecret({
     cache: true,
@@ -27,4 +14,4 @@ const checkJwt = jwt({
   algorithms: ['RS256'],
 });
 
-module.exports = { checkJwt, checkStaticToken };
+module.exports = { checkJwt };

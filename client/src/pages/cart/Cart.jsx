@@ -85,7 +85,7 @@ export default function Cart() {
   const total = cartItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
 
   return (
-    <div className="flex flex-col flex-grow justify-center items-center pt-10 mt-26 ml-32 text-white">
+    <div className="flex flex-grow justify-center items-center pt-10 mt-26 ml-32 text-white">
       {loading ? <LoadingSpinner /> : (
         <div className="flex flex-col space-y-6 place-items-center">
         <div className="fixed top-1/10 pt-10">

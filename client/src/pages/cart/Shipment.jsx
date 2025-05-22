@@ -9,10 +9,29 @@ import LoadingSpinner from "../../components/LoadingSpinner";
 
 export default function Shipment() {
   const [loading, setLoading] = useState(true);
+  const [contactInfo, setContactInfo] = useState({ name: '', email: '', phone: '' });
+  const [selectedCarrier, setSelectedCarrier] = useState('');
+  const carriers = ['InPost', 'DHL', 'DPD'];
+  const [deliveryAddress, setDeliveryAddress] = useState({
+    street: '',
+    city: '',
+    zip: '',
+    country: ''
+  });
   const { currentStep, setCurrentStep } = useOrderContext();
   const { userData } = useUser();
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  const handleContactChange = e => {
+    const { name, value } = e.target;
+    setContactInfo(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleAddressChange = e => {
+    const { name, value } = e.target;
+    setDeliveryAddress(prev => ({ ...prev, [name]: value }));
+  };
 
 	useEffect(() => {
 		setCurrentStep(2);
@@ -29,45 +48,77 @@ export default function Shipment() {
             <OrderProgress currentStep={currentStep}/>
           </div>
     
-          <div className="flex flex-1 flex-col items-center justify-center">
-            <div className="mt-8">
-             
-            </div>
-    
-            { true ? (
-              <div className="flex justify-center items-center bg-white text-black rounded-lg p-4 w-64">
-                <p className="text-center font-bold">No items in your cart</p>
-              </div>
-            ) : (
-              <div className="flex flex-col my-8 space-y-4 justify-center items-center">
-                <div className="flex gap-8 justify-between items-center mt-8 p-4 w-80 text-xl font-semibold">
-                  <h3 className="font-bold">Total:</h3>
-                  <div className="flex justify-center items-center bg-white text-black rounded-lg p-4 w-40">
-                   
+           <div className="flex flex-1 flex-col items-center justify-center">
+              <div className="mt-8 w-full max-w-xl space-y-8">
+
+                {/* FORMULARZ 1 – Dane kontaktowe */}
+                <div className="bg-white shadow-md rounded-lg p-6 w-full">
+                  <h2 className="text-xl font-bold mb-4">Dane kontaktowe</h2>
+                  <div className="space-y-4">
+                    <input type="text" name="name" placeholder="Imię i nazwisko" value={contactInfo.name} onChange={handleContactChange}
+                      className="w-full p-2 border rounded" />
+                    <input type="email" name="email" placeholder="Email" value={contactInfo.email} onChange={handleContactChange}
+                      className="w-full p-2 border rounded" />
+                    <input type="tel" name="phone" placeholder="Telefon" value={contactInfo.phone} onChange={handleContactChange}
+                      className="w-full p-2 border rounded" />
                   </div>
                 </div>
-                {userData ? (
-                  <button className="bg-green-600 hover:bg-green-700 font-semibold text-white px-2 py-4 rounded-lg w-80">
-                    Proceed to Checkout
-                  </button>
-                ) : (
-                  <div className="flex flex-col justify-between items-center mt-8 p-4 w-80 text-md font-semibold">
-                    <p className="font-semibold mb-2">If you wish to continue, please log in.</p>
-                  <button 
-                    className="text-xl bg-gray-700 font-semibold text-white px-2 py-4 rounded-lg w-80"
-                    disabled={true}
-                  >
-                    Proceed to Checkout
-                  </button>
+
+                {/* FORMULARZ 2 – Wybór dostawcy */}
+                <div className="bg-white shadow-md rounded-lg p-6 w-full">
+                  <h2 className="text-xl font-bold mb-4">Wybierz dostawcę</h2>
+                  <div className="flex flex-wrap gap-4">
+                    {carriers.map(carrier => (
+                      <label key={carrier} className={`cursor-pointer border rounded-lg p-4 w-32 text-center font-semibold
+                        ${selectedCarrier === carrier ? 'border-green-500 bg-green-100' : 'border-gray-300'}`}>
+                        <input
+                          type="radio"
+                          name="carrier"
+                          value={carrier}
+                          checked={selectedCarrier === carrier}
+                          onChange={() => setSelectedCarrier(carrier)}
+                          className="hidden"
+                        />
+                        {carrier}
+                      </label>
+                    ))}
+                  </div>
                 </div>
 
-                )}
+                {/* FORMULARZ 3 – Adres dostawy */}
+                <div className="bg-white shadow-md rounded-lg p-6 w-full">
+                  <h2 className="text-xl font-bold mb-4">Adres dostawy</h2>
+                  <div className="space-y-4">
+                    <input type="text" name="street" placeholder="Ulica i numer" value={deliveryAddress.street} onChange={handleAddressChange}
+                      className="w-full p-2 border rounded" />
+                    <input type="text" name="city" placeholder="Miasto" value={deliveryAddress.city} onChange={handleAddressChange}
+                      className="w-full p-2 border rounded" />
+                    <input type="text" name="zip" placeholder="Kod pocztowy" value={deliveryAddress.zip} onChange={handleAddressChange}
+                      className="w-full p-2 border rounded" />
+                    <input type="text" name="country" placeholder="Kraj" value={deliveryAddress.country} onChange={handleAddressChange}
+                      className="w-full p-2 border rounded" />
+                  </div>
+                </div>
+
+                {/* Przycisk zatwierdzający */}
+                <div className="flex flex-col items-center">
+                  {userData ? (
+                    <button className="bg-green-600 hover:bg-green-700 font-semibold text-white px-6 py-3 rounded-lg w-full">
+                      Złóż zamówienie
+                    </button>
+                  ) : (
+                    <div className="w-full text-center">
+                      <p className="mb-2">Aby kontynuować, zaloguj się.</p>
+                      <button className="bg-gray-500 text-white font-semibold px-6 py-3 rounded-lg w-full" disabled>
+                        Złóż zamówienie
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
-            )}
-           <BackButton onClick={() => 
-							navigate(-1)
-						} />
-          </div>
+
+              <BackButton onClick={() => navigate(-1)} />
+            </div>
         </div>
     </div>
   );
