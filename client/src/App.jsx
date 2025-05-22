@@ -84,6 +84,8 @@ function App() {
 export default App;
 
 /* TODO
+- furgonetka api
+- payU api
 - orders
 - reviews 
 - change view product layout
