@@ -85,21 +85,18 @@ export default function Cart() {
   const total = cartItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
 
   return (
-    <div className="flex flex-grow justify-center items-center pt-10 mt-26 ml-32 text-white">
+    <div className="flex flex-col flex-grow justify-center items-center w-full text-white mt-21 pt-8">
       {loading ? <LoadingSpinner /> : (
-        <div className="flex flex-col space-y-6 place-items-center">
-        <div className="fixed top-1/10 pt-10">
-          <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md">
-            {t('header.cart')}
-          </div>
-        </div>
 
-        <div className="flex flex-grow gap-4 justify-center items-center w-full">
-          <div className="fixed top-1/4 left-12 w-24 mb-8">
+        <div className="flex flex-grow gap-4 items-center w-full">
+          <div className="w-24 mb-8 mx-12">
             <OrderProgress currentStep={currentStep}/>
           </div>
     
-          <div className="fixed top-1/4 flex-col items-center justify-center">
+          <div className="flex flex-col items-center justify-center w-full">
+            <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md text-center w-60">
+              {t('header.cart')}
+            </div>
             <div className="mt-8">
               <ul className="space-y-4 text-black">
                 {cartItems.map((item) => (
@@ -167,14 +164,13 @@ export default function Cart() {
 
           </div>
         </div>
-        </div>
-      )}
+      )} 
           <DeleteModal 
             isOpen={isDeleteModalOpen} 
             onClose={handleClose} 
             onDelete={handleDelete} 
             item={productToDelete}
-            titleItem="product from your cart"
+            titleItem={t('modal.deleteProductFromCart')}
             itemLabel={productToDelete?.name}
           />
     </div>

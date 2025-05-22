@@ -14,9 +14,10 @@ export default function Shipment() {
   const carriers = ['InPost', 'DHL', 'DPD'];
   const [deliveryAddress, setDeliveryAddress] = useState({
     street: '',
+    house: '',
+    apartment: '',
     city: '',
-    zip: '',
-    country: ''
+    zip: ''
   });
   const { currentStep, setCurrentStep } = useOrderContext();
   const { userData } = useUser();
@@ -38,83 +39,84 @@ export default function Shipment() {
 	}, []);
 	
   return (
-    <div className="flex flex-col flex-grow justify-center items-center pt-10 mt-26 ml-32 text-white">
-        <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md text-center w-60">
-          {t('header.shipment')}
-        </div>
+    <div className="flex flex-col flex-grow justify-center items-center w-full text-white mt-21 pt-8">
 
-        <div className="flex flex-grow gap-4 justify-center items-center w-full">
-          <div className="fixed top-1/4 left-12 w-24 mb-8">
+        <div className="flex flex-grow gap-4 items-center w-full">
+          <div className="w-24 mb-8 mx-12">
             <OrderProgress currentStep={currentStep}/>
           </div>
     
-           <div className="flex flex-1 flex-col items-center justify-center">
-              <div className="mt-8 w-full max-w-xl space-y-8">
+          <div className="flex flex-col items-center justify-center w-full text-black">
+            <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md text-center w-60">
+              {t('header.shipment')}
+            </div>
 
-                {/* FORMULARZ 1 – Dane kontaktowe */}
-                <div className="bg-white shadow-md rounded-lg p-6 w-full">
-                  <h2 className="text-xl font-bold mb-4">Dane kontaktowe</h2>
-                  <div className="space-y-4">
-                    <input type="text" name="name" placeholder="Imię i nazwisko" value={contactInfo.name} onChange={handleContactChange}
-                      className="w-full p-2 border rounded" />
-                    <input type="email" name="email" placeholder="Email" value={contactInfo.email} onChange={handleContactChange}
-                      className="w-full p-2 border rounded" />
-                    <input type="tel" name="phone" placeholder="Telefon" value={contactInfo.phone} onChange={handleContactChange}
-                      className="w-full p-2 border rounded" />
-                  </div>
-                </div>
-
-                {/* FORMULARZ 2 – Wybór dostawcy */}
-                <div className="bg-white shadow-md rounded-lg p-6 w-full">
-                  <h2 className="text-xl font-bold mb-4">Wybierz dostawcę</h2>
-                  <div className="flex flex-wrap gap-4">
-                    {carriers.map(carrier => (
-                      <label key={carrier} className={`cursor-pointer border rounded-lg p-4 w-32 text-center font-semibold
-                        ${selectedCarrier === carrier ? 'border-green-500 bg-green-100' : 'border-gray-300'}`}>
-                        <input
-                          type="radio"
-                          name="carrier"
-                          value={carrier}
-                          checked={selectedCarrier === carrier}
-                          onChange={() => setSelectedCarrier(carrier)}
-                          className="hidden"
-                        />
-                        {carrier}
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* FORMULARZ 3 – Adres dostawy */}
-                <div className="bg-white shadow-md rounded-lg p-6 w-full">
-                  <h2 className="text-xl font-bold mb-4">Adres dostawy</h2>
-                  <div className="space-y-4">
-                    <input type="text" name="street" placeholder="Ulica i numer" value={deliveryAddress.street} onChange={handleAddressChange}
-                      className="w-full p-2 border rounded" />
-                    <input type="text" name="city" placeholder="Miasto" value={deliveryAddress.city} onChange={handleAddressChange}
-                      className="w-full p-2 border rounded" />
-                    <input type="text" name="zip" placeholder="Kod pocztowy" value={deliveryAddress.zip} onChange={handleAddressChange}
-                      className="w-full p-2 border rounded" />
-                    <input type="text" name="country" placeholder="Kraj" value={deliveryAddress.country} onChange={handleAddressChange}
-                      className="w-full p-2 border rounded" />
-                  </div>
-                </div>
-
-                {/* Przycisk zatwierdzający */}
-                <div className="flex flex-col items-center">
-                  {userData ? (
-                    <button className="bg-green-600 hover:bg-green-700 font-semibold text-white px-6 py-3 rounded-lg w-full">
-                      Złóż zamówienie
-                    </button>
-                  ) : (
-                    <div className="w-full text-center">
-                      <p className="mb-2">Aby kontynuować, zaloguj się.</p>
-                      <button className="bg-gray-500 text-white font-semibold px-6 py-3 rounded-lg w-full" disabled>
-                        Złóż zamówienie
-                      </button>
+              <div className="mt-8 flex flex-col 2xl:flex-row gap-6 px-6 items-stretch">
+                <div className="flex flex-col gap-6 flex-1">
+                  <div className="bg-white shadow-md rounded-lg p-6 w-160">
+                    <h2 className="text-xl font-bold mb-4 text-center">{t('form.contact')}</h2>
+                    <div className="space-y-4">
+                      <input type="text" name="name" placeholder={t('form.surname')} value={contactInfo.name} onChange={handleContactChange}
+                        className="w-full p-2 border rounded" />
+                      <input type="email" name="email" placeholder={t('form.email')} value={contactInfo.email} onChange={handleContactChange}
+                        className="w-full p-2 border rounded" />
+                      <input type="tel" name="phone" placeholder={t('form.phone')} value={contactInfo.phone} onChange={handleContactChange}
+                        className="w-full p-2 border rounded" />
                     </div>
-                  )}
+                  </div>
+
+                  <div className="bg-white shadow-md rounded-lg p-6 w-160">
+                    <h2 className="text-xl font-bold mb-4 text-center">{t('form.deliveryMethod')}</h2>
+                    <div className="flex flex-wrap gap-4 justify-center">
+                      {carriers.map(carrier => (
+                        <label key={carrier} className={`cursor-pointer border rounded-lg p-4 w-32 text-center font-semibold
+                          ${selectedCarrier === carrier ? 'border-green-500 bg-green-100' : 'border-gray-300'}`}>
+                          <input
+                            type="radio"
+                            name="carrier"
+                            value={carrier}
+                            checked={selectedCarrier === carrier}
+                            onChange={() => setSelectedCarrier(carrier)}
+                            className="hidden"
+                          />
+                          {carrier}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
                 </div>
+
+                <div className="flex-1 w-160">
+                  <div className="bg-white shadow-md rounded-lg p-6 w-160 h-full flex flex-col">
+                    <h2 className="text-xl font-bold mb-4 text-center">{t('form.address')}</h2>
+
+                    <div className="flex-grow flex justify-center items-center">
+                      <div className="flex flex-col space-y-4 w-full">
+                      <input type="text" name="street" placeholder={t('form.address.street')} value={deliveryAddress.street} onChange={handleAddressChange}
+                        className="w-full p-2 border rounded" />
+                      <input type="text" name="house" placeholder={t('form.address.house')} value={deliveryAddress.house} onChange={handleAddressChange}
+                        className="w-full p-2 border rounded" />
+                      <input type="text" name="apartment" placeholder={t('form.address.apartment')} value={deliveryAddress.apartment} onChange={handleAddressChange}
+                        className="w-full p-2 border rounded" />
+                      <input type="text" name="city" placeholder={t('form.address.city')} value={deliveryAddress.city} onChange={handleAddressChange}
+                        className="w-full p-2 border rounded" />
+                      <input type="text" name="zip" placeholder={t('form.address.postalCode')} value={deliveryAddress.zip} onChange={handleAddressChange}
+                        className="w-full p-2 border rounded" />
+                    </div>
+                  </div>
+                  </div>
+               </div>
+              </div>
+
+              <div className="flex flex-col items-center my-6">
+                <button 
+                  className="bg-green-600 hover:bg-green-700 font-semibold text-white px-6 py-3 rounded-lg w-70"
+                  onClick={() => 
+                    navigate(`/payment`)
+                  }
+                >
+                  {t('button.next')}
+                </button>
               </div>
 
               <BackButton onClick={() => navigate(-1)} />

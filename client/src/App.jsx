@@ -12,6 +12,8 @@ import Statute from "./pages/store/Statute";
 import PrivacyPolicy from "./pages/store/PrivacyPolicy";
 import Cart from "./pages/cart/Cart";
 import Shipment from "./pages/cart/Shipment";
+import Payment from "./pages/cart/Payment";
+import Summary from "./pages/cart/Summary";
 import Categories from "./pages/categories/Categories";
 import Products from "./pages/products/Products";
 import ViewProduct from "./pages/products/ViewProduct";
@@ -45,6 +47,8 @@ const AppContent = () => {
             <Route path="/privacy-policy" element={<><Navbar /> <PrivacyPolicy /></>} />
             <Route path="/cart" element={<><Navbar /> <Cart /></>} />
             <Route path="/shipment" element={<><Navbar /> <Shipment /></>} />
+            <Route path="/payment" element={<><Navbar /> <Payment /></>} />
+            <Route path="/summary" element={<><Navbar /> <Summary /></>} />
             <Route path="/categories" element={<><Navbar /> <Categories /></>} />
             <Route path="/products" element={<><Navbar /> <Products /></>} />
             <Route path="/view-product/:id" element={<><Navbar /> <ViewProduct /></>} />
@@ -84,8 +88,6 @@ function App() {
 export default App;
 
 /* TODO
-- furgonetka api
-- payU api
 - orders
 - reviews 
 - change view product layout

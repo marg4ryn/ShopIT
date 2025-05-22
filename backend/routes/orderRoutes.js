@@ -17,7 +17,7 @@ router.post('/', checkJwt, async (req, res) => {
   }
 });
 
-router.get('/', async (req, res) => {
+router.get('/', checkJwt, async (req, res) => {
   try {
     const orders = await Order.find().populate('products.productId');
     res.json(orders);

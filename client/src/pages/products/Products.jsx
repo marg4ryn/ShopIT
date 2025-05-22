@@ -109,7 +109,7 @@ export default function Products() {
 	const handleDeleteProduct = (product) => {
 			setProductToDelete(product);
 			setIsDeleteModalOpen(true);
-		};
+	};
 
 	const handleDelete = async (id) => {
 			setIsPopupOpen(false);
