@@ -84,7 +84,6 @@ function App() {
 export default App;
 
 /* TODO
-- polityka prywatności + regulamin
 - furgonetka api
 - payU api
 - orders
