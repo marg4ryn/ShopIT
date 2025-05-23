@@ -132,12 +132,7 @@ export default function Sidebar({ onSortChange, onFilterChange, sortOption, filt
     <aside>
       <nav className={`h-full pt-6 flex flex-col items-center border-0 transition-all duration-300 overflow-hidden ${expanded ? 'bg-neutral-800' : 'bg-neutral-900'}`}>
         
-        <div className="p-4 pb-2 flex items-center gap-2">
-          {expanded && (
-            <div className="transition-all duration-300 mr-2">
-              <LanguageSwitcher />
-            </div>
-          )}
+        <div className="p-4 pb-2 flex w-full justify-end items-end gap-2 mr-6">
 
           <button
             onClick={() => setExpanded((curr) => !curr)}

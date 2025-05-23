@@ -1,12 +1,16 @@
 const BASE_URL = import.meta.env.VITE_API_ORDERS;
 
-export const getAllOrders = async () => {
+export const getAllOrders = async (token) => {
   try {
     const response = await fetch(BASE_URL);
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(`${response.status} - ${errorData.message}`);
+      throw new Error(`${response.status} - ${errorData.message}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
     }
 
     return await response.json();
@@ -16,13 +20,17 @@ export const getAllOrders = async () => {
   }
 };
 
-export const getOrderById = async (id) => {
+export const getOrderById = async (token, id) => {
   try {
     const response = await fetch(`${BASE_URL}/${id}`);
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(`${response.status} - ${errorData.message}`);
+      throw new Error(`${response.status} - ${errorData.message}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
     }
 
     return await response.json();
@@ -32,9 +40,13 @@ export const getOrderById = async (id) => {
   }
 };
 
-export const getOrdersByEmail = async (email) => {
+export const getOrdersByEmail = async (token, email) => {
   try {
-    const response = await fetch(`${BASE_URL}/email/${encodeURIComponent(email)}`);
+    const response = await fetch(`${BASE_URL}/email/${encodeURIComponent(email)}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      }
+    });
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -48,11 +60,12 @@ export const getOrdersByEmail = async (email) => {
   }
 };
 
-export const createOrder = async (orderData) => {
+export const createOrder = async (token, orderData) => {
   try {
     const response = await fetch(BASE_URL, {
       method: 'POST',
       headers: {
+        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(orderData),
@@ -70,11 +83,12 @@ export const createOrder = async (orderData) => {
   }
 };
 
-export const updateOrder = async (id, updatedData) => {
+export const updateOrder = async (token, id, updatedData) => {
   try {
     const response = await fetch(`${BASE_URL}/${id}`, {
       method: 'PUT',
       headers: {
+        'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(updatedData),
@@ -92,9 +106,12 @@ export const updateOrder = async (id, updatedData) => {
   }
 };
 
-export const deleteOrder = async (id) => {
+export const deleteOrder = async (token, id) => {
   try {
     const response = await fetch(`${BASE_URL}/${id}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
       method: 'DELETE',
     });
 

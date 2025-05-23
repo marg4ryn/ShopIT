@@ -7,21 +7,27 @@ const Footer = () => {
     const navigate = useNavigate();
     
     return (
-      <footer className="bg-green-700 text-white text-center w-full p-4 flex justify-center items-center gap-6">
-        <p className="m-0">&copy; {new Date().getFullYear()} {t('others.ShopIt')}. {t('footer.rightsReserved')}</p>
-        <button
-          onClick={() => navigate(`/statute`)}
-          className="underline hover:text-gray-400 focus:outline-none bg-transparent border-none p-0 cursor-pointer"
-        >
-          {t('button.statute')}
-        </button>
-        <button
-          onClick={() => navigate(`/privacy-policy`)}
-          className="underline hover:text-gray-400 focus:outline-none bg-transparent border-none p-0 cursor-pointer"
-        >
-          {t('button.privacyPolicy')}
-        </button>
-        <LanguageSwitcher direction="up"/>
+      <footer className="bg-green-700 text-white text-center w-full p-4 gap-2 flex flex-row justify-between">
+        <div className="flex flex-row items-center justify-start">
+          <p className="w-80">&copy; {new Date().getFullYear()} {t('others.ShopIt')}. {t('footer.rightsReserved')}</p>
+        </div>
+        <div className="flex flex-row items-center justify-end">
+          <button
+            onClick={() => navigate(`/statute`)}
+            className="w-30 underline hover:text-gray-400 focus:outline-none bg-transparent border-none cursor-pointer"
+          >
+            {t('button.statute')}
+          </button>
+          <button
+            onClick={() => navigate(`/privacy-policy`)}
+            className="w-40 underline hover:text-gray-400 focus:outline-none bg-transparent border-none cursor-pointer mr-6"
+          >
+            {t('button.privacyPolicy')}
+          </button>
+          <LanguageSwitcher direction="up"/>
+        </div>
+        
+        
       </footer>
     );
   };

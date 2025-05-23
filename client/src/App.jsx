@@ -91,5 +91,8 @@ export default App;
 - orders
 - reviews 
 - change view product layout
+- reducing the number of products
+- view of money spent by users for admin
+- order preview for admin
 - move application to MVP
 */

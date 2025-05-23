@@ -4,6 +4,7 @@ import { getProduct } from "../../api/products";
 import { useUser } from '../../context/UserContext';
 import { useOrderContext } from '../../context/OrderContext';
 import { useNavigate } from "react-router-dom";
+import BackButton from '../../components/BackButton';
 import DeleteModal from '../../components/modals/DeleteModal'
 import QuantitySelector from '../../components/QuantitySelector';
 import OrderProgress from '../../components/OrderProgress';
@@ -157,8 +158,8 @@ export default function Cart() {
                     {t('button.next')}
                   </button>
                 </div>
-
                 )}
+                <BackButton onClick={() => navigate('/')} />
               </div>
             )}
 

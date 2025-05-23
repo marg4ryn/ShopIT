@@ -66,7 +66,7 @@ const orderSchema = new mongoose.Schema({
   paymentMethod: {
     type: String,
     required: true,
-    enum: ['payu', 'tpay', 'google_pay', 'paypo', 'blik', 'traditional_transfer', 
+    enum: ['payu', 'tpay', 'gpay', 'paypo', 'blik', 'paypal', 'traditional_transfer', 
       'online_payment_card', 'card_upon_receipt', 'cash_on_delivery'
     ]
   },

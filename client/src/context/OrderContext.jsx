@@ -1,4 +1,5 @@
-import { createContext, useState, useContext } from 'react';
+import { createContext, useState, useEffect, useContext } from 'react';
+import { useUser } from './UserContext';
 
 const OrderContext = createContext();
 
@@ -6,12 +7,38 @@ export const useOrderContext = () => useContext(OrderContext);
 
 export const OrderProvider = ({ children }) => {
   const [currentStep, setCurrentStep] = useState(1);
+  const { userData } = useUser();
 
   const [orderData, setOrderData] = useState({
-    products: [],
-    customerEmail: '',
-    totalPrice: 0,
+    contactInfo: {
+      name: '',
+      email: '',
+      phone: '',
+    },
+    deliveryAddress: {
+      street: '',
+      house: '',
+      apartment: '',
+      city: '',
+      zip: '',
+    },
+    selectedCarrier: '',
+    selectedOperator: '',
   });
+
+  useEffect(() => {
+    if (userData?.name || userData?.email) {
+     setOrderData(prev => ({
+        ...prev,
+        contactInfo: {
+          name: userData.name || '',
+          email: userData.email || '',
+          phone: '',
+        }
+      }));
+    }
+    
+  }, [userData]);
 
   const updateOrder = (partialData) => {
     setOrderData((prev) => ({
@@ -22,9 +49,20 @@ export const OrderProvider = ({ children }) => {
 
   const clearOrder = () => {
     setOrderData({
-      products: [],
-      customerEmail: '',
-      totalPrice: 0,
+      contactInfo: {
+        name: '',
+        email: '',
+        phone: '',
+      },
+      deliveryAddress: {
+        street: '',
+        house: '',
+        apartment: '',
+        city: '',
+        zip: '',
+      },
+      selectedCarrier: '',
+      selectedOperator: '',
     });
     setCurrentStep(1);
   };

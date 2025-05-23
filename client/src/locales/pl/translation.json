@@ -47,6 +47,10 @@
   "form.contact": "Dane kontaktowe",
   "form.deliveryMethod": "Wybierz dostawcę",
   "form.address": "Adres dostawy",
+  "form.paymentMethod": "Wybierz metodę płatności",
+  "form.selectedOperator": "Metoda płatności",
+  "form.selectedCarrier": "Metoda dostawy",
+  "form.quantity": "Ilość",
 
   "placeholder.select": "-- Wybierz --",
   "placeholder.description": "Wprowadź opis produktu...",
@@ -66,6 +70,16 @@
   "form.error.contentRequired": "Treść jest wymagana",
   "form.error.colorRequired": "Kolor jest wymagany",
   "form.error.categoryNameRequired": "Nazwa kategorii jest wymagana",
+  "form.error.surnameRequired": "Imię i nazwisko jest wymagane",
+  "form.error.emailRequired": "Email jest wymagany",
+  "form.error.phoneRequired": "Numer telefonu jest wymagany",
+  "form.error.streetRequired": "Ulica jest wymagana",
+  "form.error.houseRequired": "Numer domu jest wymagany",
+  "form.error.cityRequired": "Miasto jest wymagane",
+  "form.error.zipRequired": "Kod pocztowy jest wymagany",
+  "form.error.carrierRequired": "Dostawca jest wymagany",
+  "form.error.operatorRequired": "Operator płatnosci jest wymagany",
+  "form.error.termsRequired": "Wymagane zaakceptowanie regulaminu",
 
   "error.product.create": "Nie udało się utworzyć produktu:",
   "error.product.edit": "Nie udało się zapisać produktu:",
@@ -110,6 +124,7 @@
   "button.yes": "Tak",
   "button.statute": "Regulamin",
   "button.privacyPolicy": "Polityka prywatności",
+  "button.confirm": "Zatwierdź",
 
   "header.addProduct": "Dodaj Produkt",
   "header.editProduct": "Edytuj Produkt",
@@ -121,9 +136,11 @@
   "header.viewAnnouncement": "Podgląd Ogłoszenia",
   "header.cart": "Twój Koszyk",
   "header.shipment": "Wysyłka",
+  "header.payment": "Płatność",
+  "header.summary": "Podsumowanie",
 
-  "subHeader.yourOrders": "TWOJE ZAMÓWIENIA",
-  "subHeader.yourReviews": "TWOJE RECENZJE",
+  "subHeader.yourOrders": "Twoje Zamówienia",
+  "subHeader.yourReviews": "Twoje Opinie",
   "subHeader.sorting": "SORTOWANIE",
   "subHeader.filtering": "FILTROWANIE",
 
@@ -156,6 +173,11 @@
 
   "footer.rightsReserved": "Wszelkie prawa zastrzeżone.",
 
+  "payment.traditional_transfer": "Przelew tradycyjny",
+  "payment.online_payment_card": "Karta przez Internet",
+  "payment.card_upon_receipt": "Karta przy obiorze",
+  "payment.cash_on_delivery": "Gotówka przy odbiorze",
+
   "modal.delete": "Czy na pewno chcesz usunąć ",
   "modal.deleteCategory": "tę kategorię",
   "modal.deleteProduct": "ten produkt",
@@ -175,6 +197,8 @@
   "others.onlyLeft2": " sztuk!",
   "others.unknown": "Nieznana",
   "others.ShopIt": "ShopIT",
+  "others.terms1": "Przeczytałem i akceptuję",
+  "others.terms2": "regulamin sklepu",
 
   "privacyPolicy.title": "Polityka Prywatności",
   "privacyPolicy.actualizationDate": "Data ostatniej aktualizacji:",
