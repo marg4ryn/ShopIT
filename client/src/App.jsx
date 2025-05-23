@@ -90,11 +90,13 @@ function App() {
 export default App;
 
 /* TODO
-- orders
-- reviews 
+- graying out products without quantity
+- order preview
+- orders list for admin
+
+- reviews
+- reviews list for admin
 - change view product layout
-- reducing the number of products
-- view of money spent by users for admin
-- order preview for admin
+
 - move application to MVP
 */

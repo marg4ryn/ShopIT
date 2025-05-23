@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Order = require('../models/Order');
+const Product = require('../models/Product');
 const mongoose = require("mongoose");
 const { checkJwt } = require('../auth');
 
@@ -20,6 +21,20 @@ router.post('/', checkJwt, async (req, res) => {
       return res.status(400).json({ error: 'No values in the fields' });
     }
 
+     for (const item of products) {
+      const product = await Product.findById(item.productId);
+      if (!product) {
+        return res.status(404).json({ error: `Product with ID ${item.productId} not found` });
+      }
+
+      if (product.stock < item.quantity) {
+        return res.status(400).json({ error: `Not enough stock for product ${product.name}` });
+      }
+
+      product.stock -= item.quantity;
+      await product.save();
+    }
+
     const newOrder = new Order({
       products,
       totalPrice,
@@ -37,7 +52,6 @@ router.post('/', checkJwt, async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 });
-
 
 router.get('/', checkJwt, async (req, res) => {
   try {
@@ -70,20 +84,6 @@ router.get('/email/:email', checkJwt, async (req, res) => {
     res.json(orders);
   } catch (err) {
     res.status(500).json({ error: err.message });
-  }
-});
-
-router.put('/:id', checkJwt, async (req, res) => {
-  try {
-    const updated = await Order.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-    if (!updated) return res.status(404).json({ error: 'Order not found' });
-    res.json(updated);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
   }
 });
 

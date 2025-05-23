@@ -83,29 +83,6 @@ export const createOrder = async (token, orderData) => {
   }
 };
 
-export const updateOrder = async (token, id, updatedData) => {
-  try {
-    const response = await fetch(`${BASE_URL}/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(updatedData),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(`${response.status} - ${errorData.message}`);
-    }
-
-    return await response.json();
-  } catch (err) {
-    console.error('Error updating order:', err);
-    throw err;
-  }
-};
-
 export const deleteOrder = async (token, id) => {
   try {
     const response = await fetch(`${BASE_URL}/${id}`, {
