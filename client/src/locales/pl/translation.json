@@ -22,6 +22,9 @@
   "announcement.delete.success": "Ogłoszenie zostało pomyślnie usunięte!",
   "announcement.delete.failed": "Nie udało się usunąć ogłoszenia.",
 
+  "order.create.success": "Zamówienie zostało pomyślnie utworzone!",
+  "order.create.failed": "Nie udało się utworzyć zamówienia.",
+
   "form.name": "Nazwa",
   "form.description": "Opis",
   "form.price": "Cena ($)",
@@ -45,7 +48,7 @@
   "form.address.house": "Numer domu",
   "form.address.apartment": "Numer mieszkania",
   "form.contact": "Dane kontaktowe",
-  "form.deliveryMethod": "Wybierz dostawcę",
+  "form.deliveryMethod": "Wybierz metodę dostawy",
   "form.address": "Adres dostawy",
   "form.paymentMethod": "Wybierz metodę płatności",
   "form.selectedOperator": "Metoda płatności",

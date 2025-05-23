@@ -77,18 +77,16 @@ export default function ViewProduct() {
     setIsModalOpen(false);
   }
 
-  const addToCart = (quantity) => {
+  const addToCart = (_, quantity) => {
     setIsPopupOpen(false);
     try {
       const cart = JSON.parse(localStorage.getItem('cart')) || [];
-  
       const index = cart.findIndex(item => item.id === id);
       if (index !== -1) {
         cart[index].quantity += quantity;
       } else {
         cart.push({ id, quantity });
       }
-      console.log(cart);
     
       localStorage.setItem('cart', JSON.stringify(cart));
       setPopupBackgroundColor("#008236");

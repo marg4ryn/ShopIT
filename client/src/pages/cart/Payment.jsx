@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useOrderContext } from '../../context/OrderContext';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import OrderProgress from '../../components/OrderProgress';
 import BackButton from '../../components/BackButton';
 import LoadingSpinner from "../../components/LoadingSpinner";
@@ -10,22 +10,11 @@ export default function Payment() {
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState({});
   const { t } = useTranslation();
-  const { currentStep, setCurrentStep, orderData, updateOrder } = useOrderContext();
+  const { currentStep, setCurrentStep, orderData, updateOrder, operators } = useOrderContext();
+  const location = useLocation();
   const navigate = useNavigate();
 
   const [selectedOperator, setSelectedOperator] = useState('');
-  const operators = [
-    { name: 'payu', image: '/payment/payu.jpg' },
-    { name: 'gpay', image: '/payment/gpay.jpg' },
-    { name: 'paypo', image: '/payment/paypo.jpg' },
-    { name: 'blik', image: '/payment/blik.jpg' },
-    { name: 'paypal', image: '/payment/paypal.jpg' },
-    { name: 'tpay', image: '/payment/tpay.jpg' },
-    { name: t('payment.traditional_transfer'), image: '' },
-    { name: t('payment.online_payment_card'), image: '' },
-    { name: t('payment.card_upon_receipt'), image: '' },
-    { name: t('payment.cash_on_delivery'), image: '' }
-  ];
 
   const validateForm = () => {
     const newErrors = {};
@@ -42,11 +31,15 @@ export default function Payment() {
     });
   };
 
-  useEffect(() => {
-    setCurrentStep(3);
+  useEffect(() => {    
+    if (!location.state?.fromShipment) {
+      navigate(-1);
+    }
     if (orderData.selectedOperator) {
       setSelectedOperator(orderData.selectedOperator);
     }
+    setCurrentStep(3);
+    setLoading(false);
   }, []);
 
   const handleSubmit = () => {
@@ -54,12 +47,13 @@ export default function Payment() {
       updateOrder({
         selectedOperator
       });
-      navigate(`/summary`);
+      navigate('/summary', { state: { fromPayment: true } })
     }
   };
 
     return (
     <div className="flex flex-col flex-grow justify-center items-center w-full text-white mt-21 pt-8">
+      {loading ? <LoadingSpinner /> : (
 
         <div className="flex flex-grow gap-4 items-center w-full">
           <div className="w-24 mb-8 mx-12">
@@ -99,7 +93,7 @@ export default function Payment() {
                               className="max-h-full max-w-full object-contain"
                             />
                           ) : (
-                            <span>{operator.name}</span>
+                            <span>{t('payment.' + operator.name)}</span>
                           )}
                         </label>
                       ))}
@@ -127,6 +121,7 @@ export default function Payment() {
               <BackButton onClick={() => navigate(-1)} />
             </div>
         </div>
+      )} 
     </div>
   );
 }

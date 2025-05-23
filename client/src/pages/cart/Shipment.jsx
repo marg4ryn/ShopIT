@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useOrderContext } from '../../context/OrderContext';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import OrderProgress from '../../components/OrderProgress';
 import BackButton from '../../components/BackButton';
 import LoadingSpinner from "../../components/LoadingSpinner";
@@ -9,13 +9,9 @@ import LoadingSpinner from "../../components/LoadingSpinner";
 export default function Shipment() {
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState({});
-  const carriers = [
-    { name: 'inpost', image: '/delivery/inpost-logo.jpg' },
-    { name: 'dhl', image: '/delivery/dhl-logo.jpg' },
-    { name: 'dpd', image: '/delivery/dpd-logo.jpg' }
-  ];
-  const { currentStep, setCurrentStep, orderData, updateOrder } = useOrderContext();
+  const { currentStep, setCurrentStep, orderData, updateOrder, carriers } = useOrderContext();
   const { t } = useTranslation();
+  const location = useLocation();
   const navigate = useNavigate();
   
   const [contactInfo, setContactInfo] = useState({ 
@@ -72,8 +68,9 @@ export default function Shipment() {
   };
 
 	useEffect(() => {
-		setCurrentStep(2);
-
+    if (!location.state?.fromCart) {
+      navigate(-1);
+    }
     if (orderData.contactInfo) {
       setContactInfo(orderData.contactInfo);
     }
@@ -82,7 +79,10 @@ export default function Shipment() {
     }
     if (orderData.selectedCarrier) {
       setSelectedCarrier(orderData.selectedCarrier);
-    }
+    }		
+    
+    setCurrentStep(2);
+    setLoading(false);
 	}, []);
 
   const handleSubmit = () => {
@@ -92,12 +92,13 @@ export default function Shipment() {
         deliveryAddress,
         selectedCarrier
       });
-      navigate(`/payment`);
+      navigate('/payment', { state: { fromShipment: true } })
     }
   };
 
   return (
     <div className="flex flex-col flex-grow justify-center items-center w-full text-white mt-21 pt-8">
+      {loading ? <LoadingSpinner /> : (
 
         <div className="flex flex-grow gap-4 items-center w-full">
           <div className="w-24 mb-8 mx-12">
@@ -129,7 +130,7 @@ export default function Shipment() {
                   <div className="bg-white shadow-md rounded-lg p-6 w-160">
                     <h2 className="text-xl font-bold mb-4 text-center">{t('form.deliveryMethod')}</h2>
                     <div className="flex flex-wrap gap-4 justify-center">
-                      {carriers.map(carrier => (
+                      {Array.isArray(carriers) && carriers.map(carrier => (
                         <label
                           key={carrier.name}
                           className={`cursor-pointer border rounded-lg p-2 w-32 h-20 flex items-center justify-center
@@ -197,6 +198,7 @@ export default function Shipment() {
               <BackButton onClick={() => navigate(-1)} />
             </div>
         </div>
+        )} 
     </div>
   );
 }

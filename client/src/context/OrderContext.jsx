@@ -7,6 +7,24 @@ export const useOrderContext = () => useContext(OrderContext);
 
 export const OrderProvider = ({ children }) => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [operators] = useState([
+    { name: 'payu', image: '/payment/payu.jpg' },
+    { name: 'gpay', image: '/payment/gpay.jpg' },
+    { name: 'paypo', image: '/payment/paypo.jpg' },
+    { name: 'blik', image: '/payment/blik.jpg' },
+    { name: 'paypal', image: '/payment/paypal.jpg' },
+    { name: 'tpay', image: '/payment/tpay.jpg' },
+    { name: 'traditional_transfer', image: '' },
+    { name: 'online_payment_card', image: '' },
+    { name: 'card_upon_receipt', image: '' },
+    { name: 'cash_on_delivery', image: '' }
+  ]);
+  const [carriers] = useState([
+    { name: 'inpost', image: '/delivery/inpost-logo.jpg' },
+    { name: 'dhl', image: '/delivery/dhl-logo.jpg' },
+    { name: 'dpd', image: '/delivery/dpd-logo.jpg' }
+  ]);
+
   const { userData } = useUser();
 
   const [orderData, setOrderData] = useState({
@@ -50,8 +68,8 @@ export const OrderProvider = ({ children }) => {
   const clearOrder = () => {
     setOrderData({
       contactInfo: {
-        name: '',
-        email: '',
+        name: userData.name || '',
+        email: userData.email || '',
         phone: '',
       },
       deliveryAddress: {
@@ -75,6 +93,8 @@ export const OrderProvider = ({ children }) => {
         orderData,
         updateOrder,
         clearOrder,
+        carriers,
+        operators,
       }}
     >
       {children}

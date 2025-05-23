@@ -24,6 +24,7 @@ import ViewAnnouncement from "./pages/announcements/ViewAnnouncement";
 import EditAnnouncement from "./pages/announcements/EditAnnouncement";
 import AddAnnouncement from "./pages/announcements/AddAnnouncement";
 import LoadingSpinner from "./components/LoadingSpinner";
+import ScrollToTop from "./components/ScrollToTop";
 
 const domain = import.meta.env.VITE_AUTH0_DOMAIN;
 const clientId = import.meta.env.VITE_AUTH0_CLIENT_ID;
@@ -36,6 +37,7 @@ const AppContent = () => {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <OrderProvider>
       <FilterProvider>
       <SearchProvider>

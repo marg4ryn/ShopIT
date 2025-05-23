@@ -24,7 +24,7 @@ export default function Cart() {
   useEffect(() => {
     const getCartFromCookie = async () => {
       try {
-        setCart(JSON.parse(localStorage.getItem('cart')));
+        setCart(JSON.parse(localStorage.getItem('cart'))) || [];
       } catch (error) {
         setCart([]);
       } finally {
@@ -38,7 +38,7 @@ export default function Cart() {
 
   useEffect(() => {
     const fetchCartDetails = async () => {
-      if (cart?.length === 0) {
+      if (!Array.isArray(cart) || cart.length === 0) {
         setCartItems([]);
         return;
       }
@@ -128,7 +128,7 @@ export default function Cart() {
               </ul>
             </div>
     
-            {cart?.length === 0 ? (
+            {cart?.length === 0 || cart == null ? (
               <div className="flex justify-center items-center bg-white text-black rounded-lg p-4 w-64">
                 <p className="text-center font-bold">{t('others.emptyCart')}</p>
               </div>
@@ -141,10 +141,11 @@ export default function Cart() {
                   </div>
                 </div>
                 {userData ? (
-                  <button className="bg-green-600 hover:bg-green-700 font-semibold text-white px-2 py-4 rounded-lg w-70"
-                   onClick={() => 
-                    navigate(`/shipment`)
-                  }
+                 <button className="bg-green-600 hover:bg-green-700 font-semibold text-white px-2 py-4 rounded-lg w-70 disabled:bg-gray-700"
+                    disabled={cart?.length === 0 || cart === null}
+                    onClick={() => 
+                      navigate('/shipment', { state: { fromCart: true } })
+                    }
                    >
                     {t('button.next')}
                   </button>

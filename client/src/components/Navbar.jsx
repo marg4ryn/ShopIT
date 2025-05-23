@@ -107,11 +107,11 @@ export default function Navbar() {
           </div>
         )}
 
-        <button className="xl:hidden text-3xl font-bold" onClick={toggleMenu}>
+        <button className="2xl:hidden text-3xl font-bold" onClick={toggleMenu}>
           {menuOpen ? <FaTimes /> : <FaBars />}
         </button>
 
-        <ul className="hidden xl:flex space-x-4 font-semibold">
+        <ul className="hidden 2xl:flex space-x-4 font-semibold">
           {filteredNavItems.map(({ to, onClick, icon, label }) => {
             const isActive = location.pathname === to;
             return (
@@ -133,7 +133,7 @@ export default function Navbar() {
       </div>
 
       <ul
-        className={`xl:hidden flex flex-col items-center bg-green-800 px-4 space-y-4 text-md font-semibold overflow-hidden transition-all duration-500 ease-in-out
+        className={`2xl:hidden flex flex-col items-center bg-green-800 px-4 space-y-4 text-md font-semibold overflow-hidden transition-all duration-500 ease-in-out
           ${menuOpen ? "max-h-[500px] py-4 opacity-100" : "max-h-0 py-0 opacity-0"}
         `}
       >

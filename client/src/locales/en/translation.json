@@ -22,6 +22,9 @@
   "announcement.delete.success": "Announcement has been successfully deleted!",
   "announcement.delete.failed": "Failed to delete announcement.",
 
+  "order.create.success": "Order has been successfully created!",
+  "order.create.failed": "Failed to create order.",
+
   "form.name": "Name",
   "form.description": "Description",
   "form.price": "Price ($)",

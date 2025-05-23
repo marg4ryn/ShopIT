@@ -6,9 +6,30 @@ const { checkJwt } = require('../auth');
 
 router.post('/', checkJwt, async (req, res) => {
   try {
-    const { products, totalPrice, customerEmail } = req.body;
+    const {
+      products,
+      totalPrice,
+      customerName,
+      customerEmail,
+      customerPhone,
+      delivery,
+      paymentMethod
+    } = req.body;
 
-    const newOrder = new Order({ products, totalPrice, customerEmail });
+    if (!products?.length || !totalPrice || !customerName || !customerEmail || !customerPhone || !delivery || !paymentMethod) {
+      return res.status(400).json({ error: 'No values in the fields' });
+    }
+
+    const newOrder = new Order({
+      products,
+      totalPrice,
+      customerName,
+      customerEmail,
+      customerPhone,
+      delivery,
+      paymentMethod
+    });
+
     const saved = await newOrder.save();
 
     res.status(201).json(saved);
@@ -16,6 +37,7 @@ router.post('/', checkJwt, async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 });
+
 
 router.get('/', checkJwt, async (req, res) => {
   try {

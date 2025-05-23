@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useOrderContext } from '../../context/OrderContext';
 import { createOrder } from '../../api/orders';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { getProduct } from "../../api/products";
 import OrderProgress from '../../components/OrderProgress';
@@ -16,27 +16,11 @@ export default function Summary() {
 	const [errors, setErrors] = useState({});
 	const [isAccepted, setIsAccepted] = useState(false);
   const { t } = useTranslation();
-  const { currentStep, setCurrentStep, orderData } = useOrderContext();
-	const { getAccessTokenSilently } = useAuth0();   
+  const { currentStep, setCurrentStep, orderData, clearOrder, operators, carriers } = useOrderContext();
+	const { getAccessTokenSilently } = useAuth0();
+	const location = useLocation();
   const navigate = useNavigate();
-
-  const operators = [
-    { name: 'payu', image: '/payment/payu.jpg' },
-    { name: 'gpay', image: '/payment/gpay.jpg' },
-    { name: 'paypo', image: '/payment/paypo.jpg' },
-    { name: 'blik', image: '/payment/blik.jpg' },
-    { name: 'paypal', image: '/payment/paypal.jpg' },
-    { name: 'tpay', image: '/payment/tpay.jpg' },
-    { name: t('payment.traditional_transfer'), image: '' },
-    { name: t('payment.online_payment_card'), image: '' },
-    { name: t('payment.card_upon_receipt'), image: '' },
-    { name: t('payment.cash_on_delivery'), image: '' }
-  ];
-  const carriers = [
-    { name: 'inpost', image: '/delivery/inpost-logo.jpg' },
-    { name: 'dhl', image: '/delivery/dhl-logo.jpg' },
-    { name: 'dpd', image: '/delivery/dpd-logo.jpg' }
-  ];
+  
   const [contactInfo, setContactInfo] = useState({ 
     name: '',
     email: '', 
@@ -53,8 +37,10 @@ export default function Summary() {
   const [selectedCarrier, setSelectedCarrier] = useState('');
 
   useEffect(() => {
-    setCurrentStep(4);
-
+    
+    if (!location.state?.fromPayment) {
+      navigate(-1);
+    }
 		if (orderData.contactInfo) {
       setContactInfo(orderData.contactInfo);
     }
@@ -67,6 +53,8 @@ export default function Summary() {
 		if (orderData.selectedOperator) {
       setSelectedOperator(orderData.selectedOperator);
     }
+		setCurrentStep(4);
+		setLoading(false);
   }, []);
 
 	useEffect(() => {
@@ -133,7 +121,7 @@ export default function Summary() {
 
 			const payload = {
 				products: cart.map(p => ({
-					productId: p._id,
+					productId: p.id,
 					quantity: p.quantity
 				})),
 				totalPrice: cartItems.reduce((acc, item) => acc + item.quantity * item.price, 0),
@@ -148,14 +136,28 @@ export default function Summary() {
 					postcode: deliveryAddress.zip,
 					method: selectedCarrier
 				},
-				selectedOperator
+				 paymentMethod: selectedOperator
 			};
 
 			await createOrder(token, payload);
+			clearOrder();
+			localStorage.removeItem('cart');
+			sessionStorage.setItem("popupData", JSON.stringify({
+				backgroundColor: "#008236",
+				header: t('status.success'),
+				content: t('order.create.success'),
+				showCloseButton: false
+			}));
+		} catch (error) {					
+			sessionStorage.setItem("popupData", JSON.stringify({
+				backgroundColor: "red",
+				header: t('order.create.failed'),
+				content: `${error}`,
+				showCloseButton: true
+			}));
+			console.error(error);
+		} finally {
 			navigate('/');
-		} catch (error) {
-			console.error('Błąd przy tworzeniu zamówienia:', error);
-			alert('Nie udało się złożyć zamówienia. Spróbuj ponownie później.');
 		}
   };
 
@@ -165,6 +167,7 @@ export default function Summary() {
 
     return (
     <div className="flex flex-col flex-grow justify-center items-center w-full text-white mt-21 pt-8">
+      {loading ? <LoadingSpinner /> : (
 
         <div className="flex flex-grow gap-4 items-center w-full">
           <div className="w-24 mb-8 mx-12">
@@ -248,7 +251,7 @@ export default function Summary() {
 
 											<div className="bg-white shadow-md rounded-lg p-6 w-77">
 												<h2 className="text-xl font-bold mb-4 text-center">{t('form.selectedOperator')}</h2>
-												<div className="flex flex-wrap gap-4 justify-center">
+												<div className="flex flex-wrap gap-4 justify-center items-center text-center font-semibold ">
 													{selectedOperatorObject && (
 														<label className="border rounded-lg p-2 w-32 h-20 flex items-center justify-center">
 															<input
@@ -258,11 +261,15 @@ export default function Summary() {
 																value={selectedOperatorObject.name}
 																className="hidden"
 															/>
-															<img
-																src={selectedOperatorObject.image}
-																alt={selectedOperatorObject.name}
-																className="max-h-full max-w-full object-contain"
-															/>
+															{selectedOperatorObject.image ? (
+																<img
+																	src={selectedOperatorObject.image}
+																	alt={selectedOperatorObject.name}
+																	className="max-h-full max-w-full object-contain"
+																/>
+															) : (
+																<span>{t('payment.' + selectedOperatorObject.name)}</span>
+															)}
 														</label>
 													)}
 												</div>
@@ -330,6 +337,7 @@ export default function Summary() {
               <BackButton onClick={() => navigate(-1)} />
             </div>
         </div>
+			)} 
     </div>
   );
 }
