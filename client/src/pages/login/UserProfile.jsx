@@ -9,8 +9,9 @@ const UserProfile = () => {
 		const [loading, setLoading] = useState(true);
 		const [orders, setOrders] = useState([]);
     const { logout, getAccessTokenSilently } = useAuth0();
-    const { userData } = useUser();  
+    const { userData } = useUser();
   	const { t } = useTranslation();
+  	const appUrl = import.meta.env.VITE_APP_URL;
 
 		useEffect(() => {
 			const fetchOrders = async () => {
@@ -19,7 +20,7 @@ const UserProfile = () => {
 					const result = await getOrdersByEmail(token,userData?.email);
 					setOrders(result);
 				} catch (err) {
-					console.error(t('error.products.fetchProducts'), err);
+					console.error(t('error.orders.fetchOrders'), err);
 				} finally {
 					setLoading(false);
 				}
@@ -28,13 +29,12 @@ const UserProfile = () => {
 			if (userData?.email) {
 				fetchOrders();
 			}
-			console.log(orders);
 		}, [userData]);
 
 		return (
 			<div className="flex-grow flex pt-18 justify-center items-center">
 				{loading ? <LoadingSpinner /> : (
-				<div className={`mx-auto h-[420px] flex justify-between`}>
+				<div className={`mx-auto flex justify-between`}>
 					<div className={`bg-white p-6 rounded-lg shadow-md max-w-sm mx-auto h-[420px] flex flex-col justify-between mr-8`}>
 							<div>
 								<div className="flex justify-center mb-4 relative">
@@ -87,6 +87,44 @@ const UserProfile = () => {
 					<div className="flex-grow flex flex-col gap-4">
 							<div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md text-center">
 									{t('subHeader.yourOrders')}
+							</div>
+							<div className="w-full max-w-[800px] overflow-x-auto">
+								<ul className="flex gap-6 pb-4 min-w-max">
+									{orders.length === 0 || orders == null ? (
+										<div className="flex-grow p-6 w-full py-10">
+											<div className="col-span-full flex text-center items-center justify-center text-white bg-neutral-800 text-xl font-medium py-20 rounded-md">
+												{t('others.noResults')}
+											</div>
+										</div>
+									) : (
+										orders.map((order) => (
+											<li
+												key={order._id}
+												className="flex-shrink-0 w-62 h-76 flex flex-col justify-between p-4 bg-white rounded-lg"
+											>	
+												<span className="text-sm">{new Date(order.createdAt).toLocaleDateString()}</span>
+
+												<img
+													src={appUrl + (order.products[0].productId.imageUrls?.[0] || "/images/No_Image_Available.jpg")}
+													alt={order.products[0].productId.name}
+													className="w-full h-32 object-contain rounded"
+												/>
+
+												<span className="font-semibold overflow-hidden text-ellipsis whitespace-nowrap text-center">
+													{order.products[0].productId.name}
+												</span>
+
+												{order.products.length > 1 ? (
+													<span className="text-sm">i {order.products.length - 1} innych produktów</span>
+												) : (
+													<span className="text-sm">1 produkt</span>
+												)}
+
+												<span className="font-bold text-center">${order.totalPrice.toFixed(2)}</span>
+											</li>
+										))
+									)}
+								</ul>
 							</div>
 
 							<div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md text-center w-200">

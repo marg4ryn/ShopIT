@@ -7,7 +7,7 @@ const Footer = () => {
     const navigate = useNavigate();
     
     return (
-      <footer className="bg-green-700 text-white text-center w-full p-4 gap-2 flex flex-row justify-between">
+      <footer className="bg-green-700 text-white text-center w-full p-2 gap-2 flex flex-row justify-between">
         <div className="flex flex-row items-center justify-start">
           <p className="w-80">&copy; {new Date().getFullYear()} {t('others.ShopIt')}. {t('footer.rightsReserved')}</p>
         </div>

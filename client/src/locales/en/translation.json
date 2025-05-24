@@ -103,6 +103,9 @@
   "error.announcement.fetchAnnouncements": "Failed to fetch announcements:",
   "error.announcement.editVisibility": "Error updating visibility:",
 
+  "error.order.fetchOrders": "Failed to fetch orders:",
+  "error.order.fetchOrder": "Failed to fetch order:",
+
   "status.success": "Success!",
   
   "button.add": "Add",

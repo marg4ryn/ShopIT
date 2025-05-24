@@ -1,180 +1,42 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useOrderContext } from '../../context/OrderContext';
-import { createOrder } from '../../api/orders';
-import { useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
-import { getProduct } from "../../api/products";
-import OrderProgress from '../../components/OrderProgress';
+import { getOrderById } from '../../api/orders';
 import BackButton from '../../components/BackButton';
 import LoadingSpinner from "../../components/LoadingSpinner";
 
 export default function Summary() {
-  const [loading, setLoading] = useState(true);
-	const [cart, setCart] = useState([]);
-  const [cartItems, setCartItems] = useState([]);
-	const [errors, setErrors] = useState({});
-	const [isAccepted, setIsAccepted] = useState(false);
+  const [loading, setLoading] = useState(true);	
+	const [order, setOrder] = useState([]);
+	const { userData } = useUser();
   const { t } = useTranslation();
-  const { currentStep, setCurrentStep, orderData, clearOrder, operators, carriers } = useOrderContext();
+	const { id } = useParams();
 	const { getAccessTokenSilently } = useAuth0();
-	const location = useLocation();
-  const navigate = useNavigate();
 	const appUrl = import.meta.env.VITE_APP_URL;
-  
-  const [contactInfo, setContactInfo] = useState({ 
-    name: '',
-    email: '', 
-    phone: '' 
-  });
-  const [deliveryAddress, setDeliveryAddress] = useState({
-    street: '',
-    house: '',
-    apartment: '',
-    city: '',
-    zip: ''
-  });
-	const [selectedOperator, setSelectedOperator] = useState('');
-  const [selectedCarrier, setSelectedCarrier] = useState('');
+	const navigate = useNavigate();
 
-  useEffect(() => {
-    
-    if (!location.state?.fromPayment) {
-      navigate(-1);
-    }
-		if (orderData.contactInfo) {
-      setContactInfo(orderData.contactInfo);
-    }
-    if (orderData.deliveryAddress) {
-      setDeliveryAddress(orderData.deliveryAddress);
-    }
-    if (orderData.selectedCarrier) {
-      setSelectedCarrier(orderData.selectedCarrier);
-    }
-		if (orderData.selectedOperator) {
-      setSelectedOperator(orderData.selectedOperator);
-    }
-		setCurrentStep(4);
-		setLoading(false);
-  }, []);
-
-	useEffect(() => {
-		const getCartFromCookie = async () => {
-			try {
-				setCart(JSON.parse(localStorage.getItem('cart')));
-			} catch (error) {
-				setCart([]);
-			} finally {
-				setLoading(false);
-			}
-		}
-
-		getCartFromCookie();
-	}, []);
-
-	useEffect(() => {
-		const fetchCartDetails = async () => {
-			if (cart?.length === 0) {
-				setCartItems([]);
-				return;
-			}
-
-			const productPromises = cart.map(item => getProduct(item.id));
-			const products = await Promise.all(productPromises);
-
-			const merged = cart.map(item => {
-				const product = products.find(p => p._id === item.id);
-				return product ? { ...product, quantity: item.quantity } : null;
-			}).filter(Boolean);
-
-			setCartItems(merged);
-		};
-
-		fetchCartDetails();
-	}, [cart]);
-
-  const validateForm = () => {
-    const newErrors = {};
-    if (!isAccepted) newErrors.terms = 'form.error.termsRequired';
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-	const handleTermsChange = () => {
-    setIsAccepted(!isAccepted);
-    setErrors(prev => {
-      const { terms, ...rest } = prev;
-      return rest;
-    });
-  };
-
-  const handleSubmit = async () => {
-		if (!validateForm()) return;
-
-		try {
-			const token = await getAccessTokenSilently();
-			const {
-				contactInfo,
-				deliveryAddress,
-				selectedCarrier,
-				selectedOperator
-			} = orderData;
-
-			const payload = {
-				products: cart.map(p => ({
-					productId: p.id,
-					quantity: p.quantity
-				})),
-				totalPrice: cartItems.reduce((acc, item) => acc + item.quantity * item.price, 0),
-				customerName: contactInfo.name,
-				customerEmail: contactInfo.email,
-				customerPhone: contactInfo.phone,
-				delivery: {
-					street: deliveryAddress.street,
-					house: deliveryAddress.house,
-					apartment: deliveryAddress.apartment,
-					city: deliveryAddress.city,
-					postcode: deliveryAddress.zip,
-					method: selectedCarrier
-				},
-				 paymentMethod: selectedOperator
+		useEffect(() => {
+			const fetchOrder = async () => {
+				try {
+					const token = await getAccessTokenSilently();
+					const result = await getOrderById(token, id);
+					setOrder(result);
+				} catch (err) {
+					console.error(t('error.orders.fetchOrder'), err);
+				} finally {
+					setLoading(false);
+				}
 			};
 
-			await createOrder(token, payload);
-			clearOrder();
-			localStorage.removeItem('cart');
-			sessionStorage.setItem("popupData", JSON.stringify({
-				backgroundColor: "#008236",
-				header: t('status.success'),
-				content: t('order.create.success'),
-				showCloseButton: false
-			}));
-		} catch (error) {					
-			sessionStorage.setItem("popupData", JSON.stringify({
-				backgroundColor: "red",
-				header: t('order.create.failed'),
-				content: `${error}`,
-				showCloseButton: true
-			}));
-			console.error(error);
-		} finally {
-			navigate('/');
-		}
-  };
-
-	const selectedCarrierObject = carriers.find(c => c.name === selectedCarrier);
-	const selectedOperatorObject = operators.find(o => o.name === selectedOperator);
-	const total = cartItems.reduce((acc, item) => acc + item.quantity * item.price, 0);
+			fetchOrder();
+		}, [userData]);
 
     return (
     <div className="flex flex-col flex-grow justify-center items-center w-full text-white mt-21 pt-8">
       {loading ? <LoadingSpinner /> : (
 
         <div className="flex flex-grow gap-4 items-center w-full">
-          <div className="w-24 mb-8 mx-12">
-            <OrderProgress currentStep={currentStep}/>
-          </div>
-    
           <div className="flex flex-col items-center justify-center w-full text-black mb-8">
             <div className="inline-block bg-green-700 text-white text-2xl font-bold px-6 py-3 rounded-md shadow-md text-center w-60">
               {t('header.summary')}
@@ -185,7 +47,7 @@ export default function Summary() {
 								<div className="flex flex-col 2xl:flex-row gap-6 items-stretch">
 									<div className=" shadow-md rounded-lg w-full">
 										<ul className="space-y-4 text-black w-160">
-											{cartItems.map((item) => (
+											{order.products.map((item) => (
 												<li key={item._id} className="flex gap-6 bg-white rounded-lg">
 														<div className="flex justify-start items-center p-4 w-26">
 															<img
@@ -299,42 +161,7 @@ export default function Summary() {
 										</div>
 									</div>
 								</div>
-
-								<div className="flex flex-col 2xl:flex-row gap-6 items-stretch">
-									<div className="bg-white shadow-md rounded-lg p-6 w-full">
-										<label className="flex items-center space-x-2">
-											<input
-												type="checkbox"
-												name="terms"
-												value={isAccepted}
-												onChange={() => handleTermsChange()}
-												className="form-checkbox h-5 w-5 text-green-600"
-											/>
-											<span className="text-sm">
-												{t('others.terms1')}&nbsp;
-												<a href="/statute" target="_blank" className="text-blue-600 underline">
-													{t('others.terms2')}
-												</a>
-											</span>
-										</label>
-										{errors.terms && <p className="pt-4 text-red-500 text-sm">{t('form.error.termsRequired')}</p>}
-									</div>
-
-								</div>
-
 							</div>
-
-              <div className="flex flex-col items-center my-6">
-                <button 
-                  className="bg-green-600 hover:bg-green-700 font-semibold text-white px-6 py-3 rounded-lg w-70"
-                  onClick={() => 
-                    handleSubmit()
-                  }
-                >
-                  {t('button.confirm')}
-                </button>
-              </div>
-
               <BackButton onClick={() => navigate(-1)} />
             </div>
         </div>

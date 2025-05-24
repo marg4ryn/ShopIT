@@ -103,6 +103,9 @@
   "error.announcement.fetchAnnouncements": "Nie udało się pobrać ogłoszeń:",
   "error.announcement.editVisibility": "Błąd podczas aktualizacji widoczności:",
 
+  "error.order.fetchOrders": "Nie udało sie pobrać zamówień:",
+  "error.order.fetchOrder": "Nie udało sie pobrać zamówienia:",
+
   "status.success": "Sukces!",
   
   "button.add": "Dodaj",

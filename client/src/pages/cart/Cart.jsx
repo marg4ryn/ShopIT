@@ -20,6 +20,7 @@ export default function Cart() {
   const { userData } = useUser();
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const appUrl = import.meta.env.VITE_APP_URL;
 
   useEffect(() => {
     const getCartFromCookie = async () => {
@@ -105,7 +106,7 @@ export default function Cart() {
 
                       <div className="flex justify-start items-center p-4 rounded-lg bg-white w-26">
                         <img
-                          src={`http://localhost:3000${item.imageUrls?.[0] || "/images/No_Image_Available.jpg"}`}
+                          src={`${appUrl}${item.imageUrls?.[0] || "/images/No_Image_Available.jpg"}`}
                           alt={item.name}
                           className="h-22 object-contain"
                         />
