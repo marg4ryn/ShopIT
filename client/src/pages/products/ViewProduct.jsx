@@ -124,6 +124,13 @@ export default function ViewProduct() {
                     alt={product.name}
                     className="h-128 object-contain"
                   />
+
+                  {product.stock === 0 && (
+                    <div className="absolute inset-0 bg-gray-700 opacity-80 z-20 flex items-center justify-center rounded-xl">
+                      <span className="text-white font-bold text-xl">{t('others.outOfStock')}</span>
+                    </div>
+                  )}
+
                   {product.imageUrls?.length > 1 && (
                     <>
                       <div
@@ -178,11 +185,13 @@ export default function ViewProduct() {
               <div className="flex flex-col h-full bg-neutral-800 p-6 rounded-lg">
                 <div className="flex flex-col items-center justify-between gap-4 h-full">
 
-                  <p className={`bg-neutral-600 text-white p-2 rounded-md text-sm ${product.stock < 20 ? 'shadow-lg shadow-red-500/50' : ''}`}>
-                    {product.stock < 20 ? (
+                  <p className={`bg-neutral-600 text-white p-2 rounded-md text-sm ${product.stock < 20 && product.stock > 0 ? 'shadow-lg shadow-red-500/50' : ''}`}>
+                    {product.stock === 0 ? (
+                      <span className="">{t('others.outOfStock')}</span>
+                    ) : product.stock < 20 ? (
                       <>
                         {t('others.onlyLeft1')}{' '}
-                        <span className="font-semibold">{product.stock}{' '}</span>
+                        <span className="font-semibold">{product.stock} </span>
                         {t('others.onlyLeft2')}
                       </>
                     ) : (
@@ -199,8 +208,13 @@ export default function ViewProduct() {
 
                  <div className="flex flex-col items-center justify-center gap-4">
                    <button 
-                    className="p-2 bg-green-600 hover:bg-green-700 text-white rounded w-40 cursor-pointer"
+                    className={`p-2 text-white rounded w-40 cursor-pointer transition-colors
+                      ${product.stock === 0 
+                        ? 'bg-gray-400 cursor-not-allowed' 
+                        : 'bg-green-600 hover:bg-green-700'}
+                    `}
                     onClick={() => {setIsModalOpen(true);}}
+                    disabled={product.stock === 0}
                   >
                     {t('button.addToCart')}
                   </button>

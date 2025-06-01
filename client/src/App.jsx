@@ -90,7 +90,6 @@ function App() {
 export default App;
 
 /* TODO
-- graying out products without quantity
 - automatically hide products without quantity
 
 - order preview
@@ -100,6 +99,7 @@ export default App;
 - reviews list for admin
 
 - change cart layout
+- popups overlapping
 
 - move application to MVP
 */
