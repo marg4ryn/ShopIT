@@ -99,7 +99,6 @@ export default App;
 - reviews list for admin
 
 - change cart layout
-- popups overlapping
 
 - move application to MVP
 */

@@ -75,19 +75,27 @@ export default function Products() {
 	};
 
 	useEffect(() => {
+		const interval = setInterval(() => {
 			const popupData = sessionStorage.getItem("popupData");
-			
+
 			if (popupData) {
-					setIsPopupOpen(false);
-					const parsed = JSON.parse(popupData);
-					setPopupBackgroundColor(parsed.backgroundColor);
-					setPopupHeader(parsed.header);
-					setPopupContent(parsed.content);
-					setPopupShowCloseButton(parsed.showCloseButton);
-					setIsPopupOpen(true);
-			
-					sessionStorage.removeItem("popupData");
+			setIsPopupOpen(false);
+
+			setTimeout(() => {
+				const parsed = JSON.parse(popupData);
+				setPopupBackgroundColor(parsed.backgroundColor);
+				setPopupHeader(parsed.header);
+				setPopupContent(parsed.content);
+				setPopupShowCloseButton(parsed.showCloseButton);
+				setIsPopupOpen(true);
+
+				sessionStorage.removeItem("popupData");
+			}, 200);
 			}
+
+		}, 1000);
+
+		return () => clearInterval(interval);
 	}, []);
 			
 	const closePopup = () => {
