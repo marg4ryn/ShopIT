@@ -233,7 +233,7 @@ export default function EditProduct() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="p-4 rounded-md border-0 flex flex-col items-center justify-center">
                 <span className="text-white font-lg font-bold pb-2">{t('form.image')}</span>
-                <div className="mb-4 relative w-full max-w-md mx-auto">
+                <div className="mb-4 relative w-full max-w-md mx-auto bg-white rounded-xl border-0">
                   <img
                     src={selectedImageUrl}
                     id="file-preview"
@@ -245,7 +245,7 @@ export default function EditProduct() {
                   <button
                     type="button"
                     onClick={handleDeleteSelectedImage}
-                    className="absolute bottom-2 right-2 w-10 bg-white p-2 rounded-full shadow-md hover:bg-red-100 transition"
+                    className="absolute bottom-2 right-2 w-10 bg-white p-2 rounded-full shadow-md hover:bg-red-100 transition cursor-pointer"
                     title="Delete image"
                   >
                     <FontAwesomeIcon icon={faTrash} className="text-red-500" />
@@ -263,7 +263,7 @@ export default function EditProduct() {
                         <img
                           src={imgObj.url}
                           alt={`Thumb ${index}`}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-contain"
                           onClick={() => setSelectedImageUrl(imgObj.url)}
                         />
                       </div>
@@ -341,7 +341,7 @@ export default function EditProduct() {
                   <label htmlFor="productCategory" className="text-white font-lg font-bold pb-2">{t('form.category')}</label>
                   <select
                     id="productCategory"
-                    className={`w-full border text-black ${errors.category ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
+                    className={`w-full border text-black ${errors.category ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black cursor-pointer`}
                     value={category}
                     onChange={(e) => {
                       setCategory(e.target.value);
@@ -369,7 +369,7 @@ export default function EditProduct() {
                 id="productDescription"
                 maxLength={400}
                 className={`w-full border text-black ${errors.description ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
-                rows="4"
+                rows="6"
                 placeholder={t('placeholder.description')}
                 value={description}
                 onChange={(e) => {
@@ -393,7 +393,7 @@ export default function EditProduct() {
             <button
               disabled={!isModified}
               type="submit"
-              className={`p-2 rounded w-40 text-white transition-colors duration-200 ${
+              className={`p-2 rounded w-40 text-white transition-colors duration-200 cursor-pointer ${
                 isModified
                   ? "bg-green-600 hover:bg-green-700"
                   : "bg-gray-500"

@@ -78,7 +78,7 @@ const UserProfile = () => {
 															},
 													})
 											}
-											className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 w-30"
+											className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 w-30 cursor-pointer"
 									>
 											{t('button.logOut')}
 									</button>

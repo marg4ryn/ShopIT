@@ -146,7 +146,7 @@ export default function Announcements() {
                         </div>
                     </div>
                     <div className="mb-4 mt-8">
-                        <button className="ml-2 p-2 bg-green-600 hover:bg-green-700 text-white rounded"
+                        <button className="ml-2 p-2 bg-green-600 hover:bg-green-700 text-white rounded cursor-pointer"
                             onClick={() => handleAddAnnouncement()}
                         >
                             {t('button.addAnnouncement')}
@@ -177,15 +177,15 @@ export default function Announcements() {
                                     {t('button.visible')}
                                 </label>
 
-                                <button className="mr-2 px-2 w-20 py-2 bg-green-600 hover:bg-green-700 text-white rounded"
+                                <button className="mr-2 px-2 w-20 py-2 bg-green-600 hover:bg-green-700 text-white rounded cursor-pointer"
                                     onClick={() => handleViewAnnouncement(announcement._id)}>
                                     {t('button.view')}
                                 </button>
-                                <button className="mr-2 px-4 w-20 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
+                                <button className="mr-2 px-4 w-20 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded cursor-pointer"
                                     onClick={() => handleEditAnnouncement(announcement._id)}>
                                     {t('button.edit')}
                                 </button>
-                                <button className="mr-2 px-4 w-20 py-2 bg-red-600 hover:bg-red-700 text-white rounded"
+                                <button className="mr-2 px-4 w-20 py-2 bg-red-600 hover:bg-red-700 text-white rounded cursor-pointer"
                                 onClick={() => handleDeleteAnnouncement(announcement)}>
                                     {t('button.delete')}
                                 </button>
@@ -198,7 +198,7 @@ export default function Announcements() {
                         {hasMore && (
                             <button
                             onClick={handleLoadMore}
-                            className="px-4 py-2  bg-green-600 hover:bg-green-700 text-white rounded flex-shrink-0"
+                            className="px-4 py-2  bg-green-600 hover:bg-green-700 text-white rounded flex-shrink-0 cursor-pointer"
                             >
                             {t('button.loadMore')}
                             </button>

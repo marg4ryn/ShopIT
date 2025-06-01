@@ -181,7 +181,7 @@ export default function EditAnnouncement() {
               <input
                 id="announcementColor"
                 type="color"
-                className={`border text-black ${errors.color ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
+                className={`border text-black ${errors.color ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-black`}
                 value={color}
                 onChange={(e) => {
                   setColor(e.target.value);
@@ -227,7 +227,7 @@ export default function EditAnnouncement() {
             <button
               type="submit"
               disabled={!isModified}
-              className={`p-2 rounded w-40 text-white transition-colors duration-200 ${
+              className={`p-2 rounded w-40 text-white transition-colors duration-200 cursor-pointer ${
                 isModified
                   ? "bg-green-600 hover:bg-green-700"
                   : "bg-gray-500"

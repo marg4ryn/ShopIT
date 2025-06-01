@@ -130,13 +130,13 @@ export default function Sidebar({ onSortChange, onFilterChange, sortOption, filt
 
   return (
     <aside>
-      <nav className={`h-full pt-6 flex flex-col items-center border-0 transition-all duration-300 overflow-hidden ${expanded ? 'bg-neutral-800' : 'bg-neutral-900'}`}>
-        
+      <nav className={`sticky top-18 pt-6 h-screen flex flex-col items-center border-0 transition-all duration-300 overflow-hidden ${expanded ? 'bg-neutral-800' : 'bg-neutral-900'}`}>
+
         <div className="p-4 pb-2 flex w-full justify-end items-end gap-2 mr-6">
 
           <button
             onClick={() => setExpanded((curr) => !curr)}
-            className="p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100"
+            className="p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100 cursor-pointer"
           >
             {expanded ? <ChevronFirst /> : <ChevronLast />}
           </button>
@@ -146,13 +146,13 @@ export default function Sidebar({ onSortChange, onFilterChange, sortOption, filt
           <p className={`text-xl font-bold text-center text-white ${expanded ? "w-68 opacity-100" : "w-0 opacity-0 overflow-hidden" } ${isOpen ? "mt-2" : "mt-0"}`}>{t('subHeader.sorting')}</p>
         </div>
 
-        <div className={`p-4 pb-2 flex justify-between items-center transition-all duration-300 ${expanded ? "w-72 opacity-100" : "w-0 opacity-0 overflow-hidden"}`}>
+        <div className={`p-4 pb-2 flex justify-between items-center  transition-all duration-300 ${expanded ? "w-72 opacity-100" : "w-0 opacity-0 overflow-hidden"}`}>
           {expanded && (
             <div className={`ml-2 ${expanded ? "w-64" : "w-0"} transition-all duration-300 overflow-hidden`}>
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 className={`
-                  w-full px-4 py-2 bg-white text-black rounded-md flex justify-between items-center 
+                  w-full px-4 py-2 bg-white text-black rounded-md flex justify-between items-center cursor-pointer
                   focus:outline-none focus:ring-3 focus:ring-black
                   transition-all duration-300 ease-in-out ${expanded ? "w-64 opacity-100 visible" : "w-0 opacity-0 invisible"}
                 `}
@@ -163,7 +163,7 @@ export default function Sidebar({ onSortChange, onFilterChange, sortOption, filt
 
               <ul
                 className={`
-                  flex flex-col bg-white rounded overflow-hidden border mt-1 transition-all duration-300 ease-in-out
+                  flex flex-col bg-white rounded overflow-hidden border mt-1 transition-all duration-300 ease-in-out 
                   ${isOpen ? "max-h-[500px] py-2 opacity-100" : "max-h-0 py-0 opacity-0"} 
                 `}
               >
@@ -264,7 +264,7 @@ export default function Sidebar({ onSortChange, onFilterChange, sortOption, filt
         {expanded && (
           <button
             onClick={applyFilters}
-            className={`mb-4 w-40 justify-center flex bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded`}
+            className={`mb-4 w-40 justify-center flex bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded cursor-pointer`}
           >
             {t('button.applyFilters')}
           </button>
@@ -272,7 +272,7 @@ export default function Sidebar({ onSortChange, onFilterChange, sortOption, filt
         {expanded && (
           <button
             onClick={clearFilters}
-            className={`flex w-40 justify-center bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded`}
+            className={`flex w-40 justify-center bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded cursor-pointer`}
           >
             {t('button.clearFilters')}
           </button>

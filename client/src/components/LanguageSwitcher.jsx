@@ -21,7 +21,7 @@ const LanguageSwitcher = ({ direction = 'down' }) => {
     <div className="relative inline-block text-left">
       <button
         onClick={() => setOpen(!open)}
-        className="text-xl w-12 p-2 rounded text-white hover:text-black hover:bg-gray-100 transition duration-200"
+        className="text-xl w-12 p-2 rounded text-white hover:text-black hover:bg-gray-100 transition duration-200 cursor-pointer"
         aria-label="Change language"
       >
         <FontAwesomeIcon icon={faGlobe} />

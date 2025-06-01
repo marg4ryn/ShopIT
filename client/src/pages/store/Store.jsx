@@ -238,7 +238,7 @@ export default function Store() {
                             </p>
 
                             <div
-                                className={`absolute top-0 left-0 w-full h-full bg-white flex flex-col items-center justify-center p-6 text-black transition-all duration-300 ease-in-out 
+                                className={`absolute top-0 left-0 w-full h-full cursor-pointer bg-white flex flex-col items-center justify-center p-6 text-black transition-all duration-300 ease-in-out 
                                 ${hoveredProductId === product._id ? "translate-x-0" : "-translate-x-full"}`}
                             >
                                 <p className="text-lg font-bold pb-2">
@@ -252,7 +252,7 @@ export default function Store() {
                                         : product.description}
                                 </p>
                                 <button 
-                                    className="mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                                    className="mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 cursor-pointer"
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         setIsModalOpen(true);

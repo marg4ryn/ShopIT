@@ -91,12 +91,15 @@ export default App;
 
 /* TODO
 - graying out products without quantity
+- automatically hide products without quantity
+
 - order preview
 - orders list for admin
 
 - reviews
 - reviews list for admin
-- change view product layout
+
+- change cart layout
 
 - move application to MVP
 */

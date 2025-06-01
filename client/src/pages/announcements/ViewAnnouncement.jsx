@@ -37,7 +37,7 @@ export default function ViewAnnouncement() {
         </div>
       </div>
       <div className="flex flex-col items-center mt-10"> 
-      <div className="w-2xs200 max-w-4xl h-60 flex items-center justify-center text-center px-4 rounded-xl shadow-lg" 
+      <div className="w-200 max-w-4xl h-60 flex items-center justify-center text-center px-4 rounded-xl shadow-lg" 
            style={{ backgroundColor: ad?.color || "#16a34a" }}>
         <div>
           <h1 className="text-4xl font-bold text-white mb-2">
@@ -52,7 +52,7 @@ export default function ViewAnnouncement() {
       <div className="flex text-center gap-8 items-center justify-center my-4">
         <BackButton onClick={() => { navigate(-1); }} />
         <button
-          className="px-4 w-40 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
+          className="px-4 w-40 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded cursor-pointer"
           onClick={() => navigate(`/edit-announcement/${id}`)}
         >
           {t('button.edit')}

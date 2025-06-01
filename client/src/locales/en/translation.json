@@ -61,7 +61,7 @@
   "placeholder.announcementTitle": "Enter title...",
   "placeholder.announcementHeader": "Enter header...",
   "placeholder.announcementContent": "Enter content...",
-  "placeholder.productName": "Enter producy name...",
+  "placeholder.productName": "Enter product name...",
 
   "form.error.nameRequired": "Name is required",
   "form.error.descriptionRequired": "Description is required",
