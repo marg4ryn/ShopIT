@@ -153,7 +153,7 @@ export default function AddProduct() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="p-4 rounded-md border-0 flex flex-col items-center justify-center">
               <span className="text-white font-lg font-bold pb-2">{t('form.image')}</span>
-              <div className="mb-4 relative w-full max-w-md mx-auto">
+              <div className="mb-4 relative w-full max-w-md mx-auto bg-white rounded-xl border-0">
                 <img
                   src={selectedImageUrl}
                   id="file-preview"
@@ -183,7 +183,7 @@ export default function AddProduct() {
                       <img
                         src={imgObj.previewUrl}
                         alt={`Thumb ${index}`}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain"
                         onClick={() => setSelectedImageUrl(imgObj.previewUrl)}
                       />
                     </div>
@@ -264,7 +264,7 @@ export default function AddProduct() {
                   <label htmlFor="productCategory" className="text-white font-lg font-bold pb-2">{t('form.category')}</label>
                   <select
                     id="productCategory"
-                    className={`w-full border text-black ${errors.category ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
+                    className={`w-full border text-black ${errors.category ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-black`}
                     value={selectedCategory}
                     onChange={(e) => {
                       setSelectedCategory(e.target.value);
@@ -292,7 +292,7 @@ export default function AddProduct() {
                 id="productDescription"
                 maxLength={400}
                 className={`w-full border text-black ${errors.description ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
-                rows="4"
+                rows="6"
                 placeholder={t('placeholder.description')}
                 value={description}
                 onChange={(e) => {
@@ -315,7 +315,7 @@ export default function AddProduct() {
             }} />
             <button
               type="submit"
-              className="p-2 bg-green-600 hover:bg-green-700 text-white rounded w-40"
+              className="p-2 bg-green-600 hover:bg-green-700 text-white rounded w-40 cursor-pointer"
               >
               {t('button.add')}
             </button>

@@ -218,11 +218,17 @@ export default function Store() {
                     acc.push(
                         <div
                             key={product._id}
-                            className="relative bg-white p-4 rounded-lg text-center min-w-[180px] max-w-[400px] max-h-[440px] overflow-hidden group z-10"
+                            className="relative bg-white p-4 rounded-lg text-center min-w-[180px] max-w-[400px] max-h-[440px] overflow-hidden group z-10 cursor-pointer"
                             onMouseEnter={() => handleHoverProduct(product)}
                             onMouseLeave={() => setHoveredProductId(null)}
                             onClick={() => handleViewProduct(product._id)}
                         >
+                            {product.stock === 0 && (
+															<div className="absolute inset-0 bg-gray-700 opacity-80 z-20 flex items-center justify-center rounded-md">
+																<span className="text-white font-bold text-xl">{t('others.outOfStock')}</span>
+															</div>
+														)}
+
                             <img
                                 src={`${appUrl}${product.imageUrls[0]}`}
                                 alt={product.name}
@@ -238,7 +244,7 @@ export default function Store() {
                             </p>
 
                             <div
-                                className={`absolute top-0 left-0 w-full h-full bg-white flex flex-col items-center justify-center p-6 text-black transition-all duration-300 ease-in-out 
+                                className={`absolute top-0 left-0 w-full h-full cursor-pointer bg-white flex flex-col items-center justify-center p-6 text-black transition-all duration-300 ease-in-out 
                                 ${hoveredProductId === product._id ? "translate-x-0" : "-translate-x-full"}`}
                             >
                                 <p className="text-lg font-bold pb-2">
@@ -252,11 +258,16 @@ export default function Store() {
                                         : product.description}
                                 </p>
                                 <button 
-                                    className="mt-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+																		className={`p-2 text-white rounded w-40 cursor-pointer transition-colors
+																			${product.stock === 0 
+																				? 'bg-gray-400 cursor-not-allowed' 
+																				: 'bg-green-600 hover:bg-green-700'}
+																		`}
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         setIsModalOpen(true);
                                       }}
+																		disabled={product.stock === 0}
                                 >
                                     {t('button.addToCart')}
                                 </button>

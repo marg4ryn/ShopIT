@@ -27,7 +27,7 @@ export default function Products() {
 	const { t } = useTranslation(); 
 	const { getAccessTokenSilently } = useAuth0();   
 	const page = useRef(1);
-	const limit = 5;
+	const limit = 10;
 	const navigate = useNavigate();	
 
 	const loadProducts = async (reset = false) => {
@@ -75,19 +75,27 @@ export default function Products() {
 	};
 
 	useEffect(() => {
+		const interval = setInterval(() => {
 			const popupData = sessionStorage.getItem("popupData");
-			
+
 			if (popupData) {
-					setIsPopupOpen(false);
-					const parsed = JSON.parse(popupData);
-					setPopupBackgroundColor(parsed.backgroundColor);
-					setPopupHeader(parsed.header);
-					setPopupContent(parsed.content);
-					setPopupShowCloseButton(parsed.showCloseButton);
-					setIsPopupOpen(true);
-			
-					sessionStorage.removeItem("popupData");
+			setIsPopupOpen(false);
+
+			setTimeout(() => {
+				const parsed = JSON.parse(popupData);
+				setPopupBackgroundColor(parsed.backgroundColor);
+				setPopupHeader(parsed.header);
+				setPopupContent(parsed.content);
+				setPopupShowCloseButton(parsed.showCloseButton);
+				setIsPopupOpen(true);
+
+				sessionStorage.removeItem("popupData");
+			}, 200);
 			}
+
+		}, 1000);
+
+		return () => clearInterval(interval);
 	}, []);
 			
 	const closePopup = () => {
@@ -145,7 +153,7 @@ export default function Products() {
                     </div>
                     <div className="mb-4 mt-8">
                         <button
-                            className="ml-2 p-2 bg-green-600 hover:bg-green-700 text-white rounded"
+                            className="ml-2 p-2 bg-green-600 hover:bg-green-700 text-white rounded cursor-pointer"
                             onClick={() => handleAddProduct()}
                         >
                             {t('button.addProduct')}
@@ -171,19 +179,19 @@ export default function Products() {
                                     </div>
                                     <div className="flex gap-2">
                                         <button
-                                            className="px-2 w-20 py-2 bg-green-600 hover:bg-green-700 text-white rounded"
+                                            className="px-2 w-20 py-2 bg-green-600 hover:bg-green-700 text-white rounded cursor-pointer"
                                             onClick={() => handleViewProduct(product._id)}
                                         >
                                             {t('button.view')}
                                         </button>
                                         <button
-                                            className="px-4 w-20 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
+                                            className="px-4 w-20 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded cursor-pointer"
                                             onClick={() => handleEditProduct(product._id)}
                                         >
                                             {t('button.edit')}
                                         </button>
                                         <button
-                                            className="px-4 w-20 py-2 bg-red-600 hover:bg-red-700 text-white rounded"
+                                            className="px-4 w-20 py-2 bg-red-600 hover:bg-red-700 text-white rounded cursor-pointer"
                                             onClick={() => handleDeleteProduct(product)}
                                         >
                                             {t('button.delete')}
@@ -198,7 +206,7 @@ export default function Products() {
                         {hasMore && (
                             <button
                             onClick={handleLoadMore}
-                            className="w-40 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded flex-shrink-0 round-lg"
+                            className="w-40 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded flex-shrink-0 round-lg cursor-pointer"
                             >
                             {t('button.loadMore')}
                             </button>

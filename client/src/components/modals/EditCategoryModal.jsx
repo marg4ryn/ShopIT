@@ -62,14 +62,14 @@ const EditCategoryModal = ({ isOpen, onClose, onSave, category }) => {
             <button
               type="button"
               onClick={onClose}
-              className="w-40 px-4 py-2 text-white rounded bg-gray-500 hover:bg-gray-600"
+              className="w-40 px-4 py-2 text-white rounded bg-gray-500 hover:bg-gray-600 cursor-pointer"
             >
               {t('button.cancel')}
             </button>
             <button
               type="submit"
               disabled={!isModified}
-              className={`p-2 rounded w-40 text-white transition-colors duration-200 ${
+              className={`p-2 rounded w-40 text-white transition-colors duration-200 cursor-pointer ${
                 isModified ? "bg-green-600 hover:bg-green-700" : "bg-gray-500"
               }`}
             >

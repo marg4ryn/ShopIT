@@ -14,13 +14,13 @@ const Footer = () => {
         <div className="flex flex-row items-center justify-end">
           <button
             onClick={() => navigate(`/statute`)}
-            className="w-30 underline hover:text-gray-400 focus:outline-none bg-transparent border-none cursor-pointer"
+            className="underline hover:text-gray-400 focus:outline-none bg-transparent border-none cursor-pointer"
           >
             {t('button.statute')}
           </button>
           <button
             onClick={() => navigate(`/privacy-policy`)}
-            className="w-40 underline hover:text-gray-400 focus:outline-none bg-transparent border-none cursor-pointer mr-6"
+            className="ml-6 underline hover:text-gray-400 focus:outline-none bg-transparent border-none cursor-pointer mr-6"
           >
             {t('button.privacyPolicy')}
           </button>

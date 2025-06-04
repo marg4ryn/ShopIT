@@ -42,7 +42,7 @@ function Popup({ isOpen, onClose, backgroundColor, header, content, showCloseBut
               setIsClosing(true);
               setTimeout(onClose, 500);
             }}
-            className="absolute top-2 right-2 text-white text-2xl font-bold hover:text-gray-300"
+            className="absolute top-2 right-2 text-white text-2xl font-bold hover:text-gray-300 cursor-pointer"
             aria-label="Close"
           >
             &times;

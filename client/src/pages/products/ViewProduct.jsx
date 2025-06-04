@@ -114,15 +114,23 @@ export default function ViewProduct() {
             </div>
           </div>
 
-          <div className="bg-neutral-800 p-6 rounded-md shadow-md mx-6 w-200">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-              <div className="flex justify-center px-4 bg-white rounded-xl border-0 relative">
+          <div className="w-4/5 mb-6">
+            <div className="grid grid-cols-1 lg:grid-cols-[2fr_2fr_1fr] gap-6">
+              {/* Column 1 */}
+              <div className="bg-neutral-800 p-6 rounded-lg">
+                <div className="flex justify-center px-4 bg-white rounded-xl border-0 relative">
                   <img
                     src={`${appUrl}${selectedImage}`}
                     alt={product.name}
                     className="h-128 object-contain"
                   />
+
+                  {product.stock === 0 && (
+                    <div className="absolute inset-0 bg-gray-700 opacity-80 z-20 flex items-center justify-center rounded-xl">
+                      <span className="text-white font-bold text-xl">{t('others.outOfStock')}</span>
+                    </div>
+                  )}
+
                   {product.imageUrls?.length > 1 && (
                     <>
                       <div
@@ -146,63 +154,86 @@ export default function ViewProduct() {
                   )}
                 </div>
 
-                <div className="flex gap-2 justify-center mt-4">
+                <div className="flex gap-2 justify-center mt-4 flex-wrap">
                   {product.imageUrls?.map((img, index) => (
                     <img
                       key={index}
                       src={`${appUrl}${img}`}
                       alt={`Mini ${index}`}
                       className={`w-16 h-16 object-contain rounded cursor-pointer border-4 bg-white
-                        ${selectedImage === img ? 'border-blue-600' : 'border-gray-300'}`}                      
+                        ${selectedImage === img ? 'border-blue-600' : 'border-gray-300'}`}
                       onClick={() => setSelectedImage(img)}
                     />
                   ))}
                 </div>
               </div>
 
-              <div className="rounded-md border-0 flex flex-col h-full">
-                <div className="text-white mx-auto pr-4 container py-10 space-y-5 flex flex-col items-center flex-grow">
+              {/* Column 2 */}
+              <div className="flex flex-col h-full bg-neutral-800 p-6 rounded-lg">
+                <div className="text-white pr-4 container space-y-5 flex flex-col items-start flex-grow">
                   <div className="flex justify-between w-full">
-                    <span className="text-sm">
-                      {product.category?.name?.trim() || t('others.unknown')}
-                    </span>
-                    <span
-                      className={`text-sm ${product.stock < 20 ? 'text-red-500 font-bold' : ''}`}
-                    >
-                    {product.stock < 20
-                      ? `${t('others.onlyLeft1')} ${product.stock} ${t('others.onlyLeft2')}`
-                      : `${t('others.inStock')} ${product.stock}`}
-                    </span>
+                    <p className="bg-neutral-600 p-2 rounded-md text-sm">{t('form.category')}: <span className="font-semibold">{product.category?.name?.trim() || t('others.unknown')}</span></p>
                   </div>
 
-                  <div className="flex-grow w-full">
+                  <div className="flex-grow w-full" style={{ textAlign: 'justify' }}>
                     <span className="text-lg">{product.description}</span>
                   </div>
                 </div>
+              </div>
 
-                <div className="flex items-center justify-center w-full mt-auto pb-4">
-                  <span className="text-green-600 text-3xl font-bold">${parseFloat(product.price).toFixed(2)}</span>
+              {/* Column 3 */}
+              <div className="flex flex-col h-full bg-neutral-800 p-6 rounded-lg">
+                <div className="flex flex-col items-center justify-between gap-4 h-full">
+
+                  <p className={`bg-neutral-600 text-white p-2 rounded-md text-sm ${product.stock < 20 && product.stock > 0 ? 'shadow-lg shadow-red-500/50' : ''}`}>
+                    {product.stock === 0 ? (
+                      <span className="">{t('others.outOfStock')}</span>
+                    ) : product.stock < 20 ? (
+                      <>
+                        {t('others.onlyLeft1')}{' '}
+                        <span className="font-semibold">{product.stock} </span>
+                        {t('others.onlyLeft2')}
+                      </>
+                    ) : (
+                      <>
+                        {t('others.inStock')}{' '}
+                        <span className="font-semibold">{product.stock}</span>
+                      </>
+                    )}
+                  </p>
+
+                  <p className="text-white text-3xl font-bold">
+                    ${parseFloat(product.price).toFixed(2)}
+                  </p>
+
+                 <div className="flex flex-col items-center justify-center gap-4">
+                   <button 
+                    className={`p-2 text-white rounded w-40 cursor-pointer transition-colors
+                      ${product.stock === 0 
+                        ? 'bg-gray-400 cursor-not-allowed' 
+                        : 'bg-green-600 hover:bg-green-700'}
+                    `}
+                    onClick={() => {setIsModalOpen(true);}}
+                    disabled={product.stock === 0}
+                  >
+                    {t('button.addToCart')}
+                  </button>
+
+                  {roles.includes("admin") && (
+                    <button
+                      className="px-4 w-40 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded cursor-pointer"
+                      onClick={() => navigate(`/edit-product/${id}`)}
+                    >
+                      {t('button.edit')}
+                    </button> 
+                  )}
+
+                  <BackButton onClick={() => { navigate(-1); }} />
+                 </div>
+                 
                 </div>
               </div>
             </div>
-          </div>
-
-          <div className="flex text-center gap-8 items-center justify-center my-4">
-            <BackButton onClick={() => { navigate(-1); }} />
-            <button 
-              className="p-2 bg-green-600 hover:bg-green-700 text-white rounded w-40"
-              onClick={() => {setIsModalOpen(true);}}
-            >
-              {t('button.addToCart')}
-            </button>
-            {roles.includes("admin") && (
-            <button
-              className="px-4 w-40 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
-              onClick={() => navigate(`/edit-product/${id}`)}
-            >
-              {t('button.edit')}
-            </button>
-            )}
           </div>
         </div>
       )}

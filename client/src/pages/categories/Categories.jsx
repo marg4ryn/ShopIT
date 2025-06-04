@@ -171,7 +171,7 @@ export default function Categories() {
               />
               <button 
                 onClick={handleAddCategory} 
-                className="ml-2 p-2 bg-green-600 hover:bg-green-700 text-white rounded flex-shrink-0"
+                className="ml-2 p-2 bg-green-600 hover:bg-green-700 text-white rounded flex-shrink-0 cursor-pointer"
               >
                 {t('button.addCategory')}
               </button>
@@ -183,10 +183,10 @@ export default function Categories() {
                 <li key={category._id} className="flex justify-between items-center mb-4 w-120 p-2 bg-white border rounded">
                     <span className="font-semibold">{category.name}</span>
                     <div>
-                    <button onClick={() => handleEditCategory(category)} className="mr-2 px-4 w-20 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">
+                    <button onClick={() => handleEditCategory(category)} className="mr-2 px-4 w-20 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded cursor-pointer">
                         {t('button.edit')}
                     </button>
-                    <button onClick={() => handleDeleteCategory(category)} className="mr-2 px-4 w-20 py-2 bg-red-600 hover:bg-red-700 text-white rounded">
+                    <button onClick={() => handleDeleteCategory(category)} className="mr-2 px-4 w-20 py-2 bg-red-600 hover:bg-red-700 text-white rounded cursor-pointer">
                         {t('button.delete')}
                     </button>
                     </div>

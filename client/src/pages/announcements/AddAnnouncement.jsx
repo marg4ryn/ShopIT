@@ -139,7 +139,7 @@ export default function AddAnnouncement() {
               <input
                 id="announcementColor"
                 type="color"
-                className={`border text-black ${errors.color ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-black`}
+                className={`border text-black ${errors.color ? 'border-red-500' : 'border-gray-300'} bg-white rounded-md p-2 cursor-pointer focus:outline-none focus:ring-2 focus:ring-black`}
                 value={color}
                 onChange={(e) => {
                   setColor(e.target.value);
@@ -185,7 +185,7 @@ export default function AddAnnouncement() {
         }} />
         <button
             type="submit"
-            className="p-2 bg-green-600 hover:bg-green-700 text-white rounded w-40"
+            className="p-2 bg-green-600 hover:bg-green-700 text-white rounded w-40 cursor-pointer"
             >
             {t('button.add')}
         </button>
